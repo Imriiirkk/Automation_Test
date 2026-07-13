@@ -64,10 +64,12 @@ export default defineConfig({
     /* Test against mobile viewports. */
     {
       name: 'Mobile Chrome',
+      testDir: './tests/mobile',
       use: { ...devices['Pixel 5'] },
     },
     {
       name: 'Mobile Safari',
+      testDir: './tests/mobile',
       use: { ...devices['iPhone 13'] },
     },
 
