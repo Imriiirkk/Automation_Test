@@ -7,7 +7,7 @@ test('TC001: กดหน้าโปรโมชันได้', async ({ page
     await promotionPage.goto();
     await promotionPage.gotoPromotionPage();
     // await expect(promotionPage.promotionHeading).toBeVisible();
-    await expect(page.locator('h1').filter({ hasText: 'โปรโมชัน' }).nth(5)).toBeVisible();
+    await expect(page.locator('h1').filter({ hasText: 'โปรโมชัน' })).toBeVisible();
 });
 
 // รวมทุก filter case ไว้ใน array เดียว ไม่ต้องเขียน test ซ้ำทีละตัว
