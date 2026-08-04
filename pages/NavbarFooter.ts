@@ -1,7 +1,7 @@
 import { Page, Locator, BrowserContext } from '@playwright/test';
 
 /**
- * POM: Navbar & Footer (punpro.com)
+ * POM: Navbar & Footer
  * Owner: NUBT
  */
 
@@ -15,7 +15,7 @@ export class NavbarFooter {
     private desktopNavMenu: Locator;
 
     // ---------- Authentication ----------
-    private loginButton_desktop: Locator;
+    public loginButton_desktop: Locator;
     public loginButton_mobile: Locator;
 
     public loginModalCloseButton: Locator;
@@ -43,14 +43,16 @@ export class NavbarFooter {
 
     private userNameDisplay: Locator;  // profile name ที่แสดงหลัง login สำเร็จ
     private editProfileLink: Locator;
+    public username: Locator;
 
     public logoutLink: Locator;
+    public logout_desktop: Locator;
 
     // ---------- Social Media Links ----------
-    private navFacebookLink: Locator;
-    private navInstagramLink: Locator;
-    private navXLink: Locator;
-    private navYoutubeLink: Locator;
+    public navFacebookLink: Locator;
+    public navInstagramLink: Locator;
+    public navXLink: Locator;
+    public navYoutubeLink: Locator;
 
     public footerFacebookLink: Locator;
     public footerInstagramLink: Locator;
@@ -121,7 +123,9 @@ export class NavbarFooter {
 
     // ---------- Ads/banners ----------
     public appBanner: Locator;
+    public appBannerAnimatedWrapper: Locator;
     public appBannerCloseButton: Locator;
+    public appBannerDownloadButton: Locator;
 
     public cookieAcceptButton: Locator;
     public cookieContainer: Locator;
@@ -136,7 +140,7 @@ export class NavbarFooter {
         this.menuToggle = page.getByRole('button', { name: 'Toggle navigation' }).first();
         this.mobileNavMenu = page.getByRole('complementary');
         this.closeMenuButton = page.locator('.VerticalNav__NavHeaderAction-sc-2fb0d474-6');
-        this.desktopNavMenu = page.locator('main-header');
+        this.desktopNavMenu = page.locator('.main-header');
 
         // ---------- Authentication ----------
         this.loginButton_desktop = page.getByRole('button', { name: 'เข้าสู่ระบบ หรือ สมัครสมาชิก' });
@@ -167,8 +171,11 @@ export class NavbarFooter {
 
         this.userNameDisplay = page.locator('.UserMenu__UserName-sc-1g0x7jv-2');
         this.editProfileLink = page.getByRole('link', { name: 'แก้ไขโปรไฟล์', exact: true });
+        this.username = page.locator('.NavbarTop__BlockUsername-sc-f8cfc4bb-5');
 
         this.logoutLink = page.getByRole('link', { name: 'ออกจากระบบ', exact: true });
+        this.logout_desktop = page.getByRole('link', { name: 'ออกจากระบบ' }).last();
+
 
         // ---------- Social Media Links ----------
         const headerNav = page.getByRole('navigation').filter({ hasText: 'PUNPRO #MoreforLife' });
@@ -247,10 +254,12 @@ export class NavbarFooter {
 
         // ---------- Ads/banners ----------
         this.appBanner = page.locator('[class*="PPBNApp__BNAPP-"]');
+        this.appBannerAnimatedWrapper = this.appBanner.locator('.animate__animated');
+        this.appBannerDownloadButton = this.appBanner.locator('a[href="/app"]');
         this.appBannerCloseButton = this.appBanner.locator('button[class*="BTNCloseBNAPP"]');
 
         this.cookieAcceptButton = page.getByRole('button', { name: 'ยอมรับ' });
-        this.cookieContainer = page.locator('.CookieSession__CKSession-sc-7dacca2d-0');
+        this.cookieContainer = page.getByText('Punpro.com ใช้คุกกี้เพื่อพัฒนาประสบการณ์ใช้งานอ่านเพิ่มเติมยอมรับ');
 
         this.anchorAd = page.locator('.ats-overlay-bottom-wrapper-rendered');
         this.anchorAdCloseButton = this.anchorAd.getByRole('button').first();
@@ -272,7 +281,10 @@ export class NavbarFooter {
 
         if (appeared) {
             await this.appBannerCloseButton.click();
-            await this.appBanner.waitFor({ state: 'hidden' });
+            await this.appBanner
+                .evaluate((el) => new Promise<void>((resolve) => {
+                    el.addEventListener('animationend', () => resolve(), { once: true });
+                }));
         }
     }
 
@@ -300,6 +312,12 @@ export class NavbarFooter {
         }
     }
 
+    async dismissAllOverlaysIfPresent() {
+        await this.dismissCookieBannerIfPresent();
+        await this.dismissAppBannerIfPresent();
+        await this.dismissAnchorAdIfPresent();
+    }
+
     // ============================================
 
     // เปิดเมนู
@@ -321,8 +339,8 @@ export class NavbarFooter {
         await linkName.click();
     }
 
-    async goToMenu_desktop(linkName: string) {
-        await this.desktopNavMenu.getByRole('link', { name: linkName, exact: true }).click();
+    async goToMenu_desktop(linkName: Locator) {
+        await linkName.click();
     }
 
     // =============== Authentication ===============
@@ -371,6 +389,10 @@ export class NavbarFooter {
         await this.logoutLink.click();
     }
 
+    async logoutInDesktop() {
+        await this.logout_desktop.click();
+    }
+
     // =============== Search ===============
     // ค้นหาด้วยคำค้นหา
     async searchWithKeyword(keyword: string[]) {
@@ -385,7 +407,6 @@ export class NavbarFooter {
         await this.goto();
         await this.dismissAppBannerIfPresent();
         await this.dismissCookieBannerIfPresent();
-        await this.searchToggle.click();
     }
 
     // คลิกรายการค้นหาล่าสุด (filter จาก text เพราะมีหลายรายการ class เดียวกัน)
@@ -417,5 +438,10 @@ export class NavbarFooter {
     // =============== Footer ===============
     async goToLinkFooter_mobile(linkName: string) {
         await this.footerContainer.getByRole('link', { name: linkName, exact: true }).click();
+    }
+
+    // ================= Getters (สำหรับ assert ใน spec file) =================
+    getDesktopNavMenu(): Locator {
+        return this.desktopNavMenu;
     }
 }
