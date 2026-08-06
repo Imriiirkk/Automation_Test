@@ -136,7 +136,7 @@ export class NavbarFooter {
         this.menuToggle = page.getByRole('button', { name: 'Toggle navigation' }).first();
         this.mobileNavMenu = page.getByRole('complementary');
         this.closeMenuButton = page.locator('.VerticalNav__NavHeaderAction-sc-2fb0d474-6');
-        this.desktopNavMenu = page.locator('main-header');
+        this.desktopNavMenu = page.locator('.main-header');
 
         // ---------- Authentication ----------
         this.loginButton_desktop = page.getByRole('button', { name: 'เข้าสู่ระบบ หรือ สมัครสมาชิก' });
@@ -346,6 +346,7 @@ export class NavbarFooter {
         await this.loginModalEmailButton.click();
         await this.loginEmailInput.fill(email);
         await this.loginPasswordInput.fill(password);
+        await this.loginSubmitButton.waitFor({ state: 'visible' });
         await this.loginSubmitButton.click();
     }
 
