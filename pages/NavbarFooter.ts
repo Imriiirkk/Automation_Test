@@ -42,7 +42,6 @@ export class NavbarFooter {
     private signupErrorText: Locator;
 
     private userNameDisplay: Locator;  // profile name ที่แสดงหลัง login สำเร็จ
-    private editProfileLink: Locator;
     public username: Locator;
 
     public logoutLink: Locator;
@@ -70,6 +69,7 @@ export class NavbarFooter {
     public contactMenu_desktop: Locator;
 
     // mobile
+    public editProfile_mobile: Locator;
     public homeMenu_mobile: Locator;
     public promotionMenu_mobile: Locator;
     public articleMenu_mobile: Locator;
@@ -170,7 +170,6 @@ export class NavbarFooter {
         this.signupErrorText = page.getByRole('dialog', { name: 'โปรดกรอกข้อมูลให้ครบถ้วน' });
 
         this.userNameDisplay = page.locator('.UserMenu__UserName-sc-1g0x7jv-2');
-        this.editProfileLink = page.getByRole('link', { name: 'แก้ไขโปรไฟล์', exact: true });
         this.username = page.locator('.NavbarTop__BlockUsername-sc-f8cfc4bb-5');
 
         this.logoutLink = page.getByRole('link', { name: 'ออกจากระบบ', exact: true });
@@ -201,6 +200,7 @@ export class NavbarFooter {
         this.contactMenu_desktop = this.desktopNavMenu.getByRole('link', { name: 'Link to contact', exact: true });
 
         // mobile
+        this.editProfile_mobile = this.mobileNavMenu.getByRole('link', { name: 'แก้ไขโปรไฟล์' });
         this.homeMenu_mobile = this.mobileNavMenu.getByRole('link', { name: 'หน้าแรก', exact: true });
         this.promotionMenu_mobile = this.mobileNavMenu.getByRole('link', { name: 'โปรโมชั่น', exact: true });
         this.articleMenu_mobile = this.mobileNavMenu.getByRole('link', { name: 'บทความ', exact: true });

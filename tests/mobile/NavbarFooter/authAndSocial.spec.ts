@@ -91,7 +91,7 @@ test.describe('Authentication', () => {
             await navbarfooter.loginWithEmail(email, password);
             await expect(navbarfooter.loginSuccessDialog).toBeVisible({ timeout: 10000 });
 
-            await expect(page).toHaveURL('https://staging-www.punpro.com/');
+            await expect(page).toHaveURL('https://staging-www2.punpro.com/');
             await navbarfooter.openMenu_mobile();
         });
 
@@ -100,7 +100,7 @@ test.describe('Authentication', () => {
         });
 
         test('Auth_mobile_008: ตรวจสอบการนำทางไปหน้าโปรไฟล์เมื่อกดชื่อผู้ใช้', async ({ page }) => {
-            await page.getByRole('link', { name: 'แก้ไขโปรไฟล์' }).click();
+            await navbarfooter.goToMenu_mobile(navbarfooter.editProfile_mobile);
             await page.waitForURL(/\/profile/, { timeout: 10000 });
             expect(page.url()).toContain('/profile');
         });
@@ -112,7 +112,7 @@ test.describe('Authentication', () => {
         test('Auth_mobile_012: ตรวจสอบการออกจากระบบ เมื่อกดปุ่ม "ออกจากระบบ"', async ({ page }) => {
             await navbarfooter.logout();
 
-            await expect(page).toHaveURL('https://staging-www.punpro.com/');
+            await expect(page).toHaveURL('https://staging-www2.punpro.com/');
             await navbarfooter.dismissCookieBannerIfPresent();
             await navbarfooter.dismissAnchorAdIfPresent();
             await navbarfooter.openMenu_mobile();

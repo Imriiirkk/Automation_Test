@@ -91,7 +91,7 @@ test.describe('Authentication', () => {
             await navbarfooter.loginWithEmail(email, password);
             await expect(navbarfooter.loginSuccessDialog).toBeVisible({ timeout: 10000 });
 
-            await expect(page).toHaveURL('https://staging-www.punpro.com/');
+            await expect(page).toHaveURL('https://staging-www2.punpro.com/');
         });
 
         test('Auth_desktop_007: ตรวจสอบการแสดงชื่อผู้ใช้แทนปุ่ม Login หลังสำเร็จ', async ({ page }) => {
@@ -113,7 +113,7 @@ test.describe('Authentication', () => {
             await navbarfooter.username.click();
             await navbarfooter.logoutInDesktop();
 
-            await expect(page).toHaveURL('https://staging-www.punpro.com/');
+            await expect(page).toHaveURL('https://staging-www2.punpro.com/');
             await navbarfooter.dismissAllOverlaysIfPresent();
             await expect(navbarfooter.loginButton_desktop).toBeVisible({ timeout: 10000 });
         });
