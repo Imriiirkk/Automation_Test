@@ -305,6 +305,7 @@ export class NavbarFooter {
     // เปิดเมนู
     async openMenu_mobile() {
         await this.menuToggle.click();
+        await this.page.getByRole('complementary').waitFor({ state: 'visible' });
         await this.dismissAppBannerIfPresent();
         await this.dismissCookieBannerIfPresent();
         await this.dismissAnchorAdIfPresent();
