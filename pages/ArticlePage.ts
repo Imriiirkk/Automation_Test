@@ -11,11 +11,13 @@ export class ArticlePage {
 
     // ---------- Article Highlight Banner ----------
     public articleHightlight: Locator;
-    public indicator: Locator;
+    public indicator1: Locator;
+    public indicator2: Locator;
 
     // ---------- Article Categories Tap ----------
     private articleFilterBtn: Record<string, Locator>;
     public blockMenuCategories: Locator;
+    public inactiveTab: Locator;
     public activeTab: Locator;
 
     // ---------- Article Card ----------
@@ -29,7 +31,7 @@ export class ArticlePage {
     public profileAuthor_ArticleCard: Locator;
     // public nameAuthor_ArticleCard: Locator;
     public bookmark_ArticleCard: Locator;
-    // public bookmorkIcon: Locator;
+    public bookmarkCardIcon: Locator;
 
     // ---------- Article Detail ----------
     public title_ArticleDetail: Locator;
@@ -58,24 +60,26 @@ export class ArticlePage {
     public hiddenCommen_tBtn: Locator; //pum "ซ่อน" wai ซ่อน reply comment tungmod 
 
     // ---------- Article Interest Section ----------
-    private articleInterestSection: Locator;
-    private img_ArticleInterest: Locator;
-    private title_ArticleInterest: Locator;
-    private author_ArticleInterest: Locator;
-    private publishDate_ArticleInterest: Locator;
-    private bookmark_ArticleInterest: Locator;
-    private love_ArticleInterest: Locator;
-    private share_ArticleInterest: Locator;
+    public relatedArticleBlock: Locator;
+    public img_RelatedArticle: Locator;
+    public title_RelatedArticle: Locator;
+    public author_RelatedArticle: Locator;
+    public publishDate_RelatedArticle: Locator;
+    public bookmarkBtn_RelatedArticle: Locator;
+    public bookmarkIcon_RelatedArticle: Locator;
+    public loveBtn_RelatedArticle: Locator;
+    public loveIcon_RelatedArticle: Locator;
+    public shareBtn_RelatedArticle: Locator;
 
     constructor(page: Page) {
         this.page = page;
         this.article_heading = page.getByRole('heading', { name: 'บทความ' });
 
         // ---------- Article Highlight Banner ----------
-        this.articleHightlight = page.locator('.ArticalLageHorizontalCard__Card-sc-d1a5b486-0');
-        this.indicator = page.getByRole('button', { name: 'Go to slide' });  //.client__CustomPagination-sc-e3e6a812-0
+        this.articleHightlight = page.locator('.swiper'); //locator('.ArticalLageHorizontalCard__Card-sc-d1a5b486-0').first() และ 2) <div class="ArticalLageHorizontalCard__Card-sc-d1a5b486-0 weOVL">…</div> aka locator('div').filter({ hasText: /^Testerทดสอบสร้างบทความ1 ก\.ย\. 2569$/ }).nth(1)
+        this.indicator1 = page.getByRole('button', { name: 'Go to slide 1' });  //.client__CustomPagination-sc-e3e6a812-0
+        this.indicator2 = page.getByRole('button', { name: 'Go to slide 2' });
 
-        // this.blockMenuCategories = page.locator('.ProFilterCategories__BlockMenuCategories-sc-e0f955f4-0') //ProFilterCategories__BlockMenuCategories-sc-e0f955f4-0 deYHar
         this.articleFilterBtn = {
             pro_fashion: page.getByRole('button', { name: 'โปรสายแฟ' }),
             pro_eat: page.getByRole('button', { name: 'โปรกิน' }),
@@ -84,8 +88,10 @@ export class ArticlePage {
             pro_update: page.getByRole('button', { name: 'โปรอัพเดท' }),
             pro_talking: page.getByRole('button', { name: 'โปรชวนคุย' })
         };
-        this.blockMenuCategories = page.locator('.ProFilterCategories__BlockMenuCategories-sc-e0f955f4-0');
-        this.activeTab = page.locator('[data-active="true"]');
+        // BlockContent__Block-sc-ba535f25-0 >> ครอบแท็บ filter ทั้งหมด
+        this.blockMenuCategories = page.locator('.BlogFilterCategories__BlockMenuCategories-sc-ec10c760-0');
+        this.inactiveTab = page.locator('.BlogFilterSelector__BlockInactiveTab-sc-7829bd5c-1');
+        this.activeTab = page.locator('.BlogFilterSelector__BlockActiveTab-sc-7829bd5c-0');
 
         this.loadMoreButton = page.getByRole('button', { name: 'ดูเพิ่มเติม' });
 
@@ -100,25 +106,25 @@ export class ArticlePage {
         this.profileAuthor_ArticleCard = page.locator('.FixSizeArticleCard__Profile-sc-a3159c29-7'); //block profile = img + name
         // this.nameAuthor_ArticleCard = page.locator('.BlogMultiCategories__BlockArticle-sc-a10bddd5-1'); //block profile = img + name 
         this.bookmark_ArticleCard = page.getByTestId('bookmark-button').first(); //.locator('.FixSizeArticleCard__BookmarkButton-sc-a3159c29-4'); // .getByTestId('bookmark-button')
-        // this.bookmorkIcon = this.bookmark_ArticleCard.locator('svg path'); // .locator('.FixSizeArticleCard__BookmarkButton-sc-a3159c29-4 > svg > path')
+        this.bookmarkCardIcon = this.bookmark_ArticleCard.locator('svg path'); // .locator('.FixSizeArticleCard__BookmarkButton-sc-a3159c29-4 > svg > path')
 
         // ---------- Article Detail ----------
         this.title_ArticleDetail = page.locator('.Text__H1-sc-30b53bf2-0');
         this.imgAuthor_ArticleDetail = page.locator('.BlockContent__ImgAuthor-sc-766b4868-4');
-        this.authorName_ArticleDetail = page.locator('.BlockContent__AuthorName-sc-766b4868-5'); // link = BlockContent__StyledLink-sc-766b4868-7
+        this.authorName_ArticleDetail = page.locator('.BlockContent__AuthorName-sc-766b4868-5'); // link = BlockContent__StyledLink-sc-766b4868-7 >> aka getByRole('heading', { name: 'โดย : PJN Tester Punpromotion' })
         this.postDate_ArticleDetail = page.locator('.DateTimeContent__BlockDate-sc-b3b7f32b-2'); // DateTimeContent__Span-sc-b3b7f32b-4
         this.viewCount_ArticleDetail = page.locator('.DateTimeContent__BlockView-sc-b3b7f32b-3'); // DateTimeContent__Span-sc-b3b7f32b-4
         this.coverImg_ArticleDetail = page.locator('.BlockContent__CoverPhotoPost-sc-766b4868-9');
         this.textContent_ArticleDetail = page.locator('.RenderContentHTML__ContentStyle-sc-84005593-0');
-        this.shareDetail_btn = page.locator('.BlockContent__ContentButtonShare-sc-766b4868-2');
-        this.bookMarkDetail_btn = page.locator('.ButtonIconBookMarkDetail__Button-sc-b157073f-0');
+        this.shareDetail_btn = page.locator('.BlockContent__ContentButtonShare-sc-766b4868-2').first(); //aka locator('.BlockContent__ContentButtonShare-sc-766b4868-2').first()
+        this.bookMarkDetail_btn = page.locator('.ButtonIconBookMarkDetail__Button-sc-b157073f-0').first();
         this.loveDetail_btn = page.locator('.ButtonIconLoveDetail__Button-sc-10d0321c-0'); //.ButtonIconLoveDetail__Button-sc-10d0321c-0 > svg
         this.shareOnFacebook = page.getByRole('button', { name: 'Share on Facebook' }).first();
         this.shareOnLine = page.getByRole('button', { name: 'Share on Line' }).first();
         this.shareOnX = page.getByRole('button', { name: 'Share on X' }).first();
         this.shareCopyLink = page.getByRole('button', { name: 'share-copy-link' }).first();
-        this.tagItem = page.locator('');
-        this.multiTagCard = page.locator('');
+        this.tagItem = page.locator('.TagItem__TagItem-sc-89fc6391-0');
+        this.multiTagCard = page.locator('.BlockContent__BlockTags-sc-766b4868-15');
 
         // ---------- Comment Section (Article Detail) ----------
         this.comment = page.locator(''); //
@@ -127,14 +133,16 @@ export class ArticlePage {
         this.hiddenCommen_tBtn = page.locator(''); // ยังไม่แก้ locator
 
         // ---------- Article Interest Section ----------
-        this.articleInterestSection = page.locator(''); // ยังไม่แก้ locator
-        this.img_ArticleInterest = page.locator(''); // ยังไม่แก้ locator
-        this.title_ArticleInterest = page.locator(''); // ยังไม่แก้ locator
-        this.author_ArticleInterest = page.locator(''); // ยังไม่แก้ locator
-        this.publishDate_ArticleInterest = page.locator(''); // ยังไม่แก้ locator
-        this.bookmark_ArticleInterest = page.locator(''); // ยังไม่แก้ locator
-        this.love_ArticleInterest = page.locator(''); // ยังไม่แก้ locator
-        this.share_ArticleInterest = page.locator(''); // ยังไม่แก้ locator
+        this.relatedArticleBlock = page.locator('.BlockRelatePopular__BoxListPoppular-sc-be13f440-4'); // card = BlockRelatePopular__CardPopular-sc-be13f440-1
+        this.img_RelatedArticle = page.locator('.CardArticleRelate__StyledLink-sc-4738072-3');
+        this.title_RelatedArticle = page.locator('.CardArticleRelete__BlockTitle-sc-4738072-2');
+        this.author_RelatedArticle = page.locator('.CardArticleRelete__SectionPlatform-sc-4738072-8');
+        this.publishDate_RelatedArticle = page.locator('.CardArticleRelete__PlatformLabel-sc-4738072-11');
+        this.bookmarkBtn_RelatedArticle = page.locator('.ButtonIconBookmarkOnly__Button-sc-b618260f-0');
+        this.bookmarkIcon_RelatedArticle = this.bookmarkBtn_RelatedArticle.locator('svg path');
+        this.loveBtn_RelatedArticle = page.locator('.ButtonArticleDetailIcon__Button-sc-bee472b4-0');
+        this.loveIcon_RelatedArticle = this.loveBtn_RelatedArticle.locator('svg path');
+        this.shareBtn_RelatedArticle = page.locator('.CardArticleRelate__ShareButton-sc-4738072-15');
 
     }
 
@@ -148,6 +156,9 @@ export class ArticlePage {
         await locator.click();
     }
 
+    async clickHighlightBanner() {
+        await this.articleHightlight.first().click();
+    }
 
     async clickArticleCard_image() {
         await this.imgCover_ArticleCard.first().click();
@@ -205,5 +216,21 @@ export class ArticlePage {
 
     async clickLoveDetail() {
         await this.loveDetail_btn.locator('svg').click();
+    }
+
+    async clickRelatedArticlieCard() {
+        await this.title_RelatedArticle.first().click();
+    }
+
+    async clickLoveBtnRelatedArticlie() {
+        await this.loveBtn_RelatedArticle.first().click();
+    }
+
+    async clickBookmarkBtnRelatedArticlie() {
+        await this.bookmarkBtn_RelatedArticle.first().click();
+    }
+
+    async clickShareBtnRelatedArticlie() {
+        await this.shareBtn_RelatedArticle.first().click();
     }
 }
