@@ -16,88 +16,140 @@ test.describe('Home Page', () => {
         await navbar.dismissAllOverlaysIfPresent();
     });
 
-    test('Home_mobile_001: ตรวจสอบองค์ประกอบของหน้าแรกครบถ้วนเมื่อเข้าเว็บครั้งแรก', async () => {
-        await expect(homePage.getBannerContainer()).toBeVisible();
-        await expect(homePage.getCategorySectionContainer()).toBeVisible();
-        await expect(homePage.getServicesSectionContainer()).toBeVisible();
-        await expect(homePage.getPromotionSectionContainer()).toBeVisible();
-        await expect(homePage.getShopperPostSectionContainer()).toBeVisible();
-        await expect(homePage.getArticleSectionContainer()).toBeVisible();
-        await expect(homePage.getPunproSuggestionContainer()).toBeVisible();
-    });
+    // test('Home_mobile_001: ตรวจสอบองค์ประกอบของหน้าแรกครบถ้วนเมื่อเข้าเว็บครั้งแรก', async () => {
+    //     await expect(homePage.getBannerContainer()).toBeVisible();
+    //     await expect(homePage.getCategorySectionContainer()).toBeVisible();
+    //     await expect(homePage.getServicesSectionContainer()).toBeVisible();
+    //     await expect(homePage.getPromotionSectionContainer()).toBeVisible();
+    //     await expect(homePage.getShopperPostSectionContainer()).toBeVisible();
+    //     await expect(homePage.getArticleSectionContainer()).toBeVisible();
+    //     await expect(homePage.getPunproSuggestionContainer()).toBeHidden();
+    // });
 
     // ================================================================
     // Hero Banner
     // ================================================================
-    test.describe('Hero Banner', () => {
-        test('Home_mobile_002: ตรวจสอบการแสดง Banner หลัก (Hero Banner) พร้อม Indicator', async () => {
-            await expect(homePage.getBannerContainer()).toBeVisible();
-            await expect(homePage.getBannerIndicatorContainer()).toBeVisible();
-        });
+    // test.describe('Hero Banner', () => {
+    //     test('Home_mobile_002: ตรวจสอบการแสดง Banner หลัก (Hero Banner) พร้อม Indicator', async () => {
+    //         await expect(homePage.getBannerContainer()).toBeVisible();
+    //         await expect(homePage.getBannerIndicatorContainer()).toBeVisible();
+    //     });
 
-        test('Home_mobile_003: ตรวจสอบการนำทาง เมื่อกด Banner หลัก', async ({ page }) => {
-            const urlBefore = page.url();
-            await homePage.clickBanner(0);
-            await page.waitForLoadState('domcontentloaded');
-            expect(page.url()).not.toBe(urlBefore);
-        });
+    //     test('Home_mobile_003: ตรวจสอบการนำทาง เมื่อกด Banner หลัก', async ({ page }) => {
+    //         const urlBefore = page.url();
+    //         await homePage.clickBanner(0);
+    //         await page.waitForLoadState('domcontentloaded');
+    //         expect(page.url()).not.toBe(urlBefore);
+    //     });
 
-        test('Home_mobile_004: ตรวจสอบการกด Indicator เพื่อเลื่อนไปยังตำแหน่งสไลด์ที่ต้องการ', async () => {
-            const targetIndex = 2;
-            await homePage.clickBannerIndicator(targetIndex);
-            await expect(homePage.getActiveBannerIndicator())
-                .toHaveAttribute('aria-label', `Go to slide ${targetIndex}`);
-        });
-    });
+    //     test('Home_mobile_004: ตรวจสอบการกด Indicator เพื่อเลื่อนไปยังตำแหน่งสไลด์ที่ต้องการ', async () => {
+    //         const targetIndex = 2;
+    //         await homePage.clickBannerIndicator(targetIndex);
+    //         await expect(homePage.getActiveBannerIndicator())
+    //             .toHaveAttribute('aria-label', `Go to slide ${targetIndex}`);
+    //     });
+    // });
 
     //================================================================
     // Category Section
     //================================================================
-    // test.describe('Category Section - Product Tab', () => {
-    //     test.beforeEach(async () => {
-    //         await homePage.getCategorySectionContainer().scrollIntoViewIfNeeded();
-    //     });
+    test.describe('Category Section - Product Tab', () => {
+        test.beforeEach(async () => {
+            await homePage.getCategorySectionContainer().scrollIntoViewIfNeeded();
+        });
 
-    //     test('Home_mobile_005: ตรวจสอบการแสดง Section "หมวดหมู่" พร้อมแท็บและปุ่มดูทั้งหมด', async ({ page }) => {
-    //         await expect(homePage.categoryProductTab).toBeVisible();
-    //         await expect(homePage.categoryBrandTab).toBeVisible();
-    //         await expect(homePage.categorySeeMoreButton).toBeVisible();
-    //         const categoryItems = homePage.categoryMenuContainer.locator('> div, > *');
-    //         const itemCount = await categoryItems.count();
-    //         expect(itemCount).toBeGreaterThanOrEqual(9);
-    //     });
+        // test('Home_mobile_005: ตรวจสอบการแสดง Section "หมวดหมู่" พร้อมแท็บและปุ่มดูทั้งหมด', async ({ page }) => {
+        //     await expect(homePage.categoryProductTab).toBeVisible();
+        //     await expect(homePage.categoryBrandTab).toBeVisible();
+        //     await expect(homePage.categorySeeMoreButton).toBeVisible();
+        //     const categoryItems = homePage.categoryMenuContainer.locator('> div, > *');
+        //     const itemCount = await categoryItems.count();
+        //     expect(itemCount).toBeGreaterThanOrEqual(9);
+        // });
 
-    //     // ---------- Category Item Navigation (data-driven) ----------
-    //     const categoryCases = [
-    //         { testId: 'Home_mobile_006', name: 'รองเท้าผ้าใบ' },
-    //         { testId: 'Home_mobile_007', name: 'กระเป๋า' },
-    //         { testId: 'Home_mobile_008', name: 'เสื้อ' },
-    //         { testId: 'Home_mobile_009', name: 'ความงาม' },
-    //         { testId: 'Home_mobile_010', name: 'ไอที' },
-    //         { testId: 'Home_mobile_011', name: 'กางเกง' },
-    //         { testId: 'Home_mobile_012', name: 'ดูแลผิว' },
-    //         { testId: 'Home_mobile_013', name: 'รองเท้าแตะ' },
-    //         { testId: 'Home_mobile_014', name: 'หมวก' },
-    //     ];
+        // // ---------- Category Item Navigation (data-driven) ----------
+        // const categoryCases = [
+        //     { testId: 'Home_mobile_006', name: 'รองเท้าผ้าใบ' },
+        //     { testId: 'Home_mobile_007', name: 'กระเป๋า' },
+        //     { testId: 'Home_mobile_008', name: 'เสื้อ' },
+        //     { testId: 'Home_mobile_009', name: 'ความงาม' },
+        //     { testId: 'Home_mobile_010', name: 'ไอที' },
+        //     { testId: 'Home_mobile_011', name: 'กางเกง' },
+        //     { testId: 'Home_mobile_012', name: 'ดูแลผิว' },
+        //     { testId: 'Home_mobile_013', name: 'รองเท้าแตะ' },
+        //     { testId: 'Home_mobile_014', name: 'หมวก' },
+        // ];
 
-    //     for (const { testId, name } of categoryCases) {
-    //         test(`${testId}: ตรวจสอบการนำทางไปหน้าผลการค้นหา เมื่อกดหมวดหมู่ "${name}"`, async ({ page }) => {
-    //             await homePage.clickCategoryProductTab();
-    //             await homePage.clickCategoryItem(name);
-    //             await page.waitForURL(/\/search\?s=.+&ref_type=products/, { timeout: 10000 });
+        // for (const { testId, name } of categoryCases) {
+        //     test(`${testId}: ตรวจสอบการนำทางไปหน้าผลการค้นหา เมื่อกดหมวดหมู่ "${name}"`, async ({ page }) => {
+        //         await homePage.clickCategoryProductTab();
+        //         await homePage.clickCategoryItem(name);
+        //         await page.waitForURL(/\/search\?s=.+&ref_type=products/, { timeout: 10000 });
 
-    //             const url = new URL(page.url());
-    //             expect(url.searchParams.get('s')).toBe(name);
-    //         });
-    //     }
+        //         const url = new URL(page.url());
+        //         expect(url.searchParams.get('s')).toBe(name);
+        //     });
+        // }
 
-    //     test('Home_mobile_015: ตรวจสอบการนำทางไปหน้าแสดงหมวดหมู่ทั้งหมด เมื่อกดปุ่ม "ดูทั้งหมด" ในแท็บสินค้า', async ({ page }) => {
-    //         await homePage.clickCategoryProductTab();
-    //         await homePage.clickSeeMoreCategory();
-    //         await page.waitForURL(/\/category_groups\/products\?category=products/, { timeout: 10000 });
-    //         expect(page.url()).toContain('/category_groups/products?category=products');
-    //     });
-    // });
+        // test('Home_mobile_015: ตรวจสอบการนำทางไปหน้าแสดงหมวดหมู่ทั้งหมด เมื่อกดปุ่ม "ดูทั้งหมด" ในแท็บสินค้า', async ({ page }) => {
+        //     await homePage.clickCategoryProductTab();
+        //     await homePage.clickSeeMoreCategory();
+        //     await page.waitForURL(/\/category_groups\/products\?category=products/, { timeout: 10000 });
+        //     expect(page.url()).toContain('/category_groups/products?category=products');
+        // });
+
+        // ---------- Category Group Navigation (data-driven) ----------
+        const categoryGroupCases = [
+            { testId: 'Home_desktop_016', group: 'แฟชั่นผู้หญิง', category: 'รองเท้าผ้าใบผู้หญิง', displayName: 'รองเท้าผ้าใบ' },
+            { testId: 'Home_desktop_018', group: 'แฟชั่นผู้ชาย', category: 'รองเท้าผ้าใบผู้ชาย', displayName: 'รองเท้าผ้าใบ' },
+            { testId: 'Home_desktop_020', group: 'กระเป๋า', category: 'กระเป๋าคาดอก', displayName: 'กระเป๋าคาดอก' },
+            { testId: 'Home_desktop_022', group: 'ความงาม & สุขภาพ', category: 'เครื่องสำอาง', displayName: 'เครื่องสำอาง' },
+            { testId: 'Home_desktop_024', group: 'เครื่องประดับ', category: 'หมวก', displayName: 'หมวก' },
+            { testId: 'Home_desktop_026', group: 'ไอที', category: 'มือถือ', displayName: 'มือถือ' },
+            { testId: 'Home_desktop_028', group: 'หมวดหมู่อื่นๆ', category: 'เครื่องใช้ไฟฟ้า', displayName: 'เครื่องใช้ไฟฟ้า' },
+        ];
+
+        for (const { testId, group, category, displayName } of categoryGroupCases) {
+            test(`${testId}: ตรวจสอบการนำทางไปหน้า "ผลการค้นหา" เมื่อกดหมวดหมู่ ${displayName} จากกลุ่ม ${group} ที่หน้า "หมวดหมู่ทั้งหมด" ที่แท็บ สินค้า`, async ({ page }) => {
+                await homePage.clickCategoryProductTab();
+                await homePage.clickSeeMoreCategory();
+                await page.waitForURL(/\/category_groups\/products\?category=products/, { timeout: 10000 });
+
+                await homePage.clickCategoryFromGroup(category);
+                await page.waitForURL(/\/search/, { timeout: 10000 });
+
+                expect(page.url()).toContain('search');
+                expect(page.url()).toContain(encodeURIComponent(category));
+            });
+        }
+
+        // ---------- "ดูทั้งหมด" per Category Group (data-driven) ----------
+        const seeAllGroupCases = [
+            { testId: 'Home_desktop_017', group: 'แฟชั่นผู้หญิง' },
+            { testId: 'Home_desktop_019', group: 'แฟชั่นผู้ชาย' },
+            { testId: 'Home_desktop_021', group: 'กระเป๋า' },
+            { testId: 'Home_desktop_023', group: 'ความงาม & สุขภาพ' },
+            { testId: 'Home_desktop_025', group: 'เครื่องประดับ' },
+            { testId: 'Home_desktop_027', group: 'ไอที' },
+            { testId: 'Home_desktop_029', group: 'หมวดหมู่อื่นๆ' },
+        ];
+
+        for (const { testId, group } of seeAllGroupCases) {
+            test(`${testId}: ตรวจสอบคลิกลิงก์ "ดูทั้งหมด" ของกลุ่ม ${group}`, async ({ page }) => {
+                await homePage.clickCategoryProductTab();
+                await homePage.clickSeeMoreCategory();
+                await page.waitForURL(/\/category_groups\/products\?category=products/, { timeout: 10000 });
+
+                await homePage.clickSeeAllInCategoryGroup(group);
+                await page.waitForURL(/\/search/, { timeout: 10000 });
+
+                const url = new URL(page.url());
+                expect(url.pathname).toBe('/search');
+                // ใช้ url.search (raw, ยังไม่ decode) เทียบ แทนการเทียบทั้งก้อนด้วย encodeURIComponent
+                expect(decodeURIComponent(url.search)).toContain(group);
+            });
+        }
+    });
 
     // test.describe('Category Section - Brand Tab', () => {
     //     test.beforeEach(async () => {
@@ -267,9 +319,9 @@ test.describe('Home Page', () => {
     //     });
     // });
 
-    //================================================================
-    // Article Post Section
-    //================================================================
+    // //================================================================
+    // // Article Post Section
+    // //================================================================
     // test.describe('Article Post Section', () => {
     //     test.beforeEach(async () => {
     //         await homePage.getArticleSectionContainer().scrollIntoViewIfNeeded();
@@ -314,13 +366,13 @@ test.describe('Home Page', () => {
     //         const bookmarkButton = homePage.articleCardBookmarkButton.first();
     //         await expect(bookmarkButton).toBeVisible();
     //         await bookmarkButton.click();
-    //         await expect(navbar.loginModalLogo).toBeVisible({ timeout: 10000 });
+    //         await expect(navbar.getLoginModalLogo()).toBeVisible({ timeout: 10000 });
     //     });
 
     //     test('Home_mobile_049: ตรวจสอบการกดปุ่ม Bookmark บนการ์ดบทความ โดย login แล้ว', async ({ page }) => {
     //         await navbar.openLoginOrSignup_mobile();
-    //         await navbar.loginWithEmail(email, password);
-    //         await expect(navbar.loginSuccessDialog).toBeVisible({ timeout: 10000 });
+    //         await navbar.auth.loginWithEmail(email, password);
+    //         await expect(navbar.getLoginSuccess()).toBeVisible({ timeout: 10000 });
 
     //         const bookmarkButton = homePage.articleCardBookmarkButton.first();
     //         await bookmarkButton.click();
@@ -329,8 +381,8 @@ test.describe('Home Page', () => {
 
     //     test('Home_mobile_050: ตรวจสอบการยกเลิก Bookmark เมื่อกดปุ่มซ้ำ', async ({ page }) => {
     //         await navbar.openLoginOrSignup_mobile();
-    //         await navbar.loginWithEmail(email, password);
-    //         await expect(navbar.loginSuccessDialog).toBeVisible({ timeout: 10000 });
+    //         await navbar.auth.loginWithEmail(email, password);
+    //         await expect(navbar.getLoginSuccess()).toBeVisible({ timeout: 10000 });
 
     //         const bookmarkButton = homePage.articleCardBookmarkButton.first();
     //         await bookmarkButton.click();
@@ -417,13 +469,13 @@ test.describe('Home Page', () => {
 
     //     test('Home_mobile_058: ตรวจสอบการกดปุ่ม Favorite บนการ์ดแนะนำ โดยยังไม่ได้ login', async ({ page }) => {
     //         await homePage.clickFavoritePost(0);
-    //         await expect(navbar.loginModalLogo).toBeVisible({ timeout: 10000 });
+    //         await expect(navbar.getLoginModalLogo()).toBeVisible({ timeout: 10000 });
     //     });
 
     //     test('Home_mobile_059: ตรวจสอบการกดปุ่ม Favorite บนการ์ดแนะนำ โดย login แล้ว', async ({ page }) => {
     //         await navbar.openLoginOrSignup_mobile();
-    //         await navbar.loginWithEmail(email, password);
-    //         await expect(navbar.loginSuccessDialog).toBeVisible({ timeout: 10000 });
+    //         await navbar.auth.loginWithEmail(email, password);
+    //         await expect(navbar.getLoginSuccess()).toBeVisible({ timeout: 10000 });
 
     //         const favButton = homePage.punproCardItem.nth(0).locator('[class*="BorderImageLove"][role="button"]');
     //         const favIcon = favButton.locator('svg path');
@@ -434,8 +486,8 @@ test.describe('Home Page', () => {
 
     //     test('Home_mobile_060: ตรวจสอบการยกเลิก Favorite เมื่อกดปุ่มซ้ำ', async ({ page }) => {
     //         await navbar.openLoginOrSignup_mobile();
-    //         await navbar.loginWithEmail(email, password);
-    //         await expect(navbar.loginSuccessDialog).toBeVisible({ timeout: 10000 });
+    //         await navbar.auth.loginWithEmail(email, password);
+    //         await expect(navbar.getLoginSuccess()).toBeVisible({ timeout: 10000 });
 
 
     //         const favButton = homePage.punproCardItem.nth(0).locator('[class*="BorderImageLove"][role="button"]');

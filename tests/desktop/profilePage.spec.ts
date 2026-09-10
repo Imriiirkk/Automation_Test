@@ -16,13 +16,13 @@ test.describe('Profile Page Tests', () => {
         await navbar.dismissAllOverlaysIfPresent();
 
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(email, password);
+        await navbar.auth.loginWithEmail(email, password);
         // หยุดการตรวจสอบชั่วคราวเนื่องจากปัญหาการแสดงผลของ loginSuccessDialog
-        await expect(navbar.loginSuccessDialog).toBeVisible({ timeout: 10000 });
+        await expect(navbar.getLoginSuccess()).toBeVisible({ timeout: 10000 });
         // await page.waitForTimeout(3000);
         // await page.reload(); // รีเฟรชหน้าเพื่อให้แน่ใจว่าเข้าสู่ระบบสำเร็จ
         // await page.waitForTimeout(3000);
-        await navbar.username.click();
+        await navbar.goToMenu_desktop(navbar.auth.username);
         await page.waitForURL(/\/bookmark/, { timeout: 10000 });
         expect(page.url()).toContain('/bookmark');
     });

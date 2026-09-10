@@ -16,9 +16,9 @@ test.describe('Profile Page Tests', () => {
         await navbar.dismissAllOverlaysIfPresent();
 
         await navbar.openLoginOrSignup_mobile();
-        await navbar.loginWithEmail(email, password);
+        await navbar.auth.loginWithEmail(email, password);
         // หยุดการตรวจสอบชั่วคราวเนื่องจากปัญหาการแสดงผลของ loginSuccessDialog
-        await expect(navbar.loginSuccessDialog).toBeVisible({ timeout: 10000 });
+        await expect(navbar.getLoginSuccess()).toBeVisible({ timeout: 10000 });
         // await page.waitForTimeout(3000);
         // await page.reload(); // รีเฟรชหน้าเพื่อให้แน่ใจว่าเข้าสู่ระบบสำเร็จ
         // await page.waitForTimeout(3000);
