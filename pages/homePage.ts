@@ -1,4 +1,4 @@
-import { Page, Locator, BrowserContext } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 
 /**
  * POM: Home Page
@@ -21,6 +21,13 @@ export class HomePage {
     public categoryProductTab: Locator;
     public categoryBrandTab: Locator;
     public categorySeeMoreButton: Locator;
+
+    // --------- Category Group Section ----------
+    private categoryGroupContainer(title: string) {
+        return this.page
+            .locator('[class*="BlockCategoryGroups__ComponentContainer"]')
+            .filter({ has: this.page.locator('[class*="TitleHead"]', { hasText: title }) });
+    }
 
     // ---------- Services Section ----------
     private servicesSectionContainer: Locator;
@@ -72,6 +79,9 @@ export class HomePage {
         this.categoryProductTab = this.categorySectionContainer.getByText('สินค้า', { exact: true });
         this.categoryBrandTab = this.categorySectionContainer.getByText('แบรนด์', { exact: true });
         this.categorySeeMoreButton = page.locator('.CategoryMenuComponent__ViewAllButton-sc-fd4b0526-4');
+
+        // ---------- Category Group Section ----------
+
 
         // ---------- Services Section ----------
         this.servicesSectionContainer = page.locator('.ServiceAllComponent__Box-sc-2e87d014-0');
@@ -288,6 +298,59 @@ export class HomePage {
 
     getPunproSuggestionContainer(): Locator {
         return this.punproSuggestionContainer;
+    }
+
+    // ================= Category Group Section Getters =================
+    getCategoryGroupTitle(title: string) {
+        return this.categoryGroupContainer(title).locator('[class*="TitleHead"]');
+    }
+
+    getSeeAllButton(title: string) {
+        return this.categoryGroupContainer(title).locator('[class*="ButtonNextAllOutline"]');
+    }
+
+    async clickSeeAll(title: string) {
+        await this.getSeeAllButton(title).click({ force: true }); // ถ้าโดน overlay intercept
+    }
+
+    getCategoryGroupContent(title: string) {
+        return this.categoryGroupContainer(title).locator('[class*="SectionContent"]');
+    }
+
+    async getAllCategoryGroupTitles(): Promise<string[]> {
+        return this.page.locator('[class*="TitleHead"]:visible').allTextContents();
+    }
+
+    async selectProductTab() {
+        await this.page.locator('[class*="TabItem"]:visible', { hasText: 'สินค้า' }).click();
+    }
+
+    getCategoryLink(categoryName: string) {
+        return this.page.locator(`#filter-category-groups-${categoryName}:visible`);
+    }
+
+    async clickCategory(categoryName: string) {
+        const link = this.getCategoryLink(categoryName);
+        await link.waitFor({ state: 'visible' });
+        await link.click();
+    }
+
+    async clickCategoryFromGroup(categoryId: string) {
+        await this.page.locator(`#filter-category-groups-${categoryId}`).click();
+    }
+
+    async clickSeeAllInCategoryGroup(groupTitle: string) {
+        const container = this.page
+            .locator('[class*="BlockCategoryGroups__ComponentContainer"]')
+            .filter({ has: this.page.locator('[class*="TitleHead"]', { hasText: groupTitle }) });
+
+        await container.locator('[class*="ButtonNextAllOutline"]', { hasText: 'ดูทั้งหมด' }).click();
+    }
+
+    async gotoAllCategoriesProductTab() {
+        await this.clickCategoryProductTab();
+        await this.clickSeeMoreCategory();
+        await this.page.waitForURL(/\/category_groups\/products\?category=products/, { timeout: 10000 });
     }
 
 }

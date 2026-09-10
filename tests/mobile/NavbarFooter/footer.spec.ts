@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { NavbarFooter } from '../../../pages/NavbarFooter';
-import { expectStoreNavigation } from '../../../helper/navigation-helpers';
+import { expectStoreNavigation, expectExternalNavigation } from '../../../helper/navigation-helpers';
 
 test.describe('Footer', () => {
     let footer: NavbarFooter;
@@ -59,5 +59,30 @@ test.describe('Footer', () => {
 
     test('Footer_mobile_009: ตรวจสอบการนำทางไปยัง "Google Play"', async ({ page, context }) => {
         await expectStoreNavigation(context, () => footer.playStoreLink.click(), 'play.google.com');
+    });
+
+    // ================================================================
+    // Social Media Links - Footer
+    // ================================================================
+    test.describe('Social Media Links - Footer', () => {
+        test('Social_mobile_001: ตรวจสอบการนำทางไปหน้า Facebook ของปันโปร', async ({ page, context }) => {
+            await footer.footerFacebookLink.scrollIntoViewIfNeeded();
+            await expectExternalNavigation(page, context, () => footer.footerFacebookLink.click(), ['facebook.com']);
+        });
+
+        test('Social_mobile_002: ตรวจสอบการนำทางไปหน้า Instagram ของปันโปร', async ({ page, context }) => {
+            await footer.footerInstagramLink.scrollIntoViewIfNeeded();
+            await expectExternalNavigation(page, context, () => footer.footerInstagramLink.click(), ['instagram.com']);
+        });
+
+        test('Social_mobile_003: ตรวจสอบการนำทางไปหน้า X ของปันโปร', async ({ page, context }) => {
+            await footer.footerXLink.scrollIntoViewIfNeeded();
+            await expectExternalNavigation(page, context, () => footer.footerXLink.click(), ['x.com']);
+        });
+
+        test('Social_mobile_004: ตรวจสอบการนำทางไปช่อง YouTube ของปันโปร', async ({ page, context }) => {
+            await footer.footerYoutubeLink.scrollIntoViewIfNeeded();
+            await expectExternalNavigation(page, context, () => footer.footerYoutubeLink.click(), ['youtube.com']);
+        });
     });
 });

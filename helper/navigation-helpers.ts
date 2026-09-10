@@ -9,12 +9,17 @@ export async function expectExternalNavigation(
     trigger: () => Promise<void>,
     expectedUrlParts: string[]
 ) {
-    const popupPromise = context.waitForEvent('page', { timeout: 15000 }).catch(() => null);
+    const popupPromise = context.waitForEvent('page', { timeout: 10000 }).catch(() => null);
     await trigger();
     const popup = await popupPromise;
 
     expect(popup).not.toBeNull();
-    await popup!.waitForLoadState('domcontentloaded');
+
+    // รอจนกว่า URL จะเปลี่ยนจาก about:blank ไปเป็น URL จริง
+    await popup!.waitForURL(
+        (url) => expectedUrlParts.every((part) => url.href.includes(part)),
+        { timeout: 10000 }
+    ).catch(() => { }); // ปล่อยให้ fail ที่ expect ด้านล่างเพื่อ error message ที่ชัดเจนกว่า
 
     const popupUrl = popup!.url();
     for (const part of expectedUrlParts) {
