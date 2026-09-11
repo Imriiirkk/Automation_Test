@@ -1,5 +1,5 @@
 /*
-POM: Promotion Page
+POM: Comment Section
 Owner: Film
 */
 
@@ -9,6 +9,7 @@ export class CommentSection {
     private page: Page;
 
     // ---------- Comment Section ----------
+    // เปลี่ยนใช้ locator ให้น้อยลง = มันชื่อคล้ายกัน จะได้ไม่ hard code
     public blockSentComment: Locator;
     public blockComment: Locator;
     public blockSentCommentReply: Locator;
@@ -35,7 +36,6 @@ export class CommentSection {
         this.hideComment = page.getByRole('button', { name: 'ซ่อน' }); //ปุ่ม ซ่อน เพื่อซ่อน คอมเมนต์ที่ตอบกลับทั้งหมด
         this.existingComment = page.locator('.CommentComponents__BlockComment-sc-34e5e5de-0'); // comment ที่มีอยู่ก่อนหน้าแล้ว
     }
-
 
     async sentComment(element: Locator) {
         const testComment = `test-${Date.now()}`;
