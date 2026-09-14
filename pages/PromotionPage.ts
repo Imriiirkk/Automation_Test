@@ -7,68 +7,82 @@ import { Page, Locator } from '@playwright/test';
 
 export class PromotionPage {
     private page: Page;
-    public promotion_heading: Locator;
+    public readonly promotion_heading: Locator;
 
     // ---------- Promotion Categories Tap ----------
     private filterButtons: Record<string, Locator>;
-    public blockMenuCategories: Locator;
+    public readonly blockMenuCategories: Locator;
 
     // ---------- Highlighted / Banner Elements ----------
-    public highlightedBanner: Locator;
-    public bannerPagination: Locator;
+    public readonly highlightedBanner: Locator;
+    public readonly bannerPagination: Locator;
 
     // ---------- Element Promotion Card ----------
-    public promotionCard: Locator;
-    public promotionCardEach: Locator;
-    public promotionCard_image: Locator;
-    public promotionCard_title: Locator;
-    public promotionLabel: Locator;
-    public descriptionCard: Locator;
-    public remainingTime: Locator;
-    public dateContent: Locator;
+    public readonly promotionCard: Locator;
+    public readonly promotionCardEach: Locator;
+    public readonly promotionCard_image: Locator;
+    public readonly promotionCard_title: Locator;
+    public readonly promotionLabel: Locator;
+    public readonly descriptionCard: Locator;
+    public readonly remainingTime: Locator;
+    public readonly dateContent: Locator;
 
-    public loveButton: Locator;
-    public loveButtonIcon: Locator;
+    public readonly loveButton: Locator;
+    public readonly loveButtonIcon: Locator;
 
     // ---------- element Promotion Detail ----------
-    public breadcrumb: Locator; // Breadcrumb__BreadcrumbBlock-sc-21bc5eed-0 jkrBen
-    public blockContent: Locator;
-    public heading_detail: Locator; // Text__H1-sc-30b53bf2-0 cwSmuc
-    public author_image: Locator;
-    public author_name: Locator;
-    public blockRemainingTime: Locator;
-    public blockDate: Locator;
-    public blockView: Locator;
-    public shareButton_top: Locator;
-    public shareButton_footer: Locator;
-    public bookMarkButton: Locator;
-    public coverImage: Locator;
-    public textContent: Locator;
-    public loveDetailButton_footer: Locator;
-    public loveDetailBtnIcon: Locator;
-    public blockauthor_footer: Locator;
-    public blockTag: Locator;
-    public tagItem: Locator;
-    public shareOnFacebook: Locator;
-    public shareOnLine: Locator;
-    public shareOnX: Locator;
-    public shareCopyLink: Locator;
-    public multiTagCard: Locator;
+    public readonly breadcrumb: Locator; // Breadcrumb__BreadcrumbBlock-sc-21bc5eed-0 jkrBen
+    public readonly blockContent: Locator;
+    public readonly heading_detail: Locator; // Text__H1-sc-30b53bf2-0 cwSmuc
+    public readonly author_image: Locator;
+    public readonly author_name: Locator;
+    public readonly blockRemainingTime: Locator;
+    public readonly blockDate: Locator;
+    public readonly blockView: Locator;
+    public readonly shareButton_top: Locator;
+    public readonly shareButton_footer: Locator;
+    public readonly bookMarkButton: Locator;
+    public readonly coverImage: Locator;
+    public readonly textContent: Locator;
+    public readonly loveDetailButton_footer: Locator;
+    public readonly loveDetailBtnIcon: Locator;
+    public readonly blockAuthor_footer: Locator;
+    public readonly blockTag: Locator;
+    public readonly tagItem: Locator;
+    public readonly shareOnFacebook: Locator;
+    public readonly shareOnLine: Locator;
+    public readonly shareOnX: Locator;
+    public readonly shareCopyLink: Locator;
+    public readonly multiTagCard: Locator;
 
     // ---------- Comment Section ----------
-    public blockSentComment: Locator;
-    public blockComment: Locator;
-    public blockSentCommentReply: Locator;
-    public textBoxSendComment: Locator;
-    public submitCommentButton: Locator;
-    public textBoxReplyComment: Locator;
-    public submitReplyCommentButton: Locator;
-    public replyComment: Locator;
-    public hideComment: Locator;
-    public existingComment: Locator;
+    public readonly blockSentComment: Locator;
+    public readonly blockComment: Locator;
+    public readonly blockSentCommentReply: Locator;
+    public readonly textBoxSendComment: Locator;
+    public readonly submitCommentButton: Locator;
+    public readonly textBoxReplyComment: Locator;
+    public readonly submitReplyCommentButton: Locator;
+    public readonly replyComment: Locator;
+    public readonly hideComment: Locator;
+    public readonly existingComment: Locator;
 
     // ---------- Load More Button ----------
     readonly loadMoreButton: Locator;
+
+    // ---------- Popular Promotion ----------
+    public readonly box_ProPopular: Locator;
+    public readonly card_ProPopular: Locator;
+    public readonly coverImg_CardProPopular: Locator;
+    public readonly title_CardProPopular: Locator;
+    public readonly logoBrand_CardProPopular: Locator;
+    // public readonly buttonAction_CardProPopular: Locator;
+    public readonly loveBtn_CardProPopular: Locator;
+    public readonly bookmarkBth_CardProPopular: Locator;
+    public readonly discAndDate_CardProPopular: Locator;
+    // public readonly dateContent_CardProPopular: Locator;
+    public readonly labelPro_CardProPopular: Locator;
+    public readonly shareBtn_CardProPopular: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -103,7 +117,7 @@ export class PromotionPage {
 
         this.loadMoreButton = page.getByRole('button', { name: 'ดูเพิ่มเติม' });
 
-        // ---------- element Promotion Detail ----------
+        // ---------- Element Promotion Detail ----------
         this.heading_detail = page.locator('.Text__H1-sc-30b53bf2-0');
         this.blockContent = page.locator('.BlockContent__RootContent-sc-766b4868-0.cAgpqz');
         this.breadcrumb = page.locator('.Breadcrumb__BreadcrumbBlock-sc-21bc5eed-0.jkrBen');
@@ -121,14 +135,14 @@ export class PromotionPage {
         this.textContent = page.locator('.RenderContentHTML__ContentStyle-sc-84005593-0'); //<div class="RenderContentHTML__ContentStyle-sc-84005593-0 gvlvXY py-2" id="details">
         this.loveDetailButton_footer = page.locator('.ButtonIconLoveDetail__Button-sc-10d0321c-0'); //
         this.loveDetailBtnIcon = this.loveDetailButton_footer.locator('svg path');
-        this.blockauthor_footer = page.locator('.BlockContent__BlockAuthor-sc-766b4868-13'); //BlockContent__BlockAuthor-sc-766b4868-13 jSYeWt
+        this.blockAuthor_footer = page.locator('.BlockContent__BlockAuthor-sc-766b4868-13'); //BlockContent__BlockAuthor-sc-766b4868-13 jSYeWt
         this.blockTag = page.locator('.BlockContent__BlockTags-sc-766b4868-15'); //BlockContent__BlockTags-sc-766b4868-15 bzDMPC //การ์ดแรกมี hidden //.first()
         this.tagItem = page.locator('.Tags__TagItem-sc-89fc6391-0'); //Tags__TagItem-sc-89fc6391-0 jUaUqx
         this.multiTagCard = page.locator('.ProMultiTag__ListPostCard-sc-21da27a2-0') //ProMultiTag__ListPostCard-sc-21da27a2-0 eofyIs
 
-        this.shareOnFacebook = page.getByRole('button', { name: 'Share on Facebook' }).first();
-        this.shareOnLine = page.getByRole('button', { name: 'Share on Line' }).first();
-        this.shareOnX = page.getByRole('button', { name: 'Share on X' }).first();
+        this.shareOnFacebook = page.getByRole('button', { name: 'Share on Facebook' }).first(); //page.locator('#suggest-for-you-default').getByRole('button', { name: 'Share on Facebook' });
+        this.shareOnLine = page.getByRole('button', { name: 'Share on Line' }).first(); //page.locator('#suggest-for-you-default').getByRole('button', { name: 'Share on Line' });
+        this.shareOnX = page.getByRole('button', { name: 'Share on X' }).first(); //page.locator('#suggest-for-you-default').getByRole('button', { name: 'Share on X' });
         this.shareCopyLink = page.getByRole('button', { name: 'share-copy-link' }).first();
 
         // ---------- Comment Section ----------
@@ -143,6 +157,20 @@ export class PromotionPage {
         this.replyComment = page.getByRole('button', { name: 'ตอบกลับ' }).first(); //ปุ่ม ตอบกลับ เพื่อดู คอมเมนต์ที่ตอบกลับทั้งหมด
         this.hideComment = page.getByRole('button', { name: 'ซ่อน' }); //ปุ่ม ซ่อน เพื่อซ่อน คอมเมนต์ที่ตอบกลับทั้งหมด
         this.existingComment = page.locator('.CommentComponents__BlockComment-sc-34e5e5de-0'); // comment ที่มีอยู่ก่อนหน้าแล้ว
+
+        // ---------- Element Popular Promotion ----------
+        this.box_ProPopular = page.locator('.BlockRelatePopular__BoxListPopular-sc-be13f440-4');
+        this.card_ProPopular = page.locator('.BlockRelatePopular__CardPopular-sc-be13f440-1');
+        this.coverImg_CardProPopular = page.locator('.CardPromotion__StyledLink-sc-50ef9525-2');
+        this.title_CardProPopular = page.locator('.CardPromotion__BlockTitle-sc-50f9525-3'); //CardPromotion__StyledLink-sc-50ef9525-2
+        this.logoBrand_CardProPopular = page.locator('.CardPromotion__BlockBrandLogo-sc-50f9525-6'); //CardPromotion__StyledLink-sc-50ef9525-2
+        // this.buttonAction_CardProPopular = page.locator('.');
+        this.shareBtn_CardProPopular = page.locator('..ButtonShare__ButtonWrapper-sc-686553f6-0'); //.CardPromotion__BlockShare-sc-50ef9525-13 style="visibility: hidden"
+        this.loveBtn_CardProPopular = page.locator('.ButtonIconOnly__Button-sc-9be909ce-0.gRKZuw.btn.action-love'); //
+        this.bookmarkBth_CardProPopular = page.locator('.ButtonIconOnly__Button-sc-9be909ce-0.gRKZuw.btn.action-bookmark'); //
+        this.discAndDate_CardProPopular = page.locator('.CardPromotion__Label-sc-50ef9525-10');
+        // this.dateContent_CardProPopular = page.locator('.');
+        this.labelPro_CardProPopular = page.locator('#suggest-for-you-default').getByText('โปรโมชัน', { exact: true });
     }
 
     // ==================== Page Actions ====================
@@ -254,6 +282,10 @@ export class PromotionPage {
         await this.textBoxReplyComment.click();
         await this.textBoxReplyComment.fill(testComment);
         await this.submitReplyCommentButton.click();
+    }
+
+    async clickPromotionPopular() {
+        await this.title_CardProPopular.first().click();
     }
 
 }

@@ -8,56 +8,56 @@ import { Page, Locator } from '@playwright/test';
 
 export class ShopperPostsPage {
     private page: Page;
-    public shopper_heading: Locator;
+    public readonly shopper_heading: Locator;
 
     // ---------- Shopper Highlight Banner ----------
-    public shopperHightlight: Locator;
-    public indicator: Locator;
-    public leftArrow: Locator;
-    public rightArrow: Locator;
+    public readonly shopperHightlight: Locator;
+    public readonly indicator: Locator;
+    public readonly leftArrow: Locator;
+    public readonly rightArrow: Locator;
 
     // ---------- Shopper Categories Tap ----------
-    private shopperFilterBtn: Record<string, Locator>;
-    public individual_item: Locator;
-    public event_items: Locator;
-    public selectCardDeopdown: Locator;
+    private readonly shopperFilterBtn: Record<string, Locator>;
+    public readonly individual_item: Locator;
+    public readonly event_items: Locator;
+    public readonly selectCardDeopdown: Locator;
 
     // ---------- Shopper Card Individual Item ----------
-    public itemShopperPostCard: Locator;
-    public itemShopperPostCardEach: Locator;
-    public imgCover_ItemCard: Locator;
-    public label_ItemCard: Locator;
-    public title_ItemCard: Locator;
-    public contentPrice_ItemCard: Locator;
-    public love_ItemCard: Locator;
-    public inStock_lable: Locator;
+    public readonly itemShopperPostCard: Locator;
+    public readonly itemShopperPostCardEach: Locator;
+    public readonly imgCover_ItemCard: Locator;
+    public readonly label_ItemCard: Locator;
+    public readonly title_ItemCard: Locator;
+    public readonly contentPrice_ItemCard: Locator;
+    public readonly love_ItemCard: Locator;
+    public readonly inStock_lable: Locator;
 
     // ---------- Shopper Card Event ----------
-    public shopperPostCard: Locator;
-    public shopperPostCardEach: Locator;
+    public readonly shopperPostCard: Locator;
+    public readonly shopperPostCardEach: Locator;
     // public imgCover_EventCard: Locator; //ใช้เหมือนกันกับ imgCover_ItemCard
     // public title_EventCard: Locator; //ใช้เหมือนกันกับ imgCover_ItemCard
-    public dateContent_EventCard: Locator;
-    public proLabel_EventCard: Locator;
+    public readonly dateContent_EventCard: Locator;
+    public readonly proLabel_EventCard: Locator;
 
     // ---------- Shopper Individual Item Detail ----------
-    public title_ItemDetail: Locator;
-    public coverImg_ItemDetail: Locator;
-    public price_ItemDetail: Locator;
+    public readonly title_ItemDetail: Locator;
+    public readonly coverImg_ItemDetail: Locator;
+    public readonly price_ItemDetail: Locator;
     // public percentDiscount: Locator; อาจจะไม่มี
-    public productType_ItemDetail: Locator;
-    public purchaseBtn_ItemDetail: Locator;
-    public loveBtn_ItemDetail: Locator;
-    public shareBtn_ItemDetail_: Locator;
-    public shareOnFacebook: Locator;
-    public shareOnLine: Locator;
-    public shareOnX: Locator;
-    public shareCopyLink: Locator;
-    public owner_shopper: Locator;
-    public descrition_ItemDetail: Locator;
+    public readonly productType_ItemDetail: Locator;
+    public readonly purchaseBtn_ItemDetail: Locator;
+    public readonly loveBtn_ItemDetail: Locator;
+    public readonly shareBtn_ItemDetail_: Locator;
+    public readonly shareOnFacebook: Locator;
+    public readonly shareOnLine: Locator;
+    public readonly shareOnX: Locator;
+    public readonly shareCopyLink: Locator;
+    public readonly owner_shopper: Locator;
+    public readonly descrition_ItemDetail: Locator;
     // public tag_ItemDetail: Locator;
-    public viewAll_ItemDetail: Locator;
-    public inStockLable_Detail: Locator;
+    public readonly viewAll_ItemDetail: Locator;
+    public readonly inStockLable_Detail: Locator;
 
     // ---------- การ์ดสินค้าที่อยู่ในอีเวนต์เดียวกัน ----------
     /*
@@ -71,14 +71,14 @@ export class ShopperPostsPage {
     */
 
     // ---------- Shopper Event Detail ----------
-    public title_EventDetail: Locator;
-    public coverImg_EventDetail: Locator;
-    public description_EventDetail: Locator;
-    public priceLabel_EventDetail: Locator;
-    public viewCount_EventDetail: Locator;
-    public dateStart_EventDetail: Locator;
-    public shareBtn_EventDetail: Locator;
-    public loveBtn_EventDetail: Locator;
+    public readonly title_EventDetail: Locator;
+    public readonly coverImg_EventDetail: Locator;
+    public readonly description_EventDetail: Locator;
+    public readonly priceLabel_EventDetail: Locator;
+    public readonly viewCount_EventDetail: Locator;
+    public readonly dateStart_EventDetail: Locator;
+    public readonly shareBtn_EventDetail: Locator;
+    public readonly loveBtn_EventDetail: Locator;
 
     // ---------- Shopper การ์ดสินค้าที่เข้าร่วมอีเวนต์นั้น ๆ ----------
     /*
@@ -181,9 +181,37 @@ export class ShopperPostsPage {
         */
     }
 
+
+    // ==================== Page Actions ====================
+
     async clickFilter_Event() {
         await this.selectCardDeopdown.click();
         await this.event_items.click();
+    }
+
+    async clickFilter_Individual() {
+        await this.selectCardDeopdown.click();
+        await this.individual_item.click();
+    }
+
+    async clickTab(filterName: string) {
+        const locator = this.shopperFilterBtn[filterName];
+        if (!locator) {
+            throw new Error(`ไม่พบ Tab ชื่อ "${filterName}"`);
+        }
+        await locator.click();
+    }
+
+    async clickItemCard_image() {
+        await this.imgCover_ItemCard.first().click();
+    }
+
+    async clickItemCard_title() {
+        await this.title_ItemCard.first().click();
+    }
+
+    async clickLoveItemCard() {
+        await this.love_ItemCard.first().click();
     }
 }
 

@@ -7,71 +7,71 @@ import { Page, Locator } from '@playwright/test';
 
 export class ArticlePage {
     private page: Page;
-    public article_heading: Locator;
+    public readonly article_heading: Locator;
 
     // ---------- Article Highlight Banner ----------
-    public articleHightlight: Locator;
-    public articleBannerEach: Locator;
-    public indicatorEach: Locator;
+    public readonly articleHightlight: Locator;
+    public readonly articleBannerEach: Locator;
+    public readonly indicatorEach: Locator;
 
     // ---------- Article Categories Tap ----------
     private articleFilterBtn: Record<string, Locator>;
-    public blockMenuCategories: Locator;
-    public inactiveTab: Locator;
-    public activeTab: Locator;
+    public readonly blockMenuCategories: Locator;
+    public readonly inactiveTab: Locator;
+    public readonly activeTab: Locator;
 
     // ---------- Article Card ----------
-    public articleCard: Locator;
-    public articleCardEach: Locator;
-    public imgCover_ArticleCard: Locator;
-    public label_ArticleCard: Locator;
-    public title_ArticleCard: Locator;
-    public description_ArticleCard: Locator;
-    public datePost_ArticleCard: Locator;
-    public profileAuthor_ArticleCard: Locator;
+    public readonly articleCard: Locator;
+    public readonly articleCardEach: Locator;
+    public readonly imgCover_ArticleCard: Locator;
+    public readonly label_ArticleCard: Locator;
+    public readonly title_ArticleCard: Locator;
+    public readonly description_ArticleCard: Locator;
+    public readonly datePost_ArticleCard: Locator;
+    public readonly profileAuthor_ArticleCard: Locator;
     // public nameAuthor_ArticleCard: Locator;
-    public bookmark_ArticleCard: Locator;
-    public bookmarkCardIcon: Locator;
+    public readonly bookmark_ArticleCard: Locator;
+    public readonly bookmarkCardIcon: Locator;
 
     // ---------- Article Detail ----------
-    public title_ArticleDetail: Locator;
-    public imgAuthor_ArticleDetail: Locator;
-    public authorName_ArticleDetail: Locator;
-    public postDate_ArticleDetail: Locator;
-    public viewCount_ArticleDetail: Locator;
-    public coverImg_ArticleDetail: Locator;
-    public textContent_ArticleDetail: Locator;
-    public shareDetail_btn: Locator;
-    public bookMarkDetail_btn: Locator;
-    public loveDetail_btn: Locator;
-    public shareOnFacebook: Locator;
-    public shareOnLine: Locator;
-    public shareOnX: Locator;
-    public shareCopyLink: Locator;
-    public tagItem: Locator;
-    public multiTagCard: Locator;
+    public readonly title_ArticleDetail: Locator;
+    public readonly imgAuthor_ArticleDetail: Locator;
+    public readonly authorName_ArticleDetail: Locator;
+    public readonly postDate_ArticleDetail: Locator;
+    public readonly viewCount_ArticleDetail: Locator;
+    public readonly coverImg_ArticleDetail: Locator;
+    public readonly textContent_ArticleDetail: Locator;
+    public readonly shareDetail_btn: Locator;
+    public readonly bookMarkDetail_btn: Locator;
+    public readonly loveDetail_btn: Locator;
+    public readonly shareOnFacebook: Locator;
+    public readonly shareOnLine: Locator;
+    public readonly shareOnX: Locator;
+    public readonly shareCopyLink: Locator;
+    public readonly tagItem: Locator;
+    public readonly multiTagCard: Locator;
 
-    public shareDetail_footer: Locator;
+    public readonly shareDetail_footer: Locator;
 
     readonly loadMoreButton: Locator;
 
     // ---------- Comment Section (Article Detail) ----------
-    public comment: Locator; //chong hai pim comment
-    public submitComment_Btn: Locator;
-    public replyComment_Btn: Locator; //pum "ตอบกลับ" wai doo reply comment tungmod 
-    public hiddenCommen_tBtn: Locator; //pum "ซ่อน" wai ซ่อน reply comment tungmod 
+    public readonly comment: Locator; //chong hai pim comment
+    public readonly submitComment_Btn: Locator;
+    public readonly replyComment_Btn: Locator; //pum "ตอบกลับ" wai doo reply comment tungmod 
+    public readonly hiddenCommen_tBtn: Locator; //pum "ซ่อน" wai ซ่อน reply comment tungmod 
 
     // ---------- Article Interest Section ----------
-    public relatedArticleBlock: Locator;
-    public img_RelatedArticle: Locator;
-    public title_RelatedArticle: Locator;
-    public author_RelatedArticle: Locator;
-    public publishDate_RelatedArticle: Locator;
-    public bookmarkBtn_RelatedArticle: Locator;
-    public bookmarkIcon_RelatedArticle: Locator;
-    public loveBtn_RelatedArticle: Locator;
-    public loveIcon_RelatedArticle: Locator;
-    public shareBtn_RelatedArticle: Locator;
+    public readonly relatedArticleBlock: Locator;
+    public readonly img_RelatedArticle: Locator;
+    public readonly title_RelatedArticle: Locator;
+    public readonly author_RelatedArticle: Locator;
+    public readonly publishDate_RelatedArticle: Locator;
+    public readonly bookmarkBtn_RelatedArticle: Locator;
+    public readonly bookmarkIcon_RelatedArticle: Locator;
+    public readonly loveBtn_RelatedArticle: Locator;
+    public readonly loveIcon_RelatedArticle: Locator;
+    public readonly shareBtn_RelatedArticle: Locator;
 
     constructor(page: Page) {
         this.page = page;
