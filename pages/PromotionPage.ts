@@ -78,7 +78,7 @@ export class PromotionPage {
     public readonly logoBrand_CardProPopular: Locator;
     // public readonly buttonAction_CardProPopular: Locator;
     public readonly loveBtn_CardProPopular: Locator;
-    public readonly bookmarkBth_CardProPopular: Locator;
+    public readonly bookmarkBtn_CardProPopular: Locator;
     public readonly discAndDate_CardProPopular: Locator;
     // public readonly dateContent_CardProPopular: Locator;
     public readonly labelPro_CardProPopular: Locator;
@@ -167,7 +167,7 @@ export class PromotionPage {
         // this.buttonAction_CardProPopular = page.locator('.');
         this.shareBtn_CardProPopular = page.locator('..ButtonShare__ButtonWrapper-sc-686553f6-0'); //.CardPromotion__BlockShare-sc-50ef9525-13 style="visibility: hidden"
         this.loveBtn_CardProPopular = page.locator('.ButtonIconOnly__Button-sc-9be909ce-0.gRKZuw.btn.action-love'); //
-        this.bookmarkBth_CardProPopular = page.locator('.ButtonIconOnly__Button-sc-9be909ce-0.gRKZuw.btn.action-bookmark'); //
+        this.bookmarkBtn_CardProPopular = page.locator('.ButtonIconOnly__Button-sc-9be909ce-0.gRKZuw.btn.action-bookmark'); //
         this.discAndDate_CardProPopular = page.locator('.CardPromotion__Label-sc-50ef9525-10');
         // this.dateContent_CardProPopular = page.locator('.');
         this.labelPro_CardProPopular = page.locator('#suggest-for-you-default').getByText('โปรโมชัน', { exact: true });
@@ -288,4 +288,20 @@ export class PromotionPage {
         await this.title_CardProPopular.first().click();
     }
 
+    async clickLove_PromotionPopular() {
+        await this.loveBtn_CardProPopular.first().click();
+    }
+
+    async clickBookmark_PromotionPopular() {
+        await this.bookmarkBtn_CardProPopular.first().click();
+    }
+
+    async clickBrand_PromotionPopular() {
+        await this.logoBrand_CardProPopular.first().click();
+    }
+
+    async clickShare_PromotionPopular() {
+        await this.coverImg_CardProPopular.hover();
+        await this.shareBtn_CardProPopular.click();
+    }
 }
