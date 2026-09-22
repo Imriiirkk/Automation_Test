@@ -140,10 +140,10 @@ export class PromotionPage {
         this.tagItem = page.locator('.Tags__TagItem-sc-89fc6391-0'); //Tags__TagItem-sc-89fc6391-0 jUaUqx
         this.multiTagCard = page.locator('.ProMultiTag__ListPostCard-sc-21da27a2-0') //ProMultiTag__ListPostCard-sc-21da27a2-0 eofyIs
 
-        this.shareOnFacebook = page.getByRole('button', { name: 'Share on Facebook' }).first(); //page.locator('#suggest-for-you-default').getByRole('button', { name: 'Share on Facebook' });
-        this.shareOnLine = page.getByRole('button', { name: 'Share on Line' }).first(); //page.locator('#suggest-for-you-default').getByRole('button', { name: 'Share on Line' });
-        this.shareOnX = page.getByRole('button', { name: 'Share on X' }).first(); //page.locator('#suggest-for-you-default').getByRole('button', { name: 'Share on X' });
-        this.shareCopyLink = page.getByRole('button', { name: 'share-copy-link' }).first();
+        this.shareOnFacebook = page.getByRole('button', { name: 'Share on Facebook' }); //page.locator('#suggest-for-you-default').getByRole('button', { name: 'Share on Facebook' });
+        this.shareOnLine = page.getByRole('button', { name: 'Share on Line' }); //page.locator('#suggest-for-you-default').getByRole('button', { name: 'Share on Line' });
+        this.shareOnX = page.getByRole('button', { name: 'Share on X' }); //page.locator('#suggest-for-you-default').getByRole('button', { name: 'Share on X' });
+        this.shareCopyLink = page.getByRole('button', { name: 'share-copy-link' });
 
         // ---------- Comment Section ----------
         this.blockSentComment = page.locator('.SendComment__BlockSendComment-sc-cbc590b3-0').first(); //BlockSendComment__BlockSendCommentLayout-sc-d6705f8b-0 ensIGq >> กล่องพิมพ์ส่ง Comment (อันบน)
@@ -228,30 +228,56 @@ export class PromotionPage {
         await this.shareButton_footer.click();
     }
 
-    async clickShareOnFacebook(page: Page): Promise<Page> {
+    // -------------- TOP --------------
+    async clickShareOnFacebook_top(page: Page): Promise<Page> {
         await this.clickShareTop_Button();
         const popupPromise = page.waitForEvent('popup');
-        await this.shareOnFacebook.click();
+        await this.shareOnFacebook.first().click();
         return await popupPromise;
     }
 
-    async clickShareOnLine(page: Page): Promise<Page> {
+    async clickShareOnLine_top(page: Page): Promise<Page> {
         await this.clickShareTop_Button();
         const popupPromise = page.waitForEvent('popup');
-        await this.shareOnLine.click();
+        await this.shareOnLine.first().click();
         return await popupPromise;
     }
 
-    async clickShareOnX(page: Page): Promise<Page> {
+    async clickShareOnX_top(page: Page): Promise<Page> {
         await this.clickShareTop_Button();
         const popupPromise = page.waitForEvent('popup');
-        await this.shareOnX.click();
+        await this.shareOnX.first().click();
         return await popupPromise;
     }
 
-    async clickShareCopyLink() {
-        await this.clickShareTop_Button();
-        await this.shareCopyLink.click();
+    async clickShareCopyLink_top() {
+        return await this.shareCopyLink.first().getAttribute('data-clipboard-text');
+    }
+
+    // -------------- FOOTER --------------
+    async clickShareOnFacebook_footer(page: Page): Promise<Page> {
+        await this.clickShareFooter_Button();
+        const popupPromise = page.waitForEvent('popup');
+        await this.shareOnFacebook.nth(1).click();
+        return await popupPromise;
+    }
+
+    async clickShareOnLine_footer(page: Page): Promise<Page> {
+        await this.clickShareFooter_Button();
+        const popupPromise = page.waitForEvent('popup');
+        await this.shareOnLine.nth(1).click();
+        return await popupPromise;
+    }
+
+    async clickShareOnX_footer(page: Page): Promise<Page> {
+        await this.clickShareFooter_Button();
+        const popupPromise = page.waitForEvent('popup');
+        await this.shareOnX.nth(1).click();
+        return await popupPromise;
+    }
+
+    async clickShareCopyLink_footer() {
+        return await this.shareCopyLink.nth(1).getAttribute('data-clipboard-text');
     }
 
     // Re-check .first()

@@ -13,6 +13,11 @@ export class ArticlePage {
     public readonly articleHightlight: Locator;
     public readonly articleBannerEach: Locator;
     public readonly indicatorEach: Locator;
+    public readonly imgCover_CardBanner: Locator;
+    public readonly title_CardBanner: Locator;
+    public readonly author_CardBanner: Locator;
+    public readonly datePublish_CardBanner: Locator;
+    public readonly bookmark_CardBanner: Locator;
 
     // ---------- Article Categories Tap ----------
     private articleFilterBtn: Record<string, Locator>;
@@ -35,8 +40,9 @@ export class ArticlePage {
 
     // ---------- Article Detail ----------
     public readonly title_ArticleDetail: Locator;
-    public readonly imgAuthor_ArticleDetail: Locator;
-    public readonly authorName_ArticleDetail: Locator;
+    public readonly blockAuthor_ArticleDetail: Locator;
+    public readonly authorNameLink_ArticleDetail: Locator;
+    public readonly author_heading: Locator;
     public readonly postDate_ArticleDetail: Locator;
     public readonly viewCount_ArticleDetail: Locator;
     public readonly coverImg_ArticleDetail: Locator;
@@ -52,6 +58,18 @@ export class ArticlePage {
     public readonly multiTagCard: Locator;
 
     public readonly shareDetail_footer: Locator;
+
+    // ---------- Share Menu — บน ----------
+    public readonly shareOnFacebook_top: Locator;
+    public readonly shareOnX_top: Locator;
+    public readonly shareOnLine_top: Locator;
+    public readonly shareCopyLink_top: Locator;
+
+    // ---------- Share Menu — ล่าง ----------
+    public readonly shareOnFacebook_footer: Locator;
+    public readonly shareOnX_footer: Locator;
+    public readonly shareOnLine_footer: Locator;
+    public readonly shareCopyLink_footer: Locator;
 
     readonly loadMoreButton: Locator;
 
@@ -79,9 +97,16 @@ export class ArticlePage {
 
         // ---------- Article Highlight Banner ----------
         this.articleHightlight = page.locator('.swiper'); //locator('.ArticalLageHorizontalCard__Card-sc-d1a5b486-0').first() และ 2) <div class="ArticalLageHorizontalCard__Card-sc-d1a5b486-0 weOVL">…</div> aka locator('div').filter({ hasText: /^Testerทดสอบสร้างบทความ1 ก\.ย\. 2569$/ }).nth(1)
-        this.articleBannerEach = page.locator('.swiper-slide') //aria-label = "1 / 2", data-swiper-slide-index = "0"
+        this.articleBannerEach = page.locator('.swiper-slide') //aria-label = "1 / 2", data-swiper-slide-index = "0" // .swiper-slide swiper-slide-active
+        // .swiper-slide swiper-slide-next swiper-slide-prev
         this.indicatorEach = page.getByRole('button', { name: /Go to slide/ });  //.client__CustomPagination-sc-e3e6a812-0
+        this.imgCover_CardBanner = page.getByRole('link', { name: 'link', exact: true }).nth(2); //.ComponentLink__StyledLink-sc-86eeea75-0.jPGtZW
+        this.title_CardBanner = page.locator('.ArticalLageHorizontalCard__Title-sc-d1a5b486-2.hRDRhS'); //น่าจะต้องใช้ locator('a').filter({ hasText: /^ทดสอบสร้างบทความ$/ })
+        this.author_CardBanner = page.locator('.ArticalLageHorizontalCard__Profile-sc-d1a5b486-6.hJHaPa'); //น่าจะใช้ locator('div').filter({ hasText: /^Tester$/ }).nth(1)
+        this.datePublish_CardBanner = page.locator('.ArticalLageHorizontalCard__PublishedDate-sc-d1a5b486-4.cJGgqw'); // getByText('ก.พ. 2569')
+        this.bookmark_CardBanner = page.locator('.swiper-slide.swiper-slide swiper-slide-active').getByTestId('bookmark-button');
 
+        // ---------- Tab Categories ----------
         this.articleFilterBtn = {
             pro_fashion: page.getByRole('button', { name: 'โปรสายแฟ' }),
             pro_eat: page.getByRole('button', { name: 'โปรกิน' }),
@@ -112,8 +137,9 @@ export class ArticlePage {
 
         // ---------- Article Detail ----------
         this.title_ArticleDetail = page.locator('.Text__H1-sc-30b53bf2-0');
-        this.imgAuthor_ArticleDetail = page.locator('.BlockContent__ImgAuthor-sc-766b4868-4');
-        this.authorName_ArticleDetail = page.locator('.BlockContent__AuthorName-sc-766b4868-5'); // link = BlockContent__StyledLink-sc-766b4868-7 >> aka getByRole('heading', { name: 'โดย : PJN Tester Punpromotion' })
+        this.blockAuthor_ArticleDetail = page.locator('.BlockContent__BlockAuthor-sc-766b4868-13'); //img = .BlockContent__ImgAuthor-sc-766b4868-4
+        this.authorNameLink_ArticleDetail = page.locator('.BlockContent__StyledLink-sc-766b4868-7'); // class = BlockContent__AuthorName-sc-766b4868-5.NEKaJ >> aka getByRole('heading', { name: 'โดย : ชื่อauthor' })
+        this.author_heading = page.getByRole('heading', { name: /^โดย :/ })
         this.postDate_ArticleDetail = page.locator('.DateTimeContent__BlockDate-sc-b3b7f32b-2'); // DateTimeContent__Span-sc-b3b7f32b-4
         this.viewCount_ArticleDetail = page.locator('.DateTimeContent__BlockView-sc-b3b7f32b-3'); // DateTimeContent__Span-sc-b3b7f32b-4
         this.coverImg_ArticleDetail = page.locator('.BlockContent__CoverPhotoPost-sc-766b4868-9');
@@ -121,14 +147,34 @@ export class ArticlePage {
         this.shareDetail_btn = page.locator('.BlockContent__ContentButtonShare-sc-766b4868-2').first(); //aka locator('.BlockContent__ContentButtonShare-sc-766b4868-2').first()
         this.bookMarkDetail_btn = page.locator('.ButtonIconBookMarkDetail__Button-sc-b157073f-0').first();
         this.loveDetail_btn = page.locator('.ButtonIconLoveDetail__Button-sc-10d0321c-0'); //.ButtonIconLoveDetail__Button-sc-10d0321c-0 > svg
-        this.shareOnFacebook = page.getByRole('button', { name: 'Share on Facebook' }).first();
-        this.shareOnLine = page.getByRole('button', { name: 'Share on Line' }).first();
-        this.shareOnX = page.getByRole('button', { name: 'Share on X' }).first();
-        this.shareCopyLink = page.getByRole('button', { name: 'share-copy-link' }).first();
+        this.shareOnFacebook = page.getByRole('button', { name: 'Share on Facebook' })
+        this.shareOnLine = page.getByRole('button', { name: 'Share on Line' })
+        this.shareOnX = page.getByRole('button', { name: 'Share on X' })
+        this.shareCopyLink = page.getByRole('button', { name: 'share-copy-link' })
         this.tagItem = page.locator('.TagItem__TagItem-sc-89fc6391-0');
         this.multiTagCard = page.locator('.BlockContent__BlockTags-sc-766b4868-15');
         this.shareDetail_footer = page.locator('.BlockContent__ShareFooterButton-sc-766b4868-11') //role="button" ถ้ากดไม่ได้ใช้ 12 นะเธอ 
         // ^ เวลาจะเรียกไอคอน fb ig line link = nth(1) ^
+
+        // ---------- Share Menu — บน ----------
+        this.shareOnFacebook_top = page.locator('.ShareDirectionRow__ShareBottomList-sc-30c129c6-2')
+            .getByRole('button', { name: 'Share on Facebook' });
+        this.shareOnX_top = page.locator('.ShareDirectionRow__ShareBottomList-sc-30c129c6-2')
+            .getByRole('button', { name: 'Share on X' });
+        this.shareOnLine_top = page.locator('.ShareDirectionRow__ShareBottomList-sc-30c129c6-2')
+            .getByRole('button', { name: 'Share on Line' });
+        this.shareCopyLink_top = page.locator('.ShareDirectionRow__ShareBottomList-sc-30c129c6-2')
+            .locator('.ShareDirectionRow__ShareCopyLinkButton-sc-30c129c6-6');
+
+        // ---------- Share Menu — ล่าง ----------
+        this.shareOnFacebook_footer = page.locator('.ShareDirectionRow__ShareList-sc-30c129c6-1')
+            .getByRole('button', { name: 'Share on Facebook' });
+        this.shareOnX_footer = page.locator('.ShareDirectionRow__ShareList-sc-30c129c6-1')
+            .getByRole('button', { name: 'Share on X' });
+        this.shareOnLine_footer = page.locator('.ShareDirectionRow__ShareList-sc-30c129c6-1')
+            .getByRole('button', { name: 'Share on Line' });
+        this.shareCopyLink_footer = page.locator('.ShareDirectionRow__ShareList-sc-30c129c6-1')
+            .locator('.ShareDirectionRow__ShareCopyLinkButton-sc-30c129c6-6');
 
         // ---------- Comment Section (Article Detail) ----------
         this.comment = page.getByRole('textbox', { name: 'เขียนความคิดเห็น' }); // ถ้าจะแสดงความคิดเห็นใช้ .first() ถ้าจะ reply ใช้ nth(1)
@@ -141,13 +187,12 @@ export class ArticlePage {
         this.img_RelatedArticle = page.locator('.CardArticleRelate__StyledLink-sc-4738072-3').first();
         this.title_RelatedArticle = page.locator('.CardArticleRelate__BlockTitle-sc-4738072-2').first();
         this.author_RelatedArticle = page.locator('.CardArticleRelate__SectionPlatform-sc-4738072-8').first();
-        this.publishDate_RelatedArticle = page.locator('.CardArticleRelate__PlatformLabel-sc-4738072-11').first();
+        this.publishDate_RelatedArticle = page.locator('.CardArticleRelate__PlatformLabel-sc-4738072-11');
         this.bookmarkBtn_RelatedArticle = page.locator('.ButtonIconBookMarkOnly__Button-sc-b618260f-0').first();
-        this.bookmarkIcon_RelatedArticle = this.bookmarkBtn_RelatedArticle.locator('svg path').first();
-        this.loveBtn_RelatedArticle = page.locator('.ButtonArticleDetailIcon__Button-sc-bee472b4-0').first();
+        this.bookmarkIcon_RelatedArticle = this.bookmarkBtn_RelatedArticle.locator('svg path');
+        this.loveBtn_RelatedArticle = page.locator('.ButtonArticleDetailIcon__Button-sc-bee472b4-0');
         this.loveIcon_RelatedArticle = this.loveBtn_RelatedArticle.locator('svg path');
-        this.shareBtn_RelatedArticle = page.locator('.CardArticleRelate__ShareButton-sc-4738072-15').first();
-
+        this.shareBtn_RelatedArticle = page.locator('#suggest-for-you-default').getByRole('button'); //page.locator('.CardArticleRelate__ShareButton-sc-4738072-15').first();
     }
 
     // ==================== Page Actions ====================
@@ -161,6 +206,10 @@ export class ArticlePage {
 
     async clickHighlightBanner() {
         await this.articleHightlight.first().click();
+    }
+
+    async clickBookMarkBanner() {
+        await this.bookmark_CardBanner.click();
     }
 
     async clickArticleCard_image() {
@@ -187,31 +236,109 @@ export class ArticlePage {
         await this.shareDetail_btn.click();
     }
 
-    async clickShareOnFacebook(page: Page): Promise<Page> {
-        await this.clickShareDetail_Button();
+    async clickShareDetail_Btnfooter() {
+        await this.shareDetail_footer.click();
+    }
+
+    // --------- TOP ---------
+    async clickShareOnFacebook_top(page: Page): Promise<Page> {
+        await this.shareDetail_btn.click();
+        const popupPromise = page.waitForEvent('popup');
+        await this.shareOnFacebook_top.click();
+        return await popupPromise;
+    }
+
+    async clickShareOnLine_top(page: Page): Promise<Page> {
+        await this.shareDetail_btn.click();
+        const popupPromise = page.waitForEvent('popup');
+        await this.shareOnLine_top.click();
+        return await popupPromise;
+    }
+
+    async clickShareOnX_top(page: Page): Promise<Page> {
+        await this.shareDetail_btn.click();
+        const popupPromise = page.waitForEvent('popup');
+        await this.shareOnX_top.click();
+        return await popupPromise;
+    }
+
+    async clickShareCopyLink_top() {
+        return await this.shareCopyLink_top.getAttribute('data-clipboard-text');
+    }
+
+    // --------- FOOTER ---------
+    async clickShareOnFacebook_footer(page: Page): Promise<Page> {
+        await this.shareDetail_footer.click();
+        const popupPromise = page.waitForEvent('popup');
+        await this.shareOnFacebook_footer.click();
+        return await popupPromise;
+    }
+
+    async clickShareOnLine_footer(page: Page): Promise<Page> {
+        await this.shareDetail_footer.click();
+        const popupPromise = page.waitForEvent('popup');
+        await this.shareOnLine_footer.click();
+        return await popupPromise;
+    }
+
+    async clickShareOnX_footer(page: Page): Promise<Page> {
+        await this.shareDetail_footer.click();
+        const popupPromise = page.waitForEvent('popup');
+        await this.shareOnX_footer.click();
+        return await popupPromise;
+    }
+
+    async clickShareCopyLink_footer() {
+        return await this.shareCopyLink_footer.getAttribute('data-clipboard-text');
+    }
+
+    // --------- Article Relate ---------
+    async clickShareOnFacebook_Relate(page: Page): Promise<Page> {
+        await this.shareBtn_RelatedArticle.click();
         const popupPromise = page.waitForEvent('popup');
         await this.shareOnFacebook.click();
         return await popupPromise;
     }
 
-    async clickShareOnLine(page: Page): Promise<Page> {
-        await this.clickShareDetail_Button();
+    async clickShareOnLine_Relate(page: Page): Promise<Page> {
+        await this.shareBtn_RelatedArticle.click();
         const popupPromise = page.waitForEvent('popup');
         await this.shareOnLine.click();
         return await popupPromise;
     }
 
-    async clickShareOnX(page: Page): Promise<Page> {
-        await this.clickShareDetail_Button();
+    async clickShareOnX_Relate(page: Page): Promise<Page> {
+        await this.shareBtn_RelatedArticle.click();
         const popupPromise = page.waitForEvent('popup');
         await this.shareOnX.click();
         return await popupPromise;
     }
 
-    async clickShareCopyLink() {
-        await this.clickShareDetail_Button();
-        await this.shareCopyLink.click();
+    async clickShareCopyLink_Relate() {
+        return await this.shareCopyLink.getAttribute('data-clipboard-text');
     }
+
+    // async clickShareOnFacebook(page: Page): Promise<Page> {
+    //     const popupPromise = page.waitForEvent('popup');
+    //     await this.shareOnFacebook.click();
+    //     return await popupPromise;
+    // }
+
+    // async clickShareOnLine(page: Page): Promise<Page> {
+    //     const popupPromise = page.waitForEvent('popup');
+    //     await this.shareOnLine.click();
+    //     return await popupPromise;
+    // }
+
+    // async clickShareOnX(page: Page): Promise<Page> {
+    //     const popupPromise = page.waitForEvent('popup');
+    //     await this.shareOnX.click();
+    //     return await popupPromise;
+    // }
+
+    // async clickShareCopyLink() {
+    //     await this.shareCopyLink.click();
+    // }
 
     async clickBookmarkDetail() {
         await this.bookMarkDetail_btn.click();
