@@ -310,28 +310,30 @@ export class ArticlePage {
 
     // --------- Article Relate ---------
     async clickShareOnFacebook_Relate(page: Page): Promise<Page> {
-        await this.shareBtn_RelatedArticle.click();
+        await this.clickShareBtnRelatedArticlie();
         const popupPromise = page.waitForEvent('popup');
         await this.shareOnFacebook.click();
         return await popupPromise;
     }
 
     async clickShareOnLine_Relate(page: Page): Promise<Page> {
-        await this.shareBtn_RelatedArticle.click();
+        await this.clickShareBtnRelatedArticlie();
         const popupPromise = page.waitForEvent('popup');
         await this.shareOnLine.click();
         return await popupPromise;
     }
 
     async clickShareOnX_Relate(page: Page): Promise<Page> {
-        await this.shareBtn_RelatedArticle.click();
+        await this.clickShareBtnRelatedArticlie();
         const popupPromise = page.waitForEvent('popup');
         await this.shareOnX.click();
         return await popupPromise;
     }
 
-    async clickShareCopyLink_Relate() {
-        return await this.shareCopyLink.getAttribute('data-clipboard-text');
+    async clickShareCopyLink_Relate(page: Page): Promise<string> {
+        await this.clickShareBtnRelatedArticlie();
+        await this.shareCopyLink.click(); // คลิกจริง trigger การ copy
+        return await page.evaluate(() => navigator.clipboard.readText());
     }
 
     // async clickShareOnFacebook(page: Page): Promise<Page> {
@@ -381,7 +383,7 @@ export class ArticlePage {
     }
 
     async clickAuthorLink() {
-        await this.authorNameLink_ArticleDetail.click();
+        await this.authorNameLink_ArticleDetail.first().click();
     }
 
 

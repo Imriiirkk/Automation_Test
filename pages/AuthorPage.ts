@@ -20,12 +20,13 @@ export class AuthorPage {
     // ---------- Multi-Author List Post Card ----------
     public readonly listPost_Card: Locator;
     public readonly each_PostCard: Locator;
-    public readonly article_PostCard: Locator;
-    public readonly promotion_PostCard: Locator;
+    public readonly articleCard: Locator;
+    public readonly promotionCard: Locator;
 
     // ---------- Element's Article Card ----------
+    public readonly articleLink: Locator;
     public readonly coverImg_ArticleCard: Locator;
-    public readonly lable_ArticleCard: Locator;
+    public readonly type_ArticleCard: Locator;
     public readonly title_ArticleCard: Locator;
     public readonly description_ArticleCard: Locator;
     // ---------- Button Action in/on Card ----------
@@ -34,8 +35,9 @@ export class AuthorPage {
     public readonly shareArticle_Btn: Locator;
 
     // ---------- Element's Promotion Card ----------
+    public readonly promotionLink: Locator;
     public readonly coverImg_PromotionCard: Locator;
-    public readonly lable_PromotionCard: Locator;
+    public readonly badge_PromotionCard: Locator;
     public readonly title_PromotionCard: Locator;
     public readonly pro_PromotionCard: Locator;
     public readonly dateSale_PromotionCard: Locator;
@@ -57,35 +59,37 @@ export class AuthorPage {
         this.author_title = this.headLayout.locator('[class*="HeadLayout__TitlePunpro"]');
 
         // ---------- Breadcrumb ----------
-        this.homeBreadcrumb = page.getByRole('link', { name: 'หน้าแรก' });
+        this.homeBreadcrumb = page.getByRole('link', { name: 'หน้าแรก', exact: true })
         this.authorBreadcrumb = page.getByText(/^นักเขียน/, { exact: true });
 
         // ---------- Multi-Author List Post Card ----------
-        this.listPost_Card = page.locator('[class*="ProMultiAuthor__ListPostCard"]');
+        this.listPost_Card = page.locator('[class*=""]'); //ProMultiAuthor__ListPostCard
         this.each_PostCard = page.locator('[class*="ProMultiAuthor__BlockArticle"]');
-        this.article_PostCard = page.locator('[class*="CardArticle__CardComponent"]');
-        this.promotion_PostCard = page.locator('[class*="CardPromotion__CardComponent"]');
+        this.articleCard = page.locator('[class*="CardArticle__CardComponent"]').first();
+        this.promotionCard = page.locator('[class*="CardPromotion__CardComponent"]').first();
 
         // ---------- Element's Article Card ----------
-        this.coverImg_ArticleCard = page.locator('');
-        this.lable_ArticleCard = page.locator('');
-        this.title_ArticleCard = page.locator('');
-        this.description_ArticleCard = page.locator('');
+        this.articleLink = this.articleCard.locator('a[href^="/p/"]'); // .first()
+        this.coverImg_ArticleCard = this.articleCard.locator('a[href^="/p/"]').first().locator('div').first();
+        this.type_ArticleCard = this.articleCard.getByText('บทความ', { exact: true });
+        this.title_ArticleCard = this.articleCard.getByRole('heading');
+        this.description_ArticleCard = this.articleCard.locator('[class*="CardArticle__Description"]');
         // ---------- Button Action Card ----------
-        this.loveArticle_Btn = page.locator('');
-        this.bookmarkArticle_Btn = page.locator('');
-        this.shareArticle_Btn = page.locator('');
+        this.loveArticle_Btn = this.articleCard.locator('.action-love');
+        this.bookmarkArticle_Btn = this.articleCard.locator('.action-bookmark');
+        this.shareArticle_Btn = this.articleCard.locator('[class*="ButtonShare__ButtonWrapper"]');
 
         // ---------- Element's Promotion Card ----------
-        this.coverImg_PromotionCard = page.locator('');
-        this.lable_PromotionCard = page.locator('');
-        this.title_PromotionCard = page.locator('');
-        this.pro_PromotionCard = page.locator('');
-        this.dateSale_PromotionCard = page.locator('');
+        this.promotionLink = this.promotionCard.locator('a[href^="/p/"]').first();
+        this.coverImg_PromotionCard = this.promotionCard.locator('a[href^="/p/"]').first().locator('div').first();
+        this.badge_PromotionCard = this.promotionCard.getByText('โปรโมชัน', { exact: true });
+        this.title_PromotionCard = this.promotionCard.getByRole('heading');
+        this.pro_PromotionCard = this.promotionCard.locator('[class*="CardPromotion__Label"]');
+        this.dateSale_PromotionCard = this.pro_PromotionCard.filter({ hasText: /ม\.ค\.|ก\.พ\.|มี\.ค\.|เม\.ย\.|พ\.ค\.|มิ\.ย\.|ก\.ค\.|ส\.ค\.|ก\.ย\.|ต\.ค\.|พ\.ย\.|ธ\.ค\./ }).last();
         // ---------- Button Action Card ----------
-        this.lovePromotion_Btn = page.locator('');
-        this.bookmarkPromotion_Btn = page.locator('');
-        this.sharePromotion_Btn = page.locator('');
+        this.lovePromotion_Btn = this.promotionCard.locator('.action-love');
+        this.bookmarkPromotion_Btn = this.promotionCard.locator('.action-bookmark');
+        this.sharePromotion_Btn = page.locator('[class*="CardPromotion__BlockShare"]'); //[class*="ButtonShare__ButtonWrapper"]
 
         // ---------- Icon Share in/on ... ----------
         this.shareOnFacebook_Btn = page.getByRole('button', { name: 'Share on Facebook' });

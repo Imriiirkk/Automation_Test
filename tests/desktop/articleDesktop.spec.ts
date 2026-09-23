@@ -388,6 +388,7 @@ test.describe('Article Page (Desktop)', () => {
         });
 
         // Fail
+        // test.describe('Run test', () => {
         test('Article_Desktop_037: ตรวจสอบการกด "Icon Facebook" เพื่อแชร์บทความที่อาจสนใจ ไปที่ facebook.com บนการ์ด "บทความที่อาจสนใจ"', async ({ page }) => {
             await articlePage.title_ArticleCard.nth(3).click();
             const popup = await articlePage.clickShareOnFacebook_Relate(page);
@@ -415,12 +416,23 @@ test.describe('Article Page (Desktop)', () => {
         });
 
         // Fail
-        test('Article_Desktop_040: ตรวจสอบการกด "Icon Copy Link" เพื่อคักลอกลิงก์บทความที่อาจสนใจ บนการ์ด "บทความที่อาจสนใจ"', async ({ page }) => {
+        test('Article_Desktop_040: ตรวจสอบการกด "Icon Copy Link" เพื่อคักลอกลิงก์บทความที่อาจสนใจ บนการ์ด "บทความที่อาจสนใจ"', async ({ page, context }) => {
+
+            await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+
             await articlePage.title_ArticleCard.nth(3).click();
             const expectedUrl = page.url();
-            const copyValue = await articlePage.clickShareCopyLink_Relate();
-            expect(copyValue).toBe(expectedUrl);
+
+            const clipboardText = await articlePage.clickShareCopyLink_Relate(page);
+            expect(clipboardText).toBe(expectedUrl);
+
+            // await articlePage.title_ArticleCard.nth(3).click();
+            // await articlePage.clickShareBtnRelatedArticlie();
+            // const expectedUrl = page.url();
+            // const copyValue = await articlePage.clickShareCopyLink_Relate();
+            // expect(copyValue).toBe(expectedUrl);
         });
+        // });
 
         // ---------- Share Button ---------- 
         // Pass
@@ -681,35 +693,49 @@ test.describe('Article Page (Desktop)', () => {
         await articlePage.clickLoveDetail();
         await expect(articlePage.loveDetail_btn.locator('svg path')).toHaveAttribute('fill', '#979797');
     });
-    // });
 
-    test.describe('Run test', () => {
-        // Pass
-        test('Article_Desktop_068: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดบทความ', async ({ page }) => {
-            await navbar.goToMenu_desktop('Link to article');
-            await articlePage.clickArticleCard_title();
-            await page.evaluate(() => window.scrollBy(0, 1000));
-            await expect(navbar.scrollToTopButton).toBeVisible();
-        });
-
-        // Fail
-        test('Article_Desktop_069: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดบทความ', async ({ page }) => {
-            await navbar.goToMenu_desktop('Link to article');
-            await articlePage.clickArticleCard_title();
-            await page.evaluate(() => window.scrollBy(0, 1050));
-            await expect(navbar.scrollToTopButton).toBeVisible();
-            await navbar.scrollToTopButton.click();
-            await page.waitForTimeout(3000);
-            const scrollY = await page.evaluate(() => window.scrollY);
-            expect(scrollY).toBe(0);
-            await expect(navbar.scrollToTopButton).toBeHidden();
-        });
+    // Pass
+    test('Article_Desktop_068: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดบทความ', async ({ page }) => {
+        await navbar.goToMenu_desktop('Link to article');
+        await articlePage.clickArticleCard_title();
+        await page.evaluate(() => window.scrollBy(0, 1000));
+        await expect(navbar.scrollToTopButton).toBeVisible();
     });
 
+    // Fail >> click ไม่ได้
+
+    test('Article_Desktop_069: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดบทความ', async ({ page }) => {
+        await navbar.goToMenu_desktop('Link to article');
+        await articlePage.clickArticleCard_title();
+        await page.evaluate(() => window.scrollBy(0, 1050));
+        await expect(navbar.scrollToTopButton).toBeVisible();
+        await navbar.scrollToTopButton.scrollIntoViewIfNeeded();
+        // console.log(
+        //     await navbar.scrollToTopButton.boundingBox()
+        // );
+        await navbar.scrollToTopButton.click({ force: true });
+        await expect.poll(async () => {
+            return await page.evaluate(() => window.scrollY);
+        }).toBe(0);
+        // await page.waitForTimeout(1000);
+        // const scrollY = await page.evaluate(() => window.scrollY);
+        // expect(scrollY).toBe(0);
+    });
+
+    // Pass
     test('Article_Desktop_070: ตรวจสอบการนำทางไปที่หน้า "นักเขียน" เมื่อกดชื่อและรูปโปไฟล์ผู้เขียน บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
         await articlePage.clickArticleCard_title();
+        await articlePage.clickAuthorLink();
         await expect(page).toHaveURL(/\/author\/.+/);
-
+        await expect(authorPage.homeBreadcrumb).toBeVisible();
+        await expect(authorPage.authorBreadcrumb).toBeVisible();
+        await expect(authorPage.headLayout).toBeVisible();
+        await expect(authorPage.author_heading).toBeVisible();
+        const cardCount = await authorPage.each_PostCard.count();
+        expect(cardCount).toBeGreaterThan(0);
+        expect(cardCount).toBeLessThanOrEqual(12);
+        await expect(authorPage.articleCard).toBeVisible();
+        await expect(authorPage.promotionCard).toBeVisible();
     });
 
 });

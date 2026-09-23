@@ -45,7 +45,7 @@ test.describe('Promotion Page (Desktop)', () => {
         await expect(promotionPage.highlightedBanner).toBeVisible();
     });
 
-    // Not complete
+    // Not complete 
     test('Promotion_Desktop_004: ตรวจสอบการเลื่อน Banner เมื่อกดปุ่ม Indicator', async ({ page }) => {
         await navbar.goToMenu_desktop('Link to promotion');
         await expect(promotionPage.bannerPagination).toBeVisible();
