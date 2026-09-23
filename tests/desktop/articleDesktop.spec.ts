@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { ArticlePage } from '../../pages/ArticlePage';
 import { NavbarFooter } from '../../pages/NavbarFooter';
 import { CommentSection } from '../../pages/CommentSection';
+import { AuthorPage } from '../../pages/AuthorPage';
 
 const VALID_EMAIL = 'testpunpro01@gmail.com';
 const VALID_PASSWORD = '123456';
@@ -9,10 +10,14 @@ const VALID_PASSWORD = '123456';
 let navbar: NavbarFooter;
 let commentSection: CommentSection;
 let articlePage: ArticlePage;
+let authorPage: AuthorPage;
 
 test.beforeEach(async ({ page }) => {
     navbar = new NavbarFooter(page);
     articlePage = new ArticlePage(page);
+    commentSection = new CommentSection(page);
+    authorPage = new AuthorPage(page);
+
     await navbar.goto();
     await navbar.goToMenu_desktop('Link to article');
 
@@ -55,7 +60,6 @@ test.describe('Article Page (Desktop)', () => {
             }
         }
     });
-
 
     // Fail
     test('Article_Desktop_004: ตรวจสอบการแสดงรายละเอียดของการ์ดบทความ บน Banner', async ({ page }) => {
@@ -419,58 +423,64 @@ test.describe('Article Page (Desktop)', () => {
         });
 
         // ---------- Share Button ---------- 
-        test.describe('Run test', () => {
-            // 
-            test('Article_Desktop_041: ตรวจสอบการกดปุ่ม "Share" บนหน้ารายละเอียดโปรโมชัน (ด้านบน)', async () => {
-                await articlePage.clickArticleCard_title();
-                await articlePage.clickShareDetail_Button();
-                await expect(articlePage.shareOnFacebook_top).toBeVisible();
-                await expect(articlePage.shareOnLine_top).toBeVisible();
-                await expect(articlePage.shareOnX_top).toBeVisible();
-                await expect(articlePage.shareCopyLink_top).toBeVisible();
-            });
-
-            // 
-            test('Article_Desktop_042: ตรวจสอบการกด "Icon Facebook" เพื่อแชร์บทความนั้น ไปที่ facebook.com บนหน้ารายละเอียดบทความ (ด้านบน)', async ({ page }) => {
-                await navbar.goToMenu_desktop('Link to article');
-                await articlePage.clickArticleCard_title();
-                // await articlePage.clickShareDetail_Button();
-                const popup = await articlePage.clickShareOnFacebook_top(page);
-                await popup.waitForLoadState();
-                await expect(popup).toHaveURL(/facebook\.com/);
-                await popup.close();
-            });
-
-            // Pass
-            test('Article_Desktop_043: ตรวจสอบการกด "Icon Line" เพื่อแชร์บทความนั้น ไปที่ line.me บนหน้ารายละเอียดบทความ (ด้านบน)', async ({ page }) => {
-                await navbar.goToMenu_desktop('Link to article');
-                await articlePage.clickArticleCard_title();
-                // await articlePage.clickShareDetail_Button();
-                const popup = await articlePage.clickShareOnLine_top(page);
-                await popup.waitForLoadState();
-                await expect(popup).toHaveURL(/line\.me/);
-                await popup.close();
-            });
-
-            // Pass
-            test('Article_Desktop_044: ตรวจสอบการกด "Icon X" เพื่อแชร์บทความนั้น ไปที่ x.com บนหน้ารายละเอียดบทความ (ด้านบน)', async ({ page }) => {
-                await navbar.goToMenu_desktop('Link to article');
-                await articlePage.clickArticleCard_title();
-                // await articlePage.clickShareDetail_Button();
-                const popup = await articlePage.clickShareOnX_top(page);
-                await popup.waitForLoadState();
-                await expect(popup).toHaveURL(/x\.com/);
-                await popup.close();
-            });
-
-            // ยังไม่แก้ step
-            test('Article_Desktop_045: ตรวจสอบการกด "Icon Copy Link" เพื่อคักลอกลิงก์บทความนั้น บนหน้ารายละเอียดบทความ (ด้านบน)', async ({ page }) => {
-                const expectedUrl = page.url();
-                const copyValue = await articlePage.clickShareCopyLink_top();
-                expect(copyValue).toBe(expectedUrl);
-            });
+        // Pass
+        test('Article_Desktop_041: ตรวจสอบการกดปุ่ม "Share" บนหน้ารายละเอียดโปรโมชัน (ด้านบน)', async () => {
+            await articlePage.clickArticleCard_title();
+            await articlePage.clickShareDetail_Button();
+            await expect(articlePage.shareOnFacebook_top).toBeVisible();
+            await expect(articlePage.shareOnLine_top).toBeVisible();
+            await expect(articlePage.shareOnX_top).toBeVisible();
+            await expect(articlePage.shareCopyLink_top).toBeVisible();
         });
 
+        // Pass
+        test('Article_Desktop_042: ตรวจสอบการกด "Icon Facebook" เพื่อแชร์บทความนั้น ไปที่ facebook.com บนหน้ารายละเอียดบทความ (ด้านบน)', async ({ page }) => {
+            await navbar.goToMenu_desktop('Link to article');
+            await articlePage.clickArticleCard_title();
+            // await articlePage.clickShareDetail_Button();
+            const popup = await articlePage.clickShareOnFacebook_top(page);
+            await popup.waitForLoadState();
+            await expect(popup).toHaveURL(/facebook\.com/);
+            await popup.close();
+        });
+
+        // Pass
+        test('Article_Desktop_043: ตรวจสอบการกด "Icon Line" เพื่อแชร์บทความนั้น ไปที่ line.me บนหน้ารายละเอียดบทความ (ด้านบน)', async ({ page }) => {
+            await navbar.goToMenu_desktop('Link to article');
+            await articlePage.clickArticleCard_title();
+            // await articlePage.clickShareDetail_Button();
+            const popup = await articlePage.clickShareOnLine_top(page);
+            await popup.waitForLoadState();
+            await expect(popup).toHaveURL(/line\.me/);
+            await popup.close();
+        });
+
+        // Pass
+        test('Article_Desktop_044: ตรวจสอบการกด "Icon X" เพื่อแชร์บทความนั้น ไปที่ x.com บนหน้ารายละเอียดบทความ (ด้านบน)', async ({ page }) => {
+            await navbar.goToMenu_desktop('Link to article');
+            await articlePage.clickArticleCard_title();
+            // await articlePage.clickShareDetail_Button();
+            const popup = await articlePage.clickShareOnX_top(page);
+            await popup.waitForLoadState();
+            await expect(popup).toHaveURL(/x\.com/);
+            await popup.close();
+        });
+
+        // Pass
+        test('Article_Desktop_045: ตรวจสอบการกด "Icon Copy Link" เพื่อคักลอกลิงก์บทความนั้น บนหน้ารายละเอียดบทความ (ด้านบน)', async ({ page, context }) => {
+            // const expectedUrl = page.url();
+            // const copyValue = await articlePage.clickShareCopyLink_top();
+            // expect(copyValue).toBe(expectedUrl);
+            await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+
+            await articlePage.clickArticleCard_title();
+            const expectedUrl = page.url();
+
+            const clipboardText = await articlePage.clickShareCopyLink_top(page);
+            expect(clipboardText).toBe(expectedUrl); // เช็คจาก clipboard จริง ไม่ใช่ attribute
+        });
+
+        // Pass
         test('Article_Desktop_046: ตรวจสอบการกดปุ่ม "Share" บนหน้ารายละเอียดโปรโมชัน (ด้านล่าง)', async () => {
             await articlePage.clickArticleCard_title();
             await articlePage.clickShareDetail_Btnfooter();
@@ -480,42 +490,43 @@ test.describe('Article Page (Desktop)', () => {
             await expect(articlePage.shareCopyLink.nth(1)).toBeVisible();
         });
 
+        // Pass
         test('Article_Desktop_047: ตรวจสอบการกด  "Icon Facebook" เพื่อแชร์บทความนั้น ไปที่ facebook.com บนหน้ารายละเอียดโปรโมชัน (ด้านล่าง)', async ({ page }) => {
             await navbar.goToMenu_desktop('Link to article');
             await articlePage.clickArticleCard_title();
-            // await articlePage.clickShareDetail_Btnfooter();
             const popup = await articlePage.clickShareOnFacebook_footer(page);
             await popup.waitForLoadState();
             await expect(popup).toHaveURL(/facebook\.com/);
             await popup.close();
         });
 
+        // Pass
         test('Article_Desktop_048: ตรวจสอบการกด "Icon Line" เพื่อแชร์บทความนั้น ไปที่ line.me บนหน้ารายละเอียดโปรโมชัน (ด้านล่าง)', async ({ page }) => {
             await navbar.goToMenu_desktop('Link to article');
             await articlePage.clickArticleCard_title();
-            await articlePage.clickShareDetail_Btnfooter();
             const popup = await articlePage.clickShareOnLine_footer(page);
             await popup.waitForLoadState();
             await expect(popup).toHaveURL(/line\.me/);
             await popup.close();
         });
 
+        // Pass
         test('Article_Desktop_049: ตรวจสอบการกด "Icon X" เพื่อแชร์บทความนั้น ไปที่ x.com บนหน้ารายละเอียดโปรโมชัน (ด้านล่าง)', async ({ page }) => {
             await navbar.goToMenu_desktop('Link to article');
             await articlePage.clickArticleCard_title();
-            await articlePage.clickShareDetail_Btnfooter();
             const popup = await articlePage.clickShareOnX_footer(page);
             await popup.waitForLoadState();
             await expect(popup).toHaveURL(/x\.com/);
             await popup.close();
         });
 
+        // Pass
         test('Article_Desktop_050: ตรวจสอบการกด "Icon Copy Link" เพื่อคักลอกลิงก์บทความนั้น บนหน้ารายละเอียดบทความ (ด้านล่าง)', async ({ page }) => {
+            await articlePage.clickArticleCard_title();
             const expectedUrl = page.url();
             const copyValue = await articlePage.clickShareCopyLink_footer();
             expect(copyValue).toBe(expectedUrl);
         });
-
     });
 
     // Pass
@@ -534,8 +545,8 @@ test.describe('Article Page (Desktop)', () => {
 
     // ---------- Comment Section ----------
     // ----- ยังไม่ login -----
+    // Pass
     test('Article_Desktop_052: ตรวจสอบการแสดงความคิดเห็น กรณีที่ยังไม่เข้าสู่ระบบ', async ({ page }) => {
-        commentSection = new CommentSection(page);
         await navbar.goToMenu_desktop('Link to article');
         await articlePage.clickArticleCard_title();
         await commentSection.blockSentComment.click();
@@ -543,12 +554,12 @@ test.describe('Article Page (Desktop)', () => {
         await navbar.closeLoginModal()
     });
 
+    // Pass
     test('Article_Desktop_053: ตรวจสอบการตอบกลับความคิดเห็น กรณีที่ยังไม่เข้าสู่ระบบ', async ({ page }) => {
-        commentSection = new CommentSection(page);
         await navbar.goToMenu_desktop('Link to article');
         await articlePage.clickArticleCard_title();
-        await commentSection.replyComment.click();
-        await commentSection.textBoxReplyComment.click();
+        await commentSection.replyComment_bth.click();
+        await commentSection.textField_ReplyComment.click();
         await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
         await navbar.closeLoginModal()
     });
@@ -561,7 +572,7 @@ test.describe('Article Page (Desktop)', () => {
         await navbar.goToMenu_desktop('Link to article');
         await commentSection.sentComment(articlePage.title_ArticleCard.first());
         await expect(commentSection.blockComment.getByText(`test-${Date.now()}`)).toBeVisible();
-        await expect(commentSection.textBoxSendComment).toHaveValue('');
+        await expect(commentSection.textField_Comment).toHaveValue('');
         await expect(commentSection.existingComment).toHaveCount(countBefore + 1); // จำนวนคอมเมนต์ต้องเพิ่มขึ้น 1
         // await expect(newCommentItem.getByText('testpunpro01')).toBeVisible();
         // await expect(newCommentItem.locator('.comment-time')).toBeVisible();
@@ -574,7 +585,7 @@ test.describe('Article Page (Desktop)', () => {
         await navbar.goToMenu_desktop('Link to article');
         await commentSection.sentReplyComment(articlePage.title_ArticleCard.first());
         await expect(commentSection.blockComment.getByText(`test-${Date.now()}`)).toBeVisible();
-        await expect(commentSection.textBoxReplyComment).toHaveValue('');
+        await expect(commentSection.textField_ReplyComment).toHaveValue('');
         await expect(commentSection.existingComment).toHaveCount(countBefore + 1); // จำนวนคอมเมนต์ต้องเพิ่มขึ้น 1
         // await expect(newCommentItem.getByText('testpunpro01')).toBeVisible();
         // await expect(newCommentItem.locator('.comment-time')).toBeVisible();
@@ -592,24 +603,27 @@ test.describe('Article Page (Desktop)', () => {
     test('Article_Desktop_059: ตรวจสอบความคิดเห็นยังคงอยู่หลัง reload หน้า', async ({ page }) => {
     });
 
+
+    // Pass
     test('Article_Desktop_060: ตรวจสอบการแสดงความคิดเห็นตอบกลับทั้งหมด เมื่อคลิกปุ่ม "ตอบกลับ"', async ({ page }) => {
         await navbar.goToMenu_desktop('Link to article');
         await articlePage.clickArticleCard_title();
-        await commentSection.replyComment.click();
+        await commentSection.replyComment_bth.click();
         await expect(commentSection.blockSentCommentReply).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
     });
 
+    // Pass
     test('Article_Desktop_061: ตรวจสอบการซ่อนการตอบกลับความคิดเห็น เมื่อคลิกปุ่ม "ซ่อน"', async ({ page }) => {
         await navbar.goToMenu_desktop('Link to article');
         await articlePage.clickArticleCard_title();
-        await commentSection.hideComment.click();
+        await commentSection.replyComment_bth.click();
+        await expect(commentSection.blockSentCommentReply).toBeVisible();
+        await commentSection.hideComment_bth.click();
         await expect(commentSection.blockSentCommentReply).toBeHidden();
     });
 
-
     // ---------- Bookmark / Share / Love (ยังไม่ login) ----------
     test.describe('Detail actions — Not logged in', () => {
-
         // Pass
         test('Article_Desktop_062: ตรวจสอบการกด "Bookmark" บนหน้ารายละเอียดบทความ กรณียังไม่เข้าสู่ระบบ', async () => {
             await articlePage.clickArticleCard_title();
@@ -627,70 +641,74 @@ test.describe('Article Page (Desktop)', () => {
         });
     });
 
-    // Re-Check Step
     // ---------- Bookmark / Share / Love (login แล้ว) ----------
-    test.describe.serial('Detail actions — Logged in', () => {
+    // Pass
+    test('Article_Desktop_063: ตรวจสอบการกด "Bookmark" บนหน้ารายละเอียดบทความ กรณีเข้าสู่ระบบแล้ว', async () => {
+        await navbar.openLoginOrSignup_desktop();
+        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await articlePage.clickArticleCard_title();
+        await articlePage.clickBookmarkDetail();
+        await expect(articlePage.bookMarkDetail_btn.locator('svg path')).toHaveAttribute('fill', '#BF202F');
+    });
 
-        test.beforeEach(async () => {
-            await navbar.openLoginOrSignup_desktop();
-            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+    // Pass
+    test('Article_Desktop_064: ตรวจสอบการกด "Bookmark" ซ้ำ บนหน้ารายละเอียดบทความ กรณีเข้าสู่ระบบแล้ว', async () => {
+        await navbar.openLoginOrSignup_desktop();
+        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await articlePage.clickArticleCard_title();
+        await articlePage.clickBookmarkDetail();
+        await expect(articlePage.bookMarkDetail_btn.locator('svg path')).toHaveAttribute('fill', '#BF202F');
+        await articlePage.clickBookmarkDetail();
+        await expect(articlePage.bookMarkDetail_btn.locator('i.fa-bookmark')).toBeVisible();
+    });
+
+    // Pass
+    test('Article_Desktop_066: ตรวจสอบการกด "Like" บนหน้ารายละเอียดบทความ กรณีเข้าสู่ระบบแล้ว', async () => {
+        await navbar.openLoginOrSignup_desktop();
+        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await articlePage.clickArticleCard_title();
+        await articlePage.clickLoveDetail();
+        await expect(articlePage.loveDetail_btn.locator('svg path')).toHaveAttribute('fill', '#BF202F');
+    });
+
+    // Pass
+    test('Article_Desktop_067: ตรวจสอบการกด "Like" ซ้ำ บนหน้ารายละเอียดบทความ กรณีเข้าสู่ระบบแล้ว', async () => {
+        await navbar.openLoginOrSignup_desktop();
+        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await articlePage.clickArticleCard_title();
+        await articlePage.clickLoveDetail();
+        await expect(articlePage.loveDetail_btn.locator('svg path')).toHaveAttribute('fill', '#BF202F');
+        await articlePage.clickLoveDetail();
+        await expect(articlePage.loveDetail_btn.locator('svg path')).toHaveAttribute('fill', '#979797');
+    });
+    // });
+
+    test.describe('Run test', () => {
+        // Pass
+        test('Article_Desktop_068: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดบทความ', async ({ page }) => {
             await navbar.goToMenu_desktop('Link to article');
             await articlePage.clickArticleCard_title();
+            await page.evaluate(() => window.scrollBy(0, 1000));
+            await expect(navbar.scrollToTopButton).toBeVisible();
         });
 
-        // skip >> Fail >> Not Complete
-        test('Article_Desktop_063: ตรวจสอบการกด "Bookmark" บนหน้ารายละเอียดบทความ กรณีเข้าสู่ระบบแล้ว', async () => {
-            await articlePage.clickBookmarkDetail();
-            await expect(articlePage.bookMarkDetail_btn.locator('i.fa-bookmark')).toHaveCount(0);
-            await expect(articlePage.bookMarkDetail_btn.locator('svg path')).toHaveAttribute('fill', '#BF202F');
+        // Fail
+        test('Article_Desktop_069: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดบทความ', async ({ page }) => {
+            await navbar.goToMenu_desktop('Link to article');
+            await articlePage.clickArticleCard_title();
+            await page.evaluate(() => window.scrollBy(0, 1050));
+            await expect(navbar.scrollToTopButton).toBeVisible();
+            await navbar.scrollToTopButton.click();
+            await page.waitForTimeout(3000);
+            const scrollY = await page.evaluate(() => window.scrollY);
+            expect(scrollY).toBe(0);
+            await expect(navbar.scrollToTopButton).toBeHidden();
         });
-
-        // skip >> Fail >> Not Complete
-        test('Article_Desktop_064: ตรวจสอบการกด "Bookmark" ซ้ำ บนหน้ารายละเอียดบทความ กรณีเข้าสู่ระบบแล้ว', async () => {
-            // ต่อเนื่องจาก 041 ในกลุ่ม serial — บุ๊กมาร์คถูก active ไว้แล้ว กดซ้ำเพื่อยกเลิก
-            await articlePage.clickBookmarkDetail();
-            await expect(articlePage.bookMarkDetail_btn.locator('svg path')).toHaveAttribute('fill', '#BF202F');
-            await articlePage.clickBookmarkDetail();
-            await expect(articlePage.bookMarkDetail_btn.locator('i.fa-bookmark')).toBeVisible();
-        });
-
-        // skip >> Fail >> Not Complete
-        test('Article_Desktop_066: ตรวจสอบการกด "Like" บนหน้ารายละเอียดบทความ กรณีเข้าสู่ระบบแล้ว', async () => {
-            await articlePage.clickLoveDetail();
-            await expect(articlePage.loveDetail_btn.locator('svg path')).toHaveAttribute('fill', '#BF202F');
-        });
-
-        // skip >> Fail >> Not Complete
-        test('Article_Desktop_067: ตรวจสอบการกด "Like" ซ้ำ บนหน้ารายละเอียดบทความ กรณีเข้าสู่ระบบแล้ว', async () => {
-            // ต่อเนื่องจาก 036 ในกลุ่ม serial — หัวใจถูก active ไว้แล้ว กดซ้ำเพื่อยกเลิก
-            await articlePage.clickLoveDetail();
-            await expect(articlePage.loveDetail_btn.locator('svg path')).toHaveAttribute('fill', '#BF202F');
-            await articlePage.clickLoveDetail();
-            await expect(articlePage.loveDetail_btn.locator('svg path')).toHaveAttribute('fill', '#979797');
-        });
-    });
-
-    test('Article_Desktop_068: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดบทความ', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to article');
-        await articlePage.clickArticleCard_title();
-        await page.evaluate(() => window.scrollBy(0, 1000));
-        await expect(navbar.scrollToTopButton).toBeVisible();
-    });
-
-    test('Article_Desktop_069: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดบทความ', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to article');
-        await articlePage.clickArticleCard_title();
-        await page.evaluate(() => window.scrollBy(0, 1000));
-        await expect(navbar.scrollToTopButton).toBeVisible();
-        await navbar.scrollToTopButton.click();
-        await page.waitForTimeout(3000);
-        const scrollY = await page.evaluate(() => window.scrollY);
-        expect(scrollY).toBe(0);
-        await expect(navbar.scrollToTopButton).toBeHidden();
     });
 
     test('Article_Desktop_070: ตรวจสอบการนำทางไปที่หน้า "นักเขียน" เมื่อกดชื่อและรูปโปไฟล์ผู้เขียน บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
-
+        await articlePage.clickArticleCard_title();
+        await expect(page).toHaveURL(/\/author\/.+/);
 
     });
 

@@ -138,7 +138,8 @@ export class ArticlePage {
         // ---------- Article Detail ----------
         this.title_ArticleDetail = page.locator('.Text__H1-sc-30b53bf2-0');
         this.blockAuthor_ArticleDetail = page.locator('.BlockContent__BlockAuthor-sc-766b4868-13'); //img = .BlockContent__ImgAuthor-sc-766b4868-4
-        this.authorNameLink_ArticleDetail = page.locator('.BlockContent__StyledLink-sc-766b4868-7'); // class = BlockContent__AuthorName-sc-766b4868-5.NEKaJ >> aka getByRole('heading', { name: 'โดย : ชื่อauthor' })
+        // this.authorNameLink_ArticleDetail = page.locator('.BlockContent__StyledLink-sc-766b4868-7'); // class = BlockContent__AuthorName-sc-766b4868-5.NEKaJ >> aka getByRole('heading', { name: 'โดย : ชื่อauthor' })
+        this.authorNameLink_ArticleDetail = page.locator('h5[class*="BlockContent__AuthorName"] a');
         this.author_heading = page.getByRole('heading', { name: /^โดย :/ })
         this.postDate_ArticleDetail = page.locator('.DateTimeContent__BlockDate-sc-b3b7f32b-2'); // DateTimeContent__Span-sc-b3b7f32b-4
         this.viewCount_ArticleDetail = page.locator('.DateTimeContent__BlockView-sc-b3b7f32b-3'); // DateTimeContent__Span-sc-b3b7f32b-4
@@ -153,7 +154,7 @@ export class ArticlePage {
         this.shareCopyLink = page.getByRole('button', { name: 'share-copy-link' })
         this.tagItem = page.locator('.TagItem__TagItem-sc-89fc6391-0');
         this.multiTagCard = page.locator('.BlockContent__BlockTags-sc-766b4868-15');
-        this.shareDetail_footer = page.locator('.BlockContent__ShareFooterButton-sc-766b4868-11') //role="button" ถ้ากดไม่ได้ใช้ 12 นะเธอ 
+        this.shareDetail_footer = page.locator('.BlockContent__ContentButtonFooterShare-sc-766b4868-11') //role="button" ถ้ากดไม่ได้ใช้ .BlockContent__ShareFooterButton-sc-766b4868-12 นะเธอ 
         // ^ เวลาจะเรียกไอคอน fb ig line link = nth(1) ^
 
         // ---------- Share Menu — บน ----------
@@ -173,8 +174,9 @@ export class ArticlePage {
             .getByRole('button', { name: 'Share on X' });
         this.shareOnLine_footer = page.locator('.ShareDirectionRow__ShareList-sc-30c129c6-1')
             .getByRole('button', { name: 'Share on Line' });
-        this.shareCopyLink_footer = page.locator('.ShareDirectionRow__ShareList-sc-30c129c6-1')
-            .locator('.ShareDirectionRow__ShareCopyLinkButton-sc-30c129c6-6');
+        this.shareCopyLink_footer = page.getByRole('button', { name: 'share-copy-link' }).nth(1)
+        // locator('.ShareDirectionRow__ShareList-sc-30c129c6-1')
+        //     .locator('.ShareDirectionRow__ShareCopyLinkButton-sc-30c129c6-6');
 
         // ---------- Comment Section (Article Detail) ----------
         this.comment = page.getByRole('textbox', { name: 'เขียนความคิดเห็น' }); // ถ้าจะแสดงความคิดเห็นใช้ .first() ถ้าจะ reply ใช้ nth(1)
@@ -218,6 +220,7 @@ export class ArticlePage {
 
     async clickArticleCard_title() {
         await this.title_ArticleCard.first().click();
+        await this.page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
     }
 
     async clickBookmarkCard() {
@@ -262,9 +265,18 @@ export class ArticlePage {
         return await popupPromise;
     }
 
-    async clickShareCopyLink_top() {
-        return await this.shareCopyLink_top.getAttribute('data-clipboard-text');
+    async clickShareCopyLink_top(page: Page): Promise<string> {
+        await this.shareDetail_btn.click();
+        await this.shareCopyLink_top.click(); // คลิกจริง trigger การ copy
+        return await page.evaluate(() => navigator.clipboard.readText()); // อ่านจาก clipboard จริง
     }
+
+    //     async clickShareCopyLink_top() {
+    //     await this.shareDetail_btn.click();
+    //     const clipboardValue = await this.shareCopyLink_top.getAttribute('data-clipboard-text'); // อ่านตอน element ยังอยู่
+    //     await this.shareCopyLink_top.click(); // ค่อยคลิกจริงทีหลัง (จำลอง user คลิกจริง)
+    //     return clipboardValue;
+    // }
 
     // --------- FOOTER ---------
     async clickShareOnFacebook_footer(page: Page): Promise<Page> {
@@ -289,7 +301,11 @@ export class ArticlePage {
     }
 
     async clickShareCopyLink_footer() {
-        return await this.shareCopyLink_footer.getAttribute('data-clipboard-text');
+        await this.shareDetail_footer.click();
+        const clipboardValue = await this.shareCopyLink_footer.getAttribute('data-clipboard-text'); // อ่านตอน element ยังอยู่
+        await this.shareCopyLink_footer.click(); // ค่อยคลิกจริงทีหลัง (จำลอง user คลิกจริง)
+        return clipboardValue;
+        // return await this.shareCopyLink_footer.getAttribute('data-clipboard-text');
     }
 
     // --------- Article Relate ---------
@@ -345,7 +361,7 @@ export class ArticlePage {
     }
 
     async clickLoveDetail() {
-        await this.loveDetail_btn.locator('svg').click();
+        await this.loveDetail_btn.click(); //.locator('svg')
     }
 
     async clickRelatedArticlieCard() {
@@ -363,6 +379,12 @@ export class ArticlePage {
     async clickShareBtnRelatedArticlie() {
         await this.shareBtn_RelatedArticle.click();
     }
+
+    async clickAuthorLink() {
+        await this.authorNameLink_ArticleDetail.click();
+    }
+
+
 
     //     async function findArticleWithRelated(page, articlePage) {
     //     const titles = articlePage.title_ArticleCard;
