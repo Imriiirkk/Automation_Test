@@ -193,6 +193,7 @@ export class PromotionPage {
 
     async clickPromotionCard_title() {
         await this.promotionCard_title.first().click(); //div:nth-child(4) 
+        await this.page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
     }
 
     async clickPromotionCard_title_child() {
@@ -250,8 +251,10 @@ export class PromotionPage {
         return await popupPromise;
     }
 
-    async clickShareCopyLink_top() {
-        return await this.shareCopyLink.first().getAttribute('data-clipboard-text');
+    async clickShareCopyLink_top(page: Page): Promise<string> {
+        await this.clickShareTop_Button();
+        await this.shareCopyLink.first().click(); // คลิกจริง trigger การ copy
+        return await page.evaluate(() => navigator.clipboard.readText());
     }
 
     // -------------- FOOTER --------------
@@ -277,7 +280,10 @@ export class PromotionPage {
     }
 
     async clickShareCopyLink_footer() {
-        return await this.shareCopyLink.nth(1).getAttribute('data-clipboard-text');
+        await this.clickShareFooter_Button();
+        const clipboardValue = await this.shareCopyLink.nth(1).getAttribute('data-clipboard-text'); // อ่านตอน element ยังอยู่
+        await this.shareCopyLink.nth(1).click(); // ค่อยคลิกจริงทีหลัง (จำลอง user คลิกจริง)
+        return clipboardValue;
     }
 
     // Re-check .first()

@@ -21,8 +21,8 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('Shopper Posts Page (Desktop)', () => {
-
     // ---------- Shopper Posts (Main) ----------
+    // Pass
     test('ShopperPosts_Desktop_001: ตรวจสอบการกดเข้าหน้า "ปันโปรรับหิ้ว" ได้', async ({ page }) => {
         await page.waitForURL(/\/shopper_posts/, { timeout: 10000 });
         await expect(shopperPostsPage.shopper_heading).toBeVisible();
@@ -60,46 +60,67 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // ---------- Tab x Filter Combinations ----------
-    test.describe('Tab x Filter', () => {
 
+    test.describe('Tab x Filter', () => {
         const tabCases = [
-            { id: '008', tab: 'pro_fashion', tabLabel: 'ทั้งหมด' },
-            { id: '009', tab: 'pro_eat', tabLabel: 'รับหิ้วหน้างาน' },
-            { id: '010', tab: 'pro_travel', tabLabel: 'สินค้าในสต็อก' },
+            { id: '008', tab: 'allItem', tabLabel: 'ทั้งหมด' },
+            { id: '009', tab: 'onEvent', tabLabel: 'รับหิ้วหน้างาน' },
+            { id: '010', tab: 'inStock', tabLabel: 'สินค้าในสต็อก' },
         ];
 
         // 008-010: Tab x Filter "สินค้ารายอีเวนต์"
+        // Pass
         for (const { id, tab, tabLabel } of tabCases) {
             test(`ShopperPosts_Desktop_${id}: ตรวจสอบการแสดงการ์ดสินค้ารับหิ้ว เมื่อกด Tab "${tabLabel}" และใช้ Filter "สินค้ารายอีเวนต์"`, async () => {
                 await shopperPostsPage.clickTab(tab);
                 await shopperPostsPage.clickFilter_Event();
 
                 const cardCount = await shopperPostsPage.shopperPostCardEach.count();
-                expect(cardCount).toBeGreaterThanOrEqual(0);
+                if (cardCount == 0) {
+                    expect(cardCount).toEqual(0);
+                } else {
+                    expect(cardCount).toBeGreaterThanOrEqual(0);
+                }
+
                 // >= 0 เพราะบาง Tab (เช่น "สินค้าในสต็อก") อาจไม่มีอีเวนต์เลยตามธรรมชาติของข้อมูล
             });
         }
 
         // 011-013: Tab x Filter "สินค้ารายชิ้น"
+        // Pass
         for (const { id, tab, tabLabel } of tabCases.map((c, i) => ({ ...c, id: String(11 + i).padStart(3, '0') }))) {
             test(`ShopperPosts_Desktop_${id}: ตรวจสอบการแสดงการ์ดสินค้ารับหิ้ว เมื่อกด Tab "${tabLabel}" และใช้ Filter "สินค้ารายชิ้น"`, async () => {
                 await shopperPostsPage.clickTab(tab);
                 await shopperPostsPage.clickFilter_Individual();
 
                 const cardCount = await shopperPostsPage.itemShopperPostCardEach.count();
-                expect(cardCount).toBeGreaterThanOrEqual(0);
+                if (cardCount == 0) {
+                    expect(cardCount).toEqual(0);
+                } else {
+                    expect(cardCount).toBeGreaterThanOrEqual(0);
+                }
             });
         }
-
     });
 
-    // TODO: ต้องมี loadMoreButton locator ก่อน (ยังไม่ได้ประกาศใน POM)
-    test.skip('ShopperPosts_Desktop_014: ตรวจสอบการโหลดการ์ดสินค้ารับหิ้วเพิ่ม เมื่อกดปุ่ม "ดูเพิ่มเติม"', async () => {
+    // Pass Pass Pass
+    test('ShopperPosts_Desktop_014: ตรวจสอบการโหลดการ์ดสินค้ารับหิ้วเพิ่ม เมื่อกดปุ่ม "ดูเพิ่มเติม"', async ({ page }) => {
+        const cardBefore = await shopperPostsPage.itemShopperPostCardEach.count()
+        await shopperPostsPage.clickLoadMore();
+        const cardAfter = await shopperPostsPage.itemShopperPostCardEach.count()
+        expect(cardAfter).toBeGreaterThanOrEqual(cardBefore)
+    });
+
+    // Pass Pass Pass 
+    test('ShopperPosts_Desktop_015: ตรวจสอบว่าปุ่ม "ดูเพิ่มเติม" หายไปเมื่อโหลดการ์ดสินค้ารับหิ้วครบทุกรายการแล้ว', async ({ page }) => {
+        await shopperPostsPage.clickLoadMore();
+        await expect(shopperPostsPage.loadMoreButton).toBeHidden();
     });
 
     // ---------- Card Details ----------
     test.describe('Card Details', () => {
 
+        // Fail >> dateContent Error: element(s) not found
         test('ShopperPosts_Desktop_015: ตรวจสอบการแสดงรายละเอียดบนการ์ดอีเวนต์ เมื่อใช้ Filter "สินค้ารายอีเวนต์"', async () => {
             await shopperPostsPage.clickFilter_Event();
             await expect(shopperPostsPage.shopperPostCard.first()).toBeVisible();
@@ -107,6 +128,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
             await expect(shopperPostsPage.proLabel_EventCard.first()).toBeVisible();
         });
 
+        // Pass
         test('ShopperPosts_Desktop_016: ตรวจสอบการแสดงรายละเอียดบนการ์ดสินค้ารับหิ้ว เมื่อใช้ Filter "สินค้ารายชิ้น"', async () => {
             await shopperPostsPage.clickFilter_Individual();
             await expect(shopperPostsPage.itemShopperPostCard.first()).toBeVisible();
@@ -120,6 +142,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     // ---------- Love Button (Item Card) ----------
     test.describe.serial('Love Button — Item Card', () => {
 
+        // Pass
         test('ShopperPosts_Desktop_017: ตรวจสอบการกดปุ่ม "หัวใจ" บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น โดยที่ยังไม่เข้าสู่ระบบ', async () => {
             await shopperPostsPage.clickFilter_Individual();
             await shopperPostsPage.clickLoveItemCard();
@@ -176,17 +199,17 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     // ---------- Navigation from Card ----------
     test.describe('Navigate to Detail', () => {
 
+        // Pass
         test('ShopperPosts_Desktop_020: ตรวจสอบการกดรูปภาพ (Cover) ที่การ์ดสินค้ารับหิ้ว เพื่อเข้าหน้ารายละเอียด', async ({ page }) => {
-            await shopperPostsPage.clickFilter_Individual();
             await shopperPostsPage.clickItemCard_image();
-            await expect(page).toHaveURL(/\/p\/[a-zA-Z0-9-_]+/);
+            await expect(page).toHaveURL(/\/items\/[a-zA-Z0-9-_]+/);
             await expect(shopperPostsPage.title_ItemDetail).toBeVisible();
         });
 
+        // Pass >> re-run chrome, edge
         test('ShopperPosts_Desktop_021: ตรวจสอบการกดชื่อสินค้าหรืออีเวนต์ ที่การ์ดสินค้ารับหิ้ว เพื่อเข้าหน้ารายละเอียด', async ({ page }) => {
-            await shopperPostsPage.clickFilter_Individual();
             await shopperPostsPage.clickItemCard_title();
-            await expect(page).toHaveURL(/\/p\/[a-zA-Z0-9-_]+/);
+            await expect(page).toHaveURL(/\/items\/[a-zA-Z0-9-_]+/);
             await expect(shopperPostsPage.title_ItemDetail).toBeVisible();
         });
 
@@ -194,11 +217,10 @@ test.describe('Shopper Posts Page (Desktop)', () => {
 
     // ---------- Item Detail Page ----------
     test.describe('Item Detail', () => {
-
+        // Pass
         test('ShopperPosts_Desktop_022: ตรวจสอบการแสดงรายละเอียดบนหน้า รายละเอียดสินค้ารายชิ้น', async () => {
             await shopperPostsPage.clickFilter_Individual();
             await shopperPostsPage.clickItemCard_title();
-
             await expect(shopperPostsPage.title_ItemDetail).toBeVisible();
             await expect(shopperPostsPage.coverImg_ItemDetail).toBeVisible();
             await expect(shopperPostsPage.price_ItemDetail).toBeVisible();
@@ -206,15 +228,23 @@ test.describe('Shopper Posts Page (Desktop)', () => {
             await expect(shopperPostsPage.purchaseBtn_ItemDetail).toBeVisible();
             await expect(shopperPostsPage.owner_shopper).toBeVisible();
             await expect(shopperPostsPage.descrition_ItemDetail).toBeVisible();
+            await expect(shopperPostsPage.loveBtn_ItemDetail).toBeVisible();
+            await expect(shopperPostsPage.shareBtn_ItemDetail_).toBeVisible();
             // TODO: ยังไม่เช็ค loveBtn_ItemDetail / shareBtn_ItemDetail_ (locator ยังไม่ระบุ)
         });
 
+        // Fail
         test('ShopperPosts_Desktop_023: ตรวจสอบการกด "ประเภทสินค้า" ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
             await shopperPostsPage.clickFilter_Individual();
             await shopperPostsPage.clickItemCard_title();
             await shopperPostsPage.productType_ItemDetail.click();
-            // TODO: ยืนยัน expected behavior จริง — คลิกแล้วนำทางไปหน้า filter ตามประเภทสินค้า หรือแค่ expand dropdown?
-            // ใส่ assertion ที่ตรงจุดเมื่อรู้ผลลัพธ์ที่ถูกต้องแล้ว
+            await page.waitForURL(/\/search\?s=/, { timeout: 10000 });
+            /**
+             * TimeoutError: page.waitForURL: Timeout 10000ms exceeded.
+            =========================== logs ===========================
+            waiting for navigation until "load"
+            ============================================================
+             */
         });
 
         // TODO: ยังไม่มี tag locator ใน POM (tag_ItemDetail ถูก comment ไว้)
@@ -232,11 +262,32 @@ test.describe('Shopper Posts Page (Desktop)', () => {
 
     // ---------- Love Button (Item Detail) — TODO ทั้งกลุ่ม ----------
     // TODO: loveBtn_ItemDetail ยังไม่ระบุ locator ใน POM
-    test.skip('ShopperPosts_Desktop_026: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดสินค้ารายชิ้น โดยที่ยังไม่เข้าสู่ระบบ', async () => {
+    // Fail
+    test('ShopperPosts_Desktop_026: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดสินค้ารายชิ้น โดยที่ยังไม่เข้าสู่ระบบ', async () => {
+        await shopperPostsPage.title_ItemCard.click(); //ไประบุชื่อกับรูป ระหว่างง item & event แยกกันจะได้เรียกใช้ถูก
+        await shopperPostsPage.clickLoveItemDetail();
+        await expect(navbar.loginModalCloseButton).toBeVisible();
+        await navbar.closeLoginModal();
     });
-    test.skip('ShopperPosts_Desktop_027: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดสินค้ารายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
+
+    //Fail
+    test('ShopperPosts_Desktop_027: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดสินค้ารายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
+        await navbar.openLoginOrSignup_desktop();
+        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await shopperPostsPage.title_ItemCard.click();
+        await shopperPostsPage.clickLoveItemDetail();
+        await expect(shopperPostsPage.loveBtn_ItemDetail.locator('svg path')).toHaveAttribute('fill', '#BF202F');
     });
-    test.skip('ShopperPosts_Desktop_028: ตรวจสอบการกดปุ่ม "หัวใจ" อีกครั้ง ในหน้า รายละเอียดสินค้ารายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
+
+    //Fail
+    test('ShopperPosts_Desktop_028: ตรวจสอบการกดปุ่ม "หัวใจ" อีกครั้ง ในหน้า รายละเอียดสินค้ารายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
+        await navbar.openLoginOrSignup_desktop();
+        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await shopperPostsPage.title_ItemCard.click();
+        await shopperPostsPage.clickLoveItemDetail();
+        await expect(shopperPostsPage.loveBtn_ItemDetail.locator('svg path')).toHaveAttribute('fill', '#BF202F');
+        await shopperPostsPage.clickLoveItemDetail();
+        await expect(shopperPostsPage.loveBtn_ItemDetail.locator('svg path')).toHaveAttribute('fill', '#686868');
     });
 
     // ---------- Share Button (Item Detail) — TODO ทั้งกลุ่ม ----------
@@ -261,10 +312,18 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     test.skip('ShopperPosts_Desktop_036: ตรวจสอบการกดปุ่ม "หัวใจ" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน อีกครั้ง เมื่อเข้าสู่ระบบแล้ว', async () => {
     });
 
+    // Pass 
     test('ShopperPosts_Desktop_037: ตรวจสอบการกด "ดูทั้งหมด >" ในหน้า รายละเอียดสินค้ารายชิ้น บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async ({ page }) => {
         await shopperPostsPage.clickFilter_Individual();
         await shopperPostsPage.clickItemCard_title();
-        await shopperPostsPage.viewAll_ItemDetail.click();
+        await shopperPostsPage.viewAllBtn_ItemDetail.click();
+        await expect(page).toHaveURL(/\/sp\/[a-zA-Z0-9-_]+/); //
+        await expect(shopperPostsPage.title_EventDetail).toBeVisible();
+        await expect(shopperPostsPage.coverImg_EventDetail).toBeVisible();
+        await expect(shopperPostsPage.description_EventDetail).toBeVisible();
+        await expect(shopperPostsPage.priceLabel_EventDetail).toBeVisible();
+        await expect(shopperPostsPage.viewCount_EventDetail).toBeVisible(); //
+        await expect(shopperPostsPage.dateStart_EventDetail).toBeVisible();
         // TODO: ยืนยัน URL/behavior ที่ถูกต้องหลังกด แล้วเติม assertion เพิ่ม
     });
 
@@ -273,6 +332,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // ---------- Event Detail Page ----------
+    // Fail >> TimeoutError: locator.click: Timeout 10000ms exceeded. >> waiting for locator('.ListItemShopperPost__ListPosts-sc-c96491c8-0').first()
     test('ShopperPosts_Desktop_039: ตรวจสอบการแสดงรายละเอียดบนหน้า รายละเอียดรายอีเวนต์', async () => {
         await shopperPostsPage.clickFilter_Event();
         await shopperPostsPage.itemShopperPostCard.first().click(); // ไปหน้ารายละเอียดอีเวนต์ (ใช้ card event แทน item)
@@ -302,13 +362,32 @@ test.describe('Shopper Posts Page (Desktop)', () => {
 
     // ---------- Scroll To Top ----------
     test.describe('Scroll To Top', () => {
-
-        test('ShopperPosts_Desktop_046: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง', async ({ page }) => {
+        // Pass
+        test('ShopperPosts_Desktop_046: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
             await page.evaluate(() => window.scrollBy(0, 1000));
             await expect(navbar.scrollToTopButton).toBeVisible();
         });
+        // Pass
+        test('ShopperPosts_Desktop_047: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
+            await page.evaluate(() => window.scrollBy(0, 1000));
+            await expect(navbar.scrollToTopButton).toBeVisible();
+            await navbar.scrollToTopButton.click();
 
-        test('ShopperPosts_Desktop_047: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^"', async ({ page }) => {
+            await expect.poll(async () => {
+                return await page.evaluate(() => window.scrollY);
+            }, { timeout: 5000 }).toBe(0);
+        });
+        // Pass
+        test('ShopperPosts_Desktop_046: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+            await shopperPostsPage.clickFilter_Individual();
+            await shopperPostsPage.clickItemCard_title();
+            await page.evaluate(() => window.scrollBy(0, 1000));
+            await expect(navbar.scrollToTopButton).toBeVisible();
+        });
+        // Pass
+        test('ShopperPosts_Desktop_047: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+            await shopperPostsPage.clickFilter_Individual();
+            await shopperPostsPage.clickItemCard_title();
             await page.evaluate(() => window.scrollBy(0, 1000));
             await expect(navbar.scrollToTopButton).toBeVisible();
             await navbar.scrollToTopButton.click();
@@ -318,6 +397,28 @@ test.describe('Shopper Posts Page (Desktop)', () => {
             }, { timeout: 5000 }).toBe(0);
         });
 
+        // Fail กด filter ได้ แต่กดการ์ดเพื่อเข้าหน้ารายละเอียดไม่ได้
+        test('ShopperPosts_Desktop_046: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
+            await shopperPostsPage.clickFilter_Event();
+            // await shopperPostsPage.clickItemCard_title();
+            await shopperPostsPage.itemShopperPostCard.first().click();
+            await page.evaluate(() => window.scrollBy(0, 1000));
+            await expect(navbar.scrollToTopButton).toBeVisible();
+        });
+
+        // Fail กด filter ได้ แต่กดการ์ดเพื่อเข้าหน้ารายละเอียดไม่ได้
+        test('ShopperPosts_Desktop_047: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
+            await shopperPostsPage.clickFilter_Event();
+            // await shopperPostsPage.clickItemCard_title();
+            await shopperPostsPage.itemShopperPostCard.first().click();
+            await page.evaluate(() => window.scrollBy(0, 1000));
+            await expect(navbar.scrollToTopButton).toBeVisible();
+            await navbar.scrollToTopButton.click();
+
+            await expect.poll(async () => {
+                return await page.evaluate(() => window.scrollY);
+            }, { timeout: 5000 }).toBe(0);
+        });
     });
 
     // TODO: ต้องหาหมวดหมู่ที่ยืนยันได้ว่าไม่มีสินค้าจริงในระบบ ก่อนเขียน assertion
@@ -325,3 +426,5 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
 });
+
+//test.describe('Run test', () => {

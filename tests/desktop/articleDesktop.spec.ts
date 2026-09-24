@@ -703,7 +703,6 @@ test.describe('Article Page (Desktop)', () => {
     });
 
     // Fail >> click ไม่ได้
-
     test('Article_Desktop_069: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดบทความ', async ({ page }) => {
         await navbar.goToMenu_desktop('Link to article');
         await articlePage.clickArticleCard_title();

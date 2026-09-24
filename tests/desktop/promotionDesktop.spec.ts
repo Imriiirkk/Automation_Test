@@ -152,7 +152,7 @@ test.describe('Promotion Page (Desktop)', () => {
             await expect(promotionPage.loveButtonIcon).toHaveAttribute('fill', '#BF202F');
         });
 
-        // Fail
+        // Pass
         test('Promotion_Desktop_022: ตรวจสอบการกด "Like" ซ้ำบนการ์ดโปรโมชัน เมื่อกดไปแล้ว (กลับไปเป็น Default) กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
             await navbar.openLoginOrSignup_desktop();
             await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
@@ -174,9 +174,8 @@ test.describe('Promotion Page (Desktop)', () => {
         expect(cardAfter).toBeGreaterThanOrEqual(cardBefore)
     });
 
-    // Not Complete
+    // Pass
     test('Promotion_Desktop_024: ตรวจสอบว่าปุ่ม "ดูเพิ่มเติม" หายไปเมื่อโหลดโปรโมชันครบทุกรายการแล้ว', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
         await promotionPage.clickLoadMore();
         await expect(promotionPage.loadMoreButton).toBeHidden();
     });
@@ -202,7 +201,7 @@ test.describe('Promotion Page (Desktop)', () => {
     });
 
     // ---------- Promotion Detail ----------
-    // Not complete >> มันจะมีที่ กำหนดเวลา>>สิ้นสุดใน x วัน และ ไม่กำหนดเวลา(ไม่แสดงวันเริ่ม-วันสิ้นสุด)>>ยังไม่มีกำหนดสิ้นสุด
+    // Pass >> มันจะมีที่ กำหนดเวลา>>สิ้นสุดใน x วัน และ ไม่กำหนดเวลา(ไม่แสดงวันเริ่ม-วันสิ้นสุด)>>ยังไม่มีกำหนดสิ้นสุด
     test('Promotion_Desktop_027: ตรวจสอบการแสดงรายละเอียดบน รายละเอียดโปรโมชัน', async ({ page }) => {
         await navbar.goToMenu_desktop('Link to promotion');
         await promotionPage.clickPromotionCard_title();
@@ -230,7 +229,6 @@ test.describe('Promotion Page (Desktop)', () => {
         }
     });
 
-    // test.describe('run test', () => {
     test.describe.serial('Love Detail Button', () => {
         //Pass
         test('Promotion_Desktop_028: ตรวจสอบการกด "Like" บนหน้ารายละเอียดโปรโมชัน กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
@@ -305,14 +303,20 @@ test.describe('Promotion Page (Desktop)', () => {
         await popup.close();
     });
 
-    // Not Complete
-    // เอาไว้ก่อน ไม่รู้จะทำยังไงดี เพราะมันเป็นการ copy link ไปที่ clipboard ของเครื่องเราเอง
-    test('Promotion_Desktop_035: ตรวจสอบการกด "Icon Copy Link" เพื่อคักลอกโปรโมชันนั้น บนหน้ารายละเอียดโปรโมชัน (ด้านบน)', async ({ page }) => {
+    // Fail
+    // หา locator ปุ่มแชร์ไม่เจอ???
+    // อาจต้องใช้วิธี data-clipboard-text attribute แทนถึงจะทำงานได้ครบทุก browser
+    test('Promotion_Desktop_035: ตรวจสอบการกด "Icon Copy Link" เพื่อคักลอกโปรโมชันนั้น บนหน้ารายละเอียดโปรโมชัน (ด้านบน)', async ({ page, context }) => {
+        await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+
+        await promotionPage.clickPromotionCard_title();
         const expectedUrl = page.url();
-        const copyValue = await promotionPage.clickShareCopyLink_top();
-        expect(copyValue).toBe(expectedUrl);
+
+        const clipboardText = await promotionPage.clickShareCopyLink_top(page);
+        expect(clipboardText).toBe(expectedUrl);
     });
 
+    // Pass
     test('Promotion_Desktop_036: ตรวจสอบการกดปุ่ม "Share" บนหน้ารายละเอียดโปรโมชัน (ด้านหลัง)', async ({ page }) => {
         await navbar.goToMenu_desktop('Link to promotion');
         await promotionPage.clickPromotionCard_title();
@@ -355,9 +359,9 @@ test.describe('Promotion Page (Desktop)', () => {
         await popup.close();
     });
 
-    // Not Complete
-    // เอาไว้ก่อน ไม่รู้จะทำยังไงดี เพราะมันเป็นการ copy link ไปที่ clipboard ของเครื่องเราเอง
-    test('Promotion_Desktop_040: ตรวจสอบการกด "Icon Copy Link" เพื่อคักลอกโปรโมชันนั้น บนหน้ารายละเอียดโปรโมชัน (ด้านหลัง)', async ({ page }) => {
+    // Pass
+    test('Promotion_Desktop_040: ตรวจสอบการกด "Icon Copy Link" เพื่อคักลอกโปรโมชันนั้น บนหน้ารายละเอียดโปรโมชัน (ด้านหลัง)', async ({ page, context }) => {
+        await promotionPage.clickPromotionCard_title();
         const expectedUrl = page.url();
         const copyValue = await promotionPage.clickShareCopyLink_footer();
         expect(copyValue).toBe(expectedUrl);
@@ -395,7 +399,15 @@ test.describe('Promotion Page (Desktop)', () => {
         await expect(promotionPage.bookMarkButton.locator('svg')).toHaveCount(0);
     });
 
+    /**
+     * Fail
+     * TimeoutError: page.waitForURL: Timeout 10000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+     */
     test('Promotion_Desktop_044: ตรวจสอบการแสดงรายละเอียดบนการ์ด "โปรโมชันมาแรง"', async ({ page }) => {
+        await promotionPage.clickPromotionCard_title();
         await expect(promotionPage.box_ProPopular).toBeVisible();
         await expect(promotionPage.coverImg_CardProPopular).toBeVisible();
         await expect(promotionPage.title_CardProPopular).toBeVisible();
@@ -408,7 +420,21 @@ test.describe('Promotion Page (Desktop)', () => {
         await expect(promotionPage.shareBtn_CardProPopular).toBeVisible();
     });
 
+    // Fail
+    /**
+     *  TimeoutError: locator.click: Timeout 10000ms exceeded.
+        Call log:
+        - waiting for locator('.CardPromotion__BlockTitle-sc-50f9525-3').first()
+
+
+        at ..\pages\PromotionPage.ts:320
+
+        318 |
+        319 |     async clickPromotionPopular() {
+        > 320 |         await this.title_CardProPopular.first().click();
+     */
     test('Promotion_Desktop_045: ตรวจสอบการกดที่การ์ด "โปรโมชันมาแรง" เพื่อเข้าดูหน้ารายละเอียดโปรโมชั่นนั้น', async ({ page }) => {
+        await promotionPage.clickPromotionCard_title();
         await promotionPage.clickPromotionPopular();
         await page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
         await expect(page).toHaveURL(/\/p\/[a-zA-Z0-9-_]+/);
@@ -618,23 +644,23 @@ test.describe('Promotion Page (Desktop)', () => {
     });
 
     // Not Complete
-    test('Promotion_Desktop_069: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to article');
-        await promotionPage.clickPromotionCard_image();
-        await page.evaluate(() => window.scrollBy(0, 1000));
-        await expect(navbar.scrollToTopButton).toBeVisible();
-    });
+    test.describe('Run test', () => {
+        // Pass
+        test('Promotion_Desktop_069: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
+            await promotionPage.clickPromotionCard_image();
+            await page.evaluate(() => window.scrollBy(0, 1000));
+            await expect(navbar.scrollToTopButton).toBeVisible();
+        });
 
-    // Not Complete
-    test('Promotion_Desktop_070: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to article');
-        await promotionPage.clickPromotionCard_image();
-        await page.evaluate(() => window.scrollBy(0, 1000));
-        await expect(navbar.scrollToTopButton).toBeVisible();
-        await navbar.scrollToTopButton.click();
-        await page.waitForTimeout(3000);
-        const scrollY = await page.evaluate(() => window.scrollY);
-        expect(scrollY).toBe(0);
-        await expect(navbar.scrollToTopButton).toBeHidden();
+        // Pass >> Desktop Safari ยังไม่ผ่าน
+        test('Promotion_Desktop_070: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
+            await promotionPage.clickPromotionCard_image();
+            await page.evaluate(() => window.scrollBy(0, 1000));
+            await expect(navbar.scrollToTopButton).toBeVisible();
+            await navbar.scrollToTopButton.click();
+            await page.waitForTimeout(3000);
+            const scrollY = await page.evaluate(() => window.scrollY);
+            expect(scrollY).toBe(0);
+        });
     });
 });
