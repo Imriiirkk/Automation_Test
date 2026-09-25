@@ -360,6 +360,8 @@ test.describe('Shopper Posts Page (Desktop)', () => {
         // TODO: ยังไม่มี locator แยกสำหรับปุ่มฝากหิ้วของสินค้าภายในหน้ารายละเอียดอีเวนต์ (คนละจุดกับ purchaseBtn_ItemDetail)
     });
 
+    // 45 หายไปไหนน้อ
+
     // ---------- Scroll To Top ----------
     test.describe('Scroll To Top', () => {
         // Pass

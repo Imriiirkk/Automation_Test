@@ -603,64 +603,57 @@ test.describe('Promotion Page (Desktop)', () => {
         // await expect(newCommentItem.locator('.comment-time')).toBeVisible();
     });
 
-    test('Promation_Desktop_063: ตรวจสอบการส่งความคิดเห็นแบบว่างเปล่า ในกรณีที่เข้าสู่ระบบแล้ว', () => {
-    });
-
     // Not Complete
-    test('Promotion_Desktop_064: ตรวจสอบการแสดงการตอบกลับความคิดเห็นทั้งหมด เมื่อกดปุ่ม "ตอบกลับ"', async ({ page }) => {
+    test('Promotion_Desktop_063: ตรวจสอบการแสดงการตอบกลับความคิดเห็นทั้งหมด เมื่อกดปุ่ม "ตอบกลับ"', async ({ page }) => {
         await navbar.goToMenu_desktop('Link to promotion');
         await promotionPage.clickPromotionCard_title();
         await promotionPage.replyComment.click();
-        // await expect(promotionPage.blockSenCommentReply).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-
+        await expect(promotionPage.blockSentCommentReply).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
     });
 
-    // Not Complete
-    test('Promotion_Desktop_065: ตรวจสอบการซ่อนการตอบกลับความคิดเห็น เมื่อกดปุ่ม "ซ่อน"', async ({ page }) => {
+    // Pass
+    test('Promotion_Desktop_064: ตรวจสอบการซ่อนการตอบกลับความคิดเห็น เมื่อกดปุ่ม "ซ่อน"', async ({ page }) => {
         await navbar.goToMenu_desktop('Link to promotion');
         await promotionPage.clickPromotionCard_title();
         await promotionPage.replyComment.click();
-        // await expect(promotionPage.blockSenCommentReply).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+        await expect(promotionPage.blockSentCommentReply).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
         await promotionPage.hideComment.click();
-        // await expect(promotionPage.blockSenCommentReply).toBeHidden();
+        await expect(promotionPage.blockSentCommentReply).toBeHidden();
     });
 
     // Not Complete
-    test('Promotion_Desktop_066: ตรวจสอบการแสดงโปรไฟล์ของผู้ใช้ที่แสดงความคิดเห็นได้ถูกต้อง', async ({ page }) => {
+    test('Promotion_Desktop_065: ตรวจสอบการแสดงโปรไฟล์ของผู้ใช้ที่แสดงความคิดเห็นได้ถูกต้อง', async ({ page }) => {
         await promotionPage.sentComment();
         await expect(promotionPage.existingComment).toBeVisible();
     });
 
     // Not Complete
-    test('Promotion_Desktop_067: ตรวจสอบการแสดงเวลาในการแสดงความคิดเห็นได้ถูกต้อง', async ({ page }) => {
+    test('Promotion_Desktop_066: ตรวจสอบการแสดงเวลาในการแสดงความคิดเห็นได้ถูกต้อง', async ({ page }) => {
         await page
         await expect(promotionPage.blockComment.getByText('test comment')).toBeVisible();
     });
 
     // Not Complete
-    test('Promotion_Desktop_068: ตรวจสอบความคิดเห็นยังคงอยู่หลัง reload หน้า', async ({ page }) => {
+    test('Promotion_Desktop_067: ตรวจสอบความคิดเห็นยังคงอยู่หลัง reload หน้า', async ({ page }) => {
         await page
         await expect(promotionPage.blockComment.getByText('test comment')).toBeVisible();
     });
 
-    // Not Complete
-    test.describe('Run test', () => {
-        // Pass
-        test('Promotion_Desktop_069: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
-            await promotionPage.clickPromotionCard_image();
-            await page.evaluate(() => window.scrollBy(0, 1000));
-            await expect(navbar.scrollToTopButton).toBeVisible();
-        });
+    // Pass
+    test('Promotion_Desktop_068: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
+        await promotionPage.clickPromotionCard_image();
+        await page.evaluate(() => window.scrollBy(0, 1000));
+        await expect(navbar.scrollToTopButton).toBeVisible();
+    });
 
-        // Pass >> Desktop Safari ยังไม่ผ่าน
-        test('Promotion_Desktop_070: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
-            await promotionPage.clickPromotionCard_image();
-            await page.evaluate(() => window.scrollBy(0, 1000));
-            await expect(navbar.scrollToTopButton).toBeVisible();
-            await navbar.scrollToTopButton.click();
-            await page.waitForTimeout(3000);
-            const scrollY = await page.evaluate(() => window.scrollY);
-            expect(scrollY).toBe(0);
-        });
+    // Pass
+    test('Promotion_Desktop_069: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
+        await promotionPage.clickPromotionCard_image();
+        await page.evaluate(() => window.scrollBy(0, 1000));
+        await expect(navbar.scrollToTopButton).toBeVisible();
+        await navbar.scrollToTopButton.click();
+        await page.waitForTimeout(3000);
+        const scrollY = await page.evaluate(() => window.scrollY);
+        expect(scrollY).toBe(0);
     });
 });
