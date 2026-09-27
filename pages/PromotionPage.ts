@@ -12,10 +12,13 @@ export class PromotionPage {
     // ---------- Promotion Categories Tap ----------
     private filterButtons: Record<string, Locator>;
     public readonly blockMenuCategories: Locator;
+    public readonly noPromotionMessage: Locator;
 
     // ---------- Highlighted / Banner Elements ----------
     public readonly highlightedBanner: Locator;
     public readonly bannerPagination: Locator;
+    public readonly bannerIndicator: Locator;
+    public readonly activeSlide: Locator;
 
     // ---------- Element Promotion Card ----------
     public readonly promotionCard: Locator;
@@ -34,6 +37,7 @@ export class PromotionPage {
     public readonly breadcrumb: Locator; // Breadcrumb__BreadcrumbBlock-sc-21bc5eed-0 jkrBen
     public readonly blockContent: Locator;
     public readonly heading_detail: Locator; // Text__H1-sc-30b53bf2-0 cwSmuc
+    public readonly authorNameLink_ArticleDetail: Locator;
     public readonly author_image: Locator;
     public readonly author_name: Locator;
     public readonly blockRemainingTime: Locator;
@@ -56,6 +60,7 @@ export class PromotionPage {
     public readonly multiTagCard: Locator;
 
     // ---------- Comment Section ----------
+    public readonly layout_Comment: Locator;
     public readonly blockSentComment: Locator;
     public readonly blockComment: Locator;
     public readonly blockSentCommentReply: Locator;
@@ -97,20 +102,23 @@ export class PromotionPage {
             cheapTicket: page.getByRole('button', { name: 'ตั๋วถูก' }),
             discountCode: page.getByRole('button', { name: 'โค้ดส่วนลด' })
         };
+        this.noPromotionMessage = page.locator('p').filter({ hasText: 'เปย์เป้ขออภัยครับ...' });
 
         // ---------- Highlighted / Banner Elements ----------
-        this.highlightedBanner = page.locator('.PromotionPin__BlockPromotion-sc-1fd3630-0');
-        this.bannerPagination = page.locator('.SlidePromotionBannerMulti__CustomPagination-sc-33329c3a-0');
+        this.highlightedBanner = page.locator('[class*="PromotionPin__BlockPromotion"]');
+        this.bannerPagination = page.locator('[class*="SlidePromotionBannerMulti__CustomPagination"]');
+        this.bannerIndicator = this.bannerPagination.locator('.swiper-pagination-bullet');
+        this.activeSlide = page.locator('.swiper-slide-active');
 
         // ---------- Element Promotion Card ----------
-        this.promotionCard = page.locator('.PromotionCategories__ListPromotion-sc-8c9a3c8e-0');
-        this.promotionCardEach = page.locator('.PromotionCategories__BlockArticle-sc-8c9a3c8e-1.fkOMto');
+        this.promotionCard = page.locator('[class*="PromotionCategories__ListPromotion"]');
+        this.promotionCardEach = page.locator('[class*="FixSizePromotionCard__Card-sc-"]'); //PromotionCategories__BlockArticle-sc-8c9a3c8e-1.fkOMto
         this.promotionCard_image = page.locator('.ComponentLink__StyledLink-sc-86eeea75-0.jPGtZW');
         this.promotionCard_title = page.locator('.ComponentLink__StyledLink-sc-86eeea75-0.jPGtZW');
         this.promotionLabel = page.locator('.FixSizePromotionCard__PostLabel-sc-f00d5468-4.lnHQnd');
         this.descriptionCard = page.locator('.FixSizePromotionCard__Descriptin-sc-f00d5468-3.cRPYmC');
-        this.remainingTime = page.locator('.FixSizePromotionCard__Remaining-sc-f00d5468-5.kYkGMr');
-        this.dateContent = page.locator('.FixSizePromotionCard__DateCotent-sc-f00d5468-6.idqEpo');
+        this.remainingTime = page.locator('[class*="FixSizePromotionCard__Remaining"]'); //.FixSizePromotionCard__Remaining-sc-f00d5468-5.kYkGMr
+        this.dateContent = page.locator('[class*="FixSizePromotionCard__DateCotent"]'); //'.FixSizePromotionCard__DateCotent-sc-f00d5468-6.idqEpo'
 
         this.loveButton = page.getByTestId('love-button').first();
         this.loveButtonIcon = this.loveButton.locator('svg path');
@@ -122,6 +130,7 @@ export class PromotionPage {
         this.blockContent = page.locator('.BlockContent__RootContent-sc-766b4868-0.cAgpqz');
         this.breadcrumb = page.locator('.Breadcrumb__BreadcrumbBlock-sc-21bc5eed-0.jkrBen');
 
+        this.authorNameLink_ArticleDetail = page.locator('h5[class*="BlockContent__AuthorName"] a');
         this.author_image = page.locator('.BlockContent__ImgAuthor-sc-766b4868-4'); //
         this.author_name = page.locator('.BlockContent__AuthorName-sc-766b4868-5.NEKaJ.mt-1.mb-2'); // BlockContent__AuthorName-sc-766b4868-5 NEKaJ mt-1 mb-2
         this.blockRemainingTime = page.locator('.DateTimeContent__TextColor-sc-b3b7f32b-0'); //.DateTimeContent__TextColor-sc-b3b7f32b-0.jqqcfq นับเวลาถอยหลัง
@@ -136,8 +145,8 @@ export class PromotionPage {
         this.loveDetailButton_footer = page.locator('.ButtonIconLoveDetail__Button-sc-10d0321c-0'); //
         this.loveDetailBtnIcon = this.loveDetailButton_footer.locator('svg path');
         this.blockAuthor_footer = page.locator('.BlockContent__BlockAuthor-sc-766b4868-13'); //BlockContent__BlockAuthor-sc-766b4868-13 jSYeWt
-        this.blockTag = page.locator('.BlockContent__BlockTags-sc-766b4868-15'); //BlockContent__BlockTags-sc-766b4868-15 bzDMPC //การ์ดแรกมี hidden //.first()
-        this.tagItem = page.locator('.Tags__TagItem-sc-89fc6391-0'); //Tags__TagItem-sc-89fc6391-0 jUaUqx
+        this.blockTag = page.locator('[class*="BlockContent__BlockTags"]'); //BlockContent__BlockTags-sc-766b4868-15 bzDMPC //การ์ดแรกมี hidden //.first()
+        this.tagItem = this.blockTag.locator('a[rel="tag"]'); //Tags__TagItem-sc-89fc6391-0 jUaUqx
         this.multiTagCard = page.locator('.ProMultiTag__ListPostCard-sc-21da27a2-0') //ProMultiTag__ListPostCard-sc-21da27a2-0 eofyIs
 
         this.shareOnFacebook = page.getByRole('button', { name: 'Share on Facebook' }); //page.locator('#suggest-for-you-default').getByRole('button', { name: 'Share on Facebook' });
@@ -146,6 +155,7 @@ export class PromotionPage {
         this.shareCopyLink = page.getByRole('button', { name: 'share-copy-link' });
 
         // ---------- Comment Section ----------
+        this.layout_Comment = page.locator('.BlockSendComment__BlockSendCommentLayout-sc-d6705f8b-0');
         this.blockSentComment = page.locator('.SendComment__BlockSendComment-sc-cbc590b3-0').first(); //BlockSendComment__BlockSendCommentLayout-sc-d6705f8b-0 ensIGq >> กล่องพิมพ์ส่ง Comment (อันบน)
         this.blockComment = page.locator('.BlockComment__BlockComments-sc-86b7d0e5-0'); //BlockComment__BlockComments-sc-86b7d0e5-0 cOIDBs >> กล่อง comment ทั้งหมด
         this.blockSentCommentReply = page.locator('.CommentComponents__BlockSendCommentReply-sc-34e5e5de-3'); //comment ที่แต่ละคน reply ก่อนหน้า
@@ -159,18 +169,18 @@ export class PromotionPage {
         this.existingComment = page.locator('.CommentComponents__BlockComment-sc-34e5e5de-0'); // comment ที่มีอยู่ก่อนหน้าแล้ว
 
         // ---------- Element Popular Promotion ----------
-        this.box_ProPopular = page.locator('.BlockRelatePopular__BoxListPopular-sc-be13f440-4');
-        this.card_ProPopular = page.locator('.BlockRelatePopular__CardPopular-sc-be13f440-1');
-        this.coverImg_CardProPopular = page.locator('.CardPromotion__StyledLink-sc-50ef9525-2');
-        this.title_CardProPopular = page.locator('.CardPromotion__BlockTitle-sc-50f9525-3'); //CardPromotion__StyledLink-sc-50ef9525-2
-        this.logoBrand_CardProPopular = page.locator('.CardPromotion__BlockBrandLogo-sc-50f9525-6'); //CardPromotion__StyledLink-sc-50ef9525-2
+        this.box_ProPopular = page.locator('.BlockRelatePopular__BoxListPoppular-sc-be13f440-4');
+        this.card_ProPopular = page.locator('.CardPromotion__CardComponent-sc-50ef9525-0');   //BlockRelatePopular__CardPopular-sc-be13f440-1
+        this.coverImg_CardProPopular = this.card_ProPopular.locator('a[href^="/p/"]').first();   //CardPromotion__StyledLink-sc-50ef9525-2
+        this.title_CardProPopular = this.card_ProPopular.locator('[class*="CardPromotion__TitleOther"]'); //CardPromotion__StyledLink-sc-50ef9525-2, CardPromotion__BlockTitle-sc-50f9525-3
+        this.logoBrand_CardProPopular = this.card_ProPopular.locator('[class*="CardPromotion__BlockBrandLogo"] a'); //CardPromotion__BlockBrandLogo-sc-50f9525-6, CardPromotion__StyledLink-sc-50ef9525-2
         // this.buttonAction_CardProPopular = page.locator('.');
-        this.shareBtn_CardProPopular = page.locator('..ButtonShare__ButtonWrapper-sc-686553f6-0'); //.CardPromotion__BlockShare-sc-50ef9525-13 style="visibility: hidden"
-        this.loveBtn_CardProPopular = page.locator('.ButtonIconOnly__Button-sc-9be909ce-0.gRKZuw.btn.action-love'); //
-        this.bookmarkBtn_CardProPopular = page.locator('.ButtonIconOnly__Button-sc-9be909ce-0.gRKZuw.btn.action-bookmark'); //
-        this.discAndDate_CardProPopular = page.locator('.CardPromotion__Label-sc-50ef9525-10');
+        this.shareBtn_CardProPopular = page.locator('.ButtonShare__ButtonWrapper-sc-686553f6-0'); //.CardPromotion__BlockShare-sc-50ef9525-13 style="visibility: hidden"
+        this.loveBtn_CardProPopular = page.locator('.ButtonIconOnly__Button-sc-9be909ce-0.gRKZuw.btn.action-love'); // this.card.locator('.action-love');
+        this.bookmarkBtn_CardProPopular = page.locator('.ButtonIconOnly__Button-sc-9be909ce-0.gRKZuw.btn.action-bookmark'); // this.card.locator('.action-bookmark');
+        this.discAndDate_CardProPopular = this.card_ProPopular.locator('[class*="CardPromotion__Label"]'); //page.locator('.CardPromotion__Label-sc-50ef9525-10'); CardPromotion__BlockLabel
         // this.dateContent_CardProPopular = page.locator('.');
-        this.labelPro_CardProPopular = page.locator('#suggest-for-you-default').getByText('โปรโมชัน', { exact: true });
+        this.labelPro_CardProPopular = this.card_ProPopular.getByText('โปรโมชัน', { exact: true }); //page.locator('#suggest-for-you-default').
     }
 
     // ==================== Page Actions ====================
@@ -229,6 +239,28 @@ export class PromotionPage {
         await this.shareButton_footer.click();
     }
 
+    // -------------- Relate --------------
+    async clickShareOnFacebook_Relate(page: Page): Promise<Page> {
+        await this.clickShare_PromotionPopular();
+        const popupPromise = page.waitForEvent('popup');
+        await this.shareOnFacebook.click();
+        return await popupPromise;
+    }
+
+    async clickShareOnLine_Relate(page: Page): Promise<Page> {
+        await this.clickShare_PromotionPopular();
+        const popupPromise = page.waitForEvent('popup');
+        await this.shareOnLine.click();
+        return await popupPromise;
+    }
+
+    async clickShareOnX_Relate(page: Page): Promise<Page> {
+        await this.clickShare_PromotionPopular();
+        const popupPromise = page.waitForEvent('popup');
+        await this.shareOnX.click();
+        return await popupPromise;
+    }
+
     // -------------- TOP --------------
     async clickShareOnFacebook_top(page: Page): Promise<Page> {
         await this.clickShareTop_Button();
@@ -251,10 +283,15 @@ export class PromotionPage {
         return await popupPromise;
     }
 
-    async clickShareCopyLink_top(page: Page): Promise<string> {
+    // async clickShareCopyLink_top(page: Page): Promise<string> {
+    async clickShareCopyLink_top() {
         await this.clickShareTop_Button();
-        await this.shareCopyLink.first().click(); // คลิกจริง trigger การ copy
-        return await page.evaluate(() => navigator.clipboard.readText());
+        const clipboardValue = await this.shareCopyLink.first().getAttribute('data-clipboard-text'); // อ่านตอน element ยังอยู่
+        await this.shareCopyLink.first().click(); // ค่อยคลิกจริงทีหลัง (จำลอง user คลิกจริง)
+        return clipboardValue;
+        // await this.clickShareTop_Button();
+        // await this.shareCopyLink.first().click(); // คลิกจริง trigger การ copy
+        // return await page.evaluate(() => navigator.clipboard.readText());
     }
 
     // -------------- FOOTER --------------
@@ -317,7 +354,7 @@ export class PromotionPage {
     }
 
     async clickPromotionPopular() {
-        await this.title_CardProPopular.first().click();
+        await this.coverImg_CardProPopular.first().click();
     }
 
     async clickLove_PromotionPopular() {
@@ -333,7 +370,12 @@ export class PromotionPage {
     }
 
     async clickShare_PromotionPopular() {
+        await this.clickPromotionCard_title();
         await this.coverImg_CardProPopular.hover();
         await this.shareBtn_CardProPopular.click();
+    }
+
+    async clickAuthorLink() {
+        await this.authorNameLink_ArticleDetail.first().click();
     }
 }

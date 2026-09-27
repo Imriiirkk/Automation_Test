@@ -3,7 +3,7 @@ POM: Article Page
 Owner: Film
 */
 
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 
 export class ArticlePage {
     private page: Page;
@@ -18,12 +18,15 @@ export class ArticlePage {
     public readonly author_CardBanner: Locator;
     public readonly datePublish_CardBanner: Locator;
     public readonly bookmark_CardBanner: Locator;
+    public readonly activeBanner: Locator;
 
     // ---------- Article Categories Tap ----------
     private articleFilterBtn: Record<string, Locator>;
     public readonly blockMenuCategories: Locator;
     public readonly inactiveTab: Locator;
     public readonly activeTab: Locator;
+    public readonly noArticleMessage: Locator;
+
 
     // ---------- Article Card ----------
     public readonly articleCard: Locator;
@@ -35,8 +38,10 @@ export class ArticlePage {
     public readonly datePost_ArticleCard: Locator;
     public readonly profileAuthor_ArticleCard: Locator;
     // public nameAuthor_ArticleCard: Locator;
+    public readonly articleCard_Test: Locator;
+    public readonly bookmark_ArticleCard_Test: Locator;
     public readonly bookmark_ArticleCard: Locator;
-    public readonly bookmarkCardIcon: Locator;
+    // public readonly bookmarkCardIcon: Locator;
 
     // ---------- Article Detail ----------
     public readonly title_ArticleDetail: Locator;
@@ -96,15 +101,17 @@ export class ArticlePage {
         this.article_heading = page.getByRole('heading', { name: 'บทความ' });
 
         // ---------- Article Highlight Banner ----------
-        this.articleHightlight = page.locator('.swiper'); //locator('.ArticalLageHorizontalCard__Card-sc-d1a5b486-0').first() และ 2) <div class="ArticalLageHorizontalCard__Card-sc-d1a5b486-0 weOVL">…</div> aka locator('div').filter({ hasText: /^Testerทดสอบสร้างบทความ1 ก\.ย\. 2569$/ }).nth(1)
-        this.articleBannerEach = page.locator('.swiper-slide') //aria-label = "1 / 2", data-swiper-slide-index = "0" // .swiper-slide swiper-slide-active
-        // .swiper-slide swiper-slide-next swiper-slide-prev
-        this.indicatorEach = page.getByRole('button', { name: /Go to slide/ });  //.client__CustomPagination-sc-e3e6a812-0
-        this.imgCover_CardBanner = page.getByRole('link', { name: 'link', exact: true }).nth(2); //.ComponentLink__StyledLink-sc-86eeea75-0.jPGtZW
-        this.title_CardBanner = page.locator('.ArticalLageHorizontalCard__Title-sc-d1a5b486-2.hRDRhS'); //น่าจะต้องใช้ locator('a').filter({ hasText: /^ทดสอบสร้างบทความ$/ })
-        this.author_CardBanner = page.locator('.ArticalLageHorizontalCard__Profile-sc-d1a5b486-6.hJHaPa'); //น่าจะใช้ locator('div').filter({ hasText: /^Tester$/ }).nth(1)
-        this.datePublish_CardBanner = page.locator('.ArticalLageHorizontalCard__PublishedDate-sc-d1a5b486-4.cJGgqw'); // getByText('ก.พ. 2569')
-        this.bookmark_CardBanner = page.locator('.swiper-slide.swiper-slide swiper-slide-active').getByTestId('bookmark-button');
+        this.articleHightlight = page.locator('.swiper');
+        this.articleBannerEach = page.locator('.swiper-slide');
+        this.indicatorEach = page.getByRole('button', { name: /Go to slide/ });
+        this.activeBanner = page.locator('.swiper-slide-active');   // Active banner ปัจจุบัน
+
+        // Element ภายใน active banner
+        this.imgCover_CardBanner = this.activeBanner.getByRole('link', { name: 'link', exact: true }).first();
+        this.title_CardBanner = this.activeBanner.locator('[class*="ArticalLageHorizontalCard__Title"]');
+        this.author_CardBanner = this.activeBanner.locator('[class*="ArticalLageHorizontalCard__Profile"]');
+        this.datePublish_CardBanner = this.activeBanner.locator('[class*="ArticalLageHorizontalCard__PublishedDate"]');
+        this.bookmark_CardBanner = this.activeBanner.getByTestId('bookmark-button');
 
         // ---------- Tab Categories ----------
         this.articleFilterBtn = {
@@ -119,12 +126,13 @@ export class ArticlePage {
         this.blockMenuCategories = page.locator('.BlogFilterCategories__BlockMenuCategories-sc-ec10c760-0');
         this.inactiveTab = page.locator('.BlogFilterSelector__BlockInactiveTab-sc-7829bd5c-1');
         this.activeTab = page.locator('.BlogFilterSelector__BlockActiveTab-sc-7829bd5c-0');
+        this.noArticleMessage = page.locator('p').filter({ hasText: 'เปย์เป้ขออภัยครับ...' });
 
         this.loadMoreButton = page.getByRole('button', { name: 'ดูเพิ่มเติม' });
 
         // ---------- Article Card ----------
         this.articleCard = page.locator('.BlogMultiCategories__ListArticle-sc-a10bddd5-0');
-        this.articleCardEach = page.locator('.BlogMultiCategories__BlockArticle-sc-a10bddd5-1');
+        this.articleCardEach = page.locator('[class*="FixSizeArticleCard__Card-sc-"]'); //.BlogMultiCategories__BlockArticle-sc-a10bddd5-1
         this.imgCover_ArticleCard = page.locator('.ComponentLink__StyledLink-sc-86eeea75-0');
         this.label_ArticleCard = page.locator('.FixSizeArticleCard__ArticleLabel-sc-a3159c29-8');
         this.title_ArticleCard = page.locator('.ComponentLink__StyledLink-sc-86eeea75-0'); //FixSizeArticleCard__Title-sc-a3159c29-2
@@ -132,8 +140,10 @@ export class ArticlePage {
         this.datePost_ArticleCard = page.locator('.FixSizeArticleCard__PublishedDate-sc-a3159c29-5');
         this.profileAuthor_ArticleCard = page.locator('.FixSizeArticleCard__Profile-sc-a3159c29-7'); //block profile = img + name
         // this.nameAuthor_ArticleCard = page.locator('.BlogMultiCategories__BlockArticle-sc-a10bddd5-1'); //block profile = img + name 
-        this.bookmark_ArticleCard = page.locator('.FixSizeArticleCard__BookmarkButton-sc-a3159c29-4'); // .getByTestId('bookmark-button')
-        this.bookmarkCardIcon = this.bookmark_ArticleCard.locator('svg path'); // .locator('.FixSizeArticleCard__BookmarkButton-sc-a3159c29-4 > svg > path')
+        this.articleCard_Test = page.locator('[class*="FixSizeArticleCard__Card-sc-"]').filter({ has: page.locator('a[href="/p/testar-001"]') });
+        this.bookmark_ArticleCard_Test = this.articleCard_Test.getByTestId('bookmark-button');
+        this.bookmark_ArticleCard = this.articleCardEach.getByTestId('bookmark-button'); // .getByTestId('bookmark-button') //.FixSizeArticleCard__BookmarkButton-sc-a3159c29-4
+        // this.bookmarkCardIcon = this.bookmark_ArticleCard.locator('svg path'); // .locator('.FixSizeArticleCard__BookmarkButton-sc-a3159c29-4 > svg > path')
 
         // ---------- Article Detail ----------
         this.title_ArticleDetail = page.locator('.Text__H1-sc-30b53bf2-0');
@@ -190,7 +200,7 @@ export class ArticlePage {
         this.title_RelatedArticle = page.locator('.CardArticleRelate__BlockTitle-sc-4738072-2').first();
         this.author_RelatedArticle = page.locator('.CardArticleRelate__SectionPlatform-sc-4738072-8').first();
         this.publishDate_RelatedArticle = page.locator('.CardArticleRelate__PlatformLabel-sc-4738072-11');
-        this.bookmarkBtn_RelatedArticle = page.locator('.ButtonIconBookMarkOnly__Button-sc-b618260f-0').first();
+        this.bookmarkBtn_RelatedArticle = page.locator('[class*="ButtonIconBookMarkOnly__Button"]').first();
         this.bookmarkIcon_RelatedArticle = this.bookmarkBtn_RelatedArticle.locator('svg path');
         this.loveBtn_RelatedArticle = page.locator('.ButtonArticleDetailIcon__Button-sc-bee472b4-0');
         this.loveIcon_RelatedArticle = this.loveBtn_RelatedArticle.locator('svg path');
@@ -225,6 +235,22 @@ export class ArticlePage {
 
     async clickBookmarkCard() {
         await this.bookmark_ArticleCard.first().click();
+    }
+
+    async clickBookmarkTestCard() {
+        await this.bookmark_ArticleCard_Test.click();
+    }
+
+    async ensureBookmarkUnbookmarked() {
+        const bookmark = this.bookmark_ArticleCard.first();
+
+        // ถ้ามี SVG = Bookmark อยู่แล้ว
+        if (await bookmark.locator('svg path').count() > 0) {
+            await bookmark.click();
+
+            await expect(bookmark.locator('i.fa-bookmark'))
+                .toBeVisible();
+        }
     }
 
     async clickTag() {
@@ -330,10 +356,11 @@ export class ArticlePage {
         return await popupPromise;
     }
 
-    async clickShareCopyLink_Relate(page: Page): Promise<string> {
-        await this.clickShareBtnRelatedArticlie();
-        await this.shareCopyLink.click(); // คลิกจริง trigger การ copy
-        return await page.evaluate(() => navigator.clipboard.readText());
+    async clickShareCopyLink_Relate() {
+        await this.shareBtn_RelatedArticle.click();
+        const clipboardValue = await this.shareCopyLink.getAttribute('data-clipboard-text'); // อ่านตอน element ยังอยู่
+        await this.shareCopyLink.click(); // ค่อยคลิกจริงทีหลัง (จำลอง user คลิกจริง)
+        return clipboardValue;
     }
 
     // async clickShareOnFacebook(page: Page): Promise<Page> {
@@ -386,7 +413,13 @@ export class ArticlePage {
         await this.authorNameLink_ArticleDetail.first().click();
     }
 
-
+    async getRelatedArticleUrl(index = 0) {
+        const card = this.page
+            .locator('#suggest-for-you-default .CardArticleRelate__CardComponent-sc-4738072-0')
+            .nth(index);
+        const href = await card.locator('a').first().getAttribute('href');
+        return new URL(href!, this.page.url()).toString(); // ต่อ relative path ให้เป็น full URL
+    }
 
     //     async function findArticleWithRelated(page, articlePage) {
     //     const titles = articlePage.title_ArticleCard;
