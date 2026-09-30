@@ -3,7 +3,7 @@ POM: Shopper Posts Page
 Owner: Film
 */
 
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 
 export class ShopperPostsPage {
     private page: Page;
@@ -67,7 +67,7 @@ export class ShopperPostsPage {
     public readonly productType_ItemDetail: Locator;
     public readonly purchaseBtn_ItemDetail: Locator;
     public readonly loveBtn_ItemDetail: Locator;
-    public readonly shareBtn_ItemDetail_: Locator;
+    public readonly shareBtn_ItemDetail: Locator;
     public readonly shareOnFacebook_ItemDetail: Locator;
     public readonly shareOnLine_ItemDetail: Locator;
     public readonly shareOnX_ItemDetail: Locator;
@@ -98,6 +98,8 @@ export class ShopperPostsPage {
     public readonly loveBtn_ItemSameEvent: Locator;
 
     // ---------- Shopper Event Detail ----------
+    public readonly eventDetail_ContentBox: Locator;
+    public readonly eventDetail_BoxDetail: Locator;
     public readonly title_EventDetail: Locator;
     public readonly coverImg_EventDetail: Locator;
     public readonly description_EventDetail: Locator;
@@ -163,8 +165,9 @@ export class ShopperPostsPage {
 
         // ---------- Shopper Card Item ----------
         this.itemShopperPostCard = page.locator('[class*="ListItemShopperPost__ListPosts"]');   //.ListItemShopperPost__ListPosts-sc-c96491c8-0
-        this.itemShopperPostCardEach = this.itemShopperPostCard.locator('[class*="ListItemShopperPost__BlockArticle"]').locator('[class*="FixSizeItemCard__Card"]');
-        this.imgCover_ItemCard = this.itemShopperPostCardEach.locator('div[style*="background-image"]'); // ใช้เหมือนกันกับ title.ComponentLink__StyledLink-sc-86eeea75-0. FixSizeItemCard__Card-sc-2c06b627-0 > a').first();
+        this.itemShopperPostCardEach = page.locator('[class*="FixSizeItemCard__Card"]'); //itemShopperPostCard.locator('[class*="ListItemShopperPost__BlockArticle"]')
+        this.imgCover_ItemCard = this.itemShopperPostCardEach.locator('a[aria-label="link"]:has(div[style*="background-image"])');
+        // this.imgCover_ItemCard = this.itemShopperPostCardEach.locator('div[style*="background-image"]'); // ใช้เหมือนกันกับ title.ComponentLink__StyledLink-sc-86eeea75-0. FixSizeItemCard__Card-sc-2c06b627-0 > a').first();
         this.label_ItemCard = this.itemShopperPostCardEach.locator('[class*="FixSizeItemCard__PostLabel"]'); //.FixSizeItemCard__PostLabel-sc-2c06b627-5
         this.title_ItemCard = this.itemShopperPostCardEach.locator('[class*="FixSizeItemCard__Title"]'); //.FixSizeItemCard__Title-sc-2c06b627-4 event: .FixSizeItemCard__PostTitle-sc-2c06b627-3
         this.itemCardTitleLink = this.title_ItemCard.locator('xpath=ancestor::a');
@@ -175,11 +178,11 @@ export class ShopperPostsPage {
         // ---------- Shopper Card Event ----------
         this.shopperPostCard = page.locator('[class*="ListShopperPost__ListPosts"]');   //ListShopperPost__ListPosts-sc-99cb7286-0
         this.shopperCardArticle = this.shopperPostCard.locator('[class*="ListShopperPost__BlockArticle"]');
-        this.shopperPostCardEach = this.shopperCardArticle.locator('[class*="FixSizeShopperPostCard__Card"]'); //.ListShopperPost__ListPosts-sc-99cb7286-1
-        this.imgCover_EventCard = this.shopperPostCardEach.locator('div[style*="background-image"]');  // ใช้เหมือนกันกับ title
+        this.shopperPostCardEach = page.locator('[class*="FixSizeShopperPostCard__Card"]'); //.ListShopperPost__ListPosts-sc-99cb7286-1
+        this.imgCover_EventCard = this.shopperPostCardEach.locator('a[aria-label="link"]:has(div[style*="background-image"])');  // ใช้เหมือนกันกับ title
         this.title_EventCard = this.shopperPostCardEach.locator('[class*="FixSizeShopperPostCard__Title"]');  // ใช้เหมือนกันกับ coverImg
         this.eventCardTitleLink = this.title_EventCard.locator('xpath=ancestor::a');
-        this.dateContent_EventCard = this.shopperPostCardEach.locator('[class*="FixSizeShopperPostCard__DateContent"]').first(); //FixSizeShopperPostCard__DateContent-sc-bf72de59-4
+        this.dateContent_EventCard = this.shopperPostCardEach.locator('[class*="FixSizeShopperPostCard__DateCotent"]').first(); //FixSizeShopperPostCard__DateContent-sc-bf72de59-4
         this.proLabel_EventCard = this.shopperPostCardEach.locator('[class*="FixSizeShopperPostCard__PriceContent"]').first(); //.FixSizeShopperPostCard__PriceContent-sc-bf72de59-5
 
         // ---------- Individual Item Detail ----------
@@ -191,11 +194,11 @@ export class ShopperPostsPage {
         this.productType_ItemDetail = this.shopperDetail_ContentBox.locator('[class*="ShopperDetail__CategoryTypeBox"] button'); //.ShopperDetail__CategoryTypeBox-sc-7a17d395-5 มี Button type="button" ข้างใน
         this.purchaseBtn_ItemDetail = this.shopperDetail_ContentBox.locator('[class*="ShopperDetail__PurchaseButton"]'); //.ShopperDetail__PurchaseButton-sc-7a17d395-9
         this.loveBtn_ItemDetail = page.locator('[class*="ShopperDetail__CircleButton"]').first(); //.ShopperDetail__CircleButton-sc-7a17d395-10
-        this.shareBtn_ItemDetail_ = page.locator('[class*="ShopperDetail__CircleButton"].position-relative'); //.ShopperDetail__CircleButton-sc-7a17d395-10.cIwDzr.btn.position-relative
-        this.shareOnFacebook_ItemDetail = page.getByRole('button', { name: 'Share on Facebook' }); //getByTestId('share-direction-row')
-        this.shareOnLine_ItemDetail = page.getByRole('button', { name: 'Share on Line' });
-        this.shareOnX_ItemDetail = page.getByRole('button', { name: 'Share on X' });
-        this.shareCopyLink_ItemDetail = page.getByRole('button', { name: 'share-copy-link' });
+        this.shareBtn_ItemDetail = page.locator('[class*="ShopperDetail__CircleButton"].position-relative'); //.ShopperDetail__CircleButton-sc-7a17d395-10.cIwDzr.btn.position-relative
+        this.shareOnFacebook_ItemDetail = page.getByTestId('share-direction-row').getByRole('button', { name: 'Share on Facebook' }); //getByTestId('share-direction-row').
+        this.shareOnLine_ItemDetail = page.getByTestId('share-direction-row').getByRole('button', { name: 'Share on Line' });
+        this.shareOnX_ItemDetail = page.getByTestId('share-direction-row').getByRole('button', { name: 'Share on X' });
+        this.shareCopyLink_ItemDetail = page.getByTestId('share-direction-row').getByRole('button', { name: 'share-copy-link' });
         this.owner_shopper = this.shopperDetail_ContentBox.locator('[class*="ShopperDetail__ShopperOwnerBox"]'); //.ShopperDetail__ShopperOwnerBox-sc-7a17d395-12
         this.descrition_ItemDetail = this.shopperDetail_ContentBox.locator('[class*="ShopperDetail__PostDescription"]'); //.ShopperDetail__PostDescription-sc-7a17d395-15
         this.tag_ItemDetail = this.shopperDetail_ContentBox.locator('[class*="ShopperDetail__CategoryTagBox"]');
@@ -210,7 +213,7 @@ export class ShopperPostsPage {
         this.indicator_Btn = page.getByRole('button', { name: /Go to slide/ });
 
         // ---------- การ์ดสินค้าที่อยู่ในอีเวนต์เดียวกัน ----------
-        this.itemSameEvent = this.block_ItemSameEvent.locator('[class*="ItemList__BoxContent"]').locator('.swiper');
+        this.itemSameEvent = page.locator('[class*="ItemList__BoxContent"]').locator('.swiper');
         this.itemSameEvent_Slide = this.itemSameEvent.locator('.swiper-slide');
         this.itemSameEvent_ActiveSlide = this.itemSameEvent.locator('.swiper-slide-active');
         this.itemSameEvent_NextSlide = this.itemSameEvent.locator('.swiper-slide-next');
@@ -224,29 +227,32 @@ export class ShopperPostsPage {
         this.postLabel_ItemSameEvent = this.itemSameEvent_ActiveSlide.locator('[class*="FixSizeItemCard__PostLabel"]');
         this.eventName_ItemSameEvent = this.itemSameEvent_ActiveSlide.locator('[class*="FixSizeItemCard__PostTitle"]');
         this.price_ItemSameEvent = this.itemSameEvent_ActiveSlide.locator('[class*="FixSizeItemCard__PriceContent"]');
-        this.loveBtn_ItemSameEvent = this.itemSameEvent_ActiveSlide.getByRole('button', { name: 'Add to favorites' });
+        this.loveBtn_ItemSameEvent = this.itemSameEvent_ActiveSlide.getByRole('button', { name: /favorites/i });
 
         // ---------- Shopper Event Detail ----------
-        this.title_EventDetail = page.locator('.PostDetail__Title-sc-b1e566b2-3');
-        this.coverImg_EventDetail = page.locator('.PostDetail__CoverEventDetail-sc-b1e566b2-0');
-        this.description_EventDetail = page.locator('.PostDetail__Descript-sc-b1e566b2-5');
-        this.priceLabel_EventDetail = page.locator('.PostDetail__Price-sc-b1e566b2-6');
-        this.viewCount_EventDetail = page.locator('.PostDetail__ViewTotal-sc-b1e566b2-0');
-        this.dateStart_EventDetail = page.locator('.PostDetail__StartDate-sc-b1e566b2-0');
-        this.shareBtn_EventDetail = page.locator('.PostDetail__ActionButton-sc-b1e566b2-10.cDTTRI.btn.position-relative');
-        this.loveBtn_EventDetail = page.locator('.PostDetail__ActionButton-sc-b1e566b2-10').first();
+        this.eventDetail_ContentBox = page.locator('[class*="PostDetail__BlockContent"]');
+        this.eventDetail_BoxDetail = this.eventDetail_ContentBox.locator('[class*="PostDetail__Box"]');
+        this.title_EventDetail = this.eventDetail_BoxDetail.locator('[class*="PostDetail__Title"]');
+        this.coverImg_EventDetail = this.eventDetail_ContentBox.locator('[class*="PostDetail__CoverEventDetail"]');
+        this.description_EventDetail = this.eventDetail_BoxDetail.locator('[class*="PostDetail__Descript"]');
+        this.priceLabel_EventDetail = this.eventDetail_BoxDetail.locator('[class*="PostDetail__Price"]');
+        this.viewCount_EventDetail = this.eventDetail_BoxDetail.locator('[class*="PostDetail__ViewTotal"]');
+        this.dateStart_EventDetail = this.eventDetail_BoxDetail.locator('[class*="PostDetail__StartDate-sc-"]');
+        this.shareBtn_EventDetail = this.eventDetail_BoxDetail.locator('[class*="PostDetail__ActionButton"].position-relative');
+        this.loveBtn_EventDetail = this.eventDetail_BoxDetail.locator('[class*="PostDetail__ActionButton"]').first();
         this.shareOnFacebook_EventDetail = page.getByRole('button', { name: 'Share on Facebook' });
         this.shareOnLine_EventDetail = page.getByRole('button', { name: 'Share on Line' });
         this.shareOnX_EventDetail = page.getByRole('button', { name: 'Share on X' });
         this.shareCopyLink_EventDetail = page.getByRole('button', { name: 'share-copy-link' });
 
         // ---------- Shopper การ์ดสินค้าที่เข้าร่วมอีเวนต์นั้น ๆ ----------
-        this.listEventItem = page.locator('.ListItemEventDetail__ListEventItem');
-        this.blockEventItem = page.locator('[class*="ListItemEventDetail__BlockEventItem"]');
-        this.title_ItemOnEvent = page.locator('[class*="CardCarryItem__BlockTitle"]');
-        this.coverImg_ItemOnEvent = this.blockEventItem.locator('div').locator('div > [style*="background-image"]');
-        this.price_ItemOnEvent = page.locator('[class*="CardCarryItem__BlockPrice"]');
-        this.purchaseBtn_ItemOnEvent = page.locator('a').filter({ hasText: 'ฝากหิ้วชิ้นนี้' }).first();
+        // ---------- Shopper การ์ดสินค้าที่เข้าร่วมอีเวนต์นั้น ๆ ----------
+        this.listEventItem = page.locator('[class*="ListItemEventDetail__ListEventItem"]');
+        this.blockEventItem = this.listEventItem.locator('[class*="ListItemEventDetail__BlockEventItem"]').first();
+        this.title_ItemOnEvent = this.blockEventItem.locator('[class*="CardCarryItem__BlockTitle"]');
+        this.coverImg_ItemOnEvent = this.blockEventItem.locator('div[style*="background-image"]').first();
+        this.price_ItemOnEvent = this.blockEventItem.locator('[class*="CardCarryItem__BlockPrice"]');
+        this.purchaseBtn_ItemOnEvent = this.blockEventItem.locator('[class*="CardCarryItem__ButtonCarry"]');
     }
 
     // ==================== Page Actions ====================
@@ -256,7 +262,7 @@ export class ShopperPostsPage {
         await this.event_items.click();
     }
 
-    async clickFilter_Individual() {
+    async clickFilter_Item() {
         await this.selectCardDeopdown.click();
         await this.individual_item.nth(1).click();
     }
@@ -285,6 +291,7 @@ export class ShopperPostsPage {
 
     async clickEventCard_title() {
         await this.title_EventCard.first().click();
+
     }
 
     async clickLoveItemCard() {
@@ -297,6 +304,38 @@ export class ShopperPostsPage {
 
     async clickLoveItemDetail() {
         await this.loveBtn_ItemDetail.click()
+    }
+
+    async clickShareCopyLink_ItemDetail() {
+        await this.shareBtn_ItemDetail.click();
+        const clipboardValue = await this.shareCopyLink_ItemDetail.getAttribute('data-clipboard-text');
+        await this.shareCopyLink_ItemDetail.click();
+        return clipboardValue;
+    }
+
+    async clickShareCopyLink_EventDetail() {
+        await this.shareBtn_EventDetail.click();
+        const clipboardValue = await this.shareCopyLink_EventDetail.getAttribute('data-clipboard-text');
+        await this.shareCopyLink_EventDetail.click();
+        return clipboardValue;
+    }
+
+    async clickItemCard_titleByName(itemName: string) {
+        const itemTitle = this.itemShopperPostCardEach
+            .locator('[class*="FixSizeItemCard__Title"]')
+            .filter({ hasText: itemName });
+
+        await expect(itemTitle.first()).toBeVisible({ timeout: 15000 });
+        await itemTitle.first().click();
+    }
+
+    async clickEventCard_titleByName(eventName: string) {
+        const eventTitle = this.shopperPostCardEach
+            .locator('[class*="FixSizeShopperPostCard__Title"]')
+            .filter({ hasText: eventName });
+
+        await expect(eventTitle.first()).toBeVisible({ timeout: 15000 });
+        await eventTitle.first().click();
     }
 }
 
