@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Brand Page (Desktop)', () => {
 
     test.beforeEach(async ({ page }) => {
-        await page.goto('/brand');
+        await page.goto('');
     });
 
     test('Brand_Desktop_001: ตรวจสอบการแสดงรายละเอียดบนหน้า แบรนด์', async ({ page }) => {

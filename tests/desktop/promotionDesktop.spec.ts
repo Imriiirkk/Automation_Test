@@ -674,7 +674,7 @@ test.describe('Promotion Page (Desktop)', () => {
     test('Promotion_Desktop_058: ตรวจสอบการนำทาง เมื่อกด Tag บนหน้ารายละเอียดโปรโมชัน (ถ้ามี)', async ({ page }) => {
         await promotionPage.clickPromotionCard_title();
         const title = await promotionPage.heading_detail.innerText();
-        console.log('Promotion Title:', title);
+        // console.log('Promotion Title:', title);
         const tagCount = await promotionPage.tagItem.count();
         console.log('จำนวน Tag ที่เจอ:', tagCount);
 

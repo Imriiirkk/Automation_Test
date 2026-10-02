@@ -1,144 +1,245 @@
 import { test, expect } from '@playwright/test';
+import { AuthorPage } from '../../pages/AuthorPage';
+import { NavbarFooter } from '../../pages/NavbarFooter';
 
 test.describe('Author Page (Desktop)', () => {
 
+    let authorPage: AuthorPage;
+    let navbar: NavbarFooter;
+
     test.beforeEach(async ({ page }) => {
-        await page.goto('/brand');
+        authorPage = new AuthorPage(page);
+        navbar = new NavbarFooter(page);
+
+        await page.goto('/author');
     });
 
-    test('Author_Desktop_001: ตรวจสอบการแสดงรายละเอียดบนหน้า แบรนด์', async ({ page }) => {
-        await expect(page.getByText('แบรนด์')).toBeVisible();
+    // ---------- Author Heading ----------
+    test('Author_Desktop_001: ตรวจสอบการแสดงรายละเอียดบนหน้า นักเขียน', async ({ page }) => {
+        await expect(authorPage.author_heading).toBeVisible();
+        await expect(authorPage.headLayout).toBeVisible();
+        await expect(authorPage.author_title).toBeVisible();
 
-        // TODO: ตรวจสอบรายละเอียดของหน้า
+        // ตรวจสอบการแสดงรายการ Post Card
+        await expect(authorPage.each_PostCard.first()).toBeVisible();
     });
 
+    // ---------- Breadcrumb ----------
     test('Author_Desktop_002: ตรวจสอบการกด breadcrumbs', async ({ page }) => {
-        const breadcrumb = page.getByRole('navigation').getByRole('link').first();
+        await expect(authorPage.homeBreadcrumb).toBeVisible();
 
-        await expect(breadcrumb).toBeVisible();
-        await breadcrumb.click();
+        await authorPage.homeBreadcrumb.click();
 
-        // TODO: expected URL
+        await expect(page).toHaveURL(/\/$/);
     });
 
-    test('Author_Desktop_003: ตรวจสอบการกดรูปภาพ บนการ์ดอีเว้นต์', async ({ page }) => {
-        // TODO: locator จาก POM
-        const eventCardImage = page.locator('[class*="EventCard"]').first()
-            .locator('img');
+    // ---------- Promotion Card ----------
+    test('Author_Desktop_003: ตรวจสอบการกดรูปภาพ บนการ์ดโปรโมชัน', async ({ page }) => {
+        await expect(authorPage.promotionCard).toBeVisible();
+        await expect(authorPage.coverImg_PromotionCard).toBeVisible();
 
-        await expect(eventCardImage).toBeVisible();
-        await eventCardImage.click();
+        await authorPage.coverImg_PromotionCard.click();
 
-        // TODO: ตรวจสอบ URL
+        await expect(page).toHaveURL(/\/p\//);
     });
 
-    test('Author_Desktop_004: ตรวจสอบการกดชื่ออีเว้นต์ บนการ์ดอีเว้นต์', async ({ page }) => {
-        // TODO: locator จาก POM
-        const eventTitle = page.locator('[class*="EventCard"]').first()
-            .getByRole('link');
+    test('Author_Desktop_004: ตรวจสอบการกดชื่ออีเว้นต์ บนการ์ดโปรโมชัน', async ({ page }) => {
+        await expect(authorPage.promotionCard).toBeVisible();
+        await expect(authorPage.title_PromotionCard).toBeVisible();
 
-        await expect(eventTitle).toBeVisible();
-        await eventTitle.click();
+        await authorPage.title_PromotionCard.click();
 
-        // TODO: ตรวจสอบ URL
+        await expect(page).toHaveURL(/\/p\//);
     });
 
-    test('Author_Desktop_005: ตรวจสอบการกดรูปภาพ บนการ์ดโปรโมชัน', async ({ page }) => {
-        const promotionImage = page.locator('[class*="PromotionCard"]').first()
-            .locator('img');
+    // ---------- Article Card ----------
+    test('Author_Desktop_005: ตรวจสอบการกดรูปภาพ บนการ์ดบทความ', async ({ page }) => {
+        await expect(authorPage.articleCard).toBeVisible();
+        await expect(authorPage.coverImg_ArticleCard).toBeVisible();
 
-        await expect(promotionImage).toBeVisible();
-        await promotionImage.click();
+        await authorPage.coverImg_ArticleCard.click();
 
-        // TODO: ตรวจสอบ URL
+        await expect(page).toHaveURL(/\/p\//);
     });
 
-    test('Author_Desktop_006: ตรวจสอบการกดชื่ออีเว้นต์ บนการ์ดโปรโมชัน', async ({ page }) => {
-        const promotionTitle = page.locator('[class*="PromotionCard"]').first()
-            .getByRole('link');
+    test('Author_Desktop_006: ตรวจสอบการกดชื่ออีเว้นต์ บนการ์ดบทความ', async ({ page }) => {
+        await expect(authorPage.articleCard).toBeVisible();
+        await expect(authorPage.title_ArticleCard).toBeVisible();
 
-        await expect(promotionTitle).toBeVisible();
-        await promotionTitle.click();
+        await authorPage.title_ArticleCard.click();
 
-        // TODO: ตรวจสอบ URL
+        await expect(page).toHaveURL(/\/p\//);
     });
 
-    test('Author_Desktop_007: ตรวจสอบการกดรูปภาพ บนการ์ดบทความ', async ({ page }) => {
-        const articleImage = page.locator('[class*="ArticleCard"]').first()
-            .locator('img');
+    // ============================================================
+    // Like
+    // ============================================================
 
-        await expect(articleImage).toBeVisible();
-        await articleImage.click();
+    test('Author_Desktop_007: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
+        await expect(authorPage.loveArticle_Btn).toBeVisible();
 
-        // TODO: ตรวจสอบ URL
+        await authorPage.loveArticle_Btn.click();
+
+        // ตรวจสอบว่า Login/Signup ถูกเรียก
+        await expect(
+            page.getByText(/เข้าสู่ระบบ|ลงชื่อเข้าใช้|Login|Sign in/i).first()
+        ).toBeVisible();
     });
 
-    test('Author_Desktop_008: ตรวจสอบการกดชื่ออีเว้นต์ บนการ์ดบทความ', async ({ page }) => {
-        const articleTitle = page.locator('[class*="ArticleCard"]').first()
-            .getByRole('link');
+    test('Author_Desktop_008: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
+        await navbar.openLoginOrSignup_desktop();
 
-        await expect(articleTitle).toBeVisible();
-        await articleTitle.click();
+        // TODO: ใช้ credentials / login method จริงของโปรเจกต์
+        // await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
-        // TODO: ตรวจสอบ URL
+        await authorPage.loveArticle_Btn.click();
+
+        // TODO: ตรวจสอบสถานะ Like หลังจาก Login
+        await expect(authorPage.loveArticle_Btn).toBeVisible();
     });
 
-    test('Author_Desktop_009: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
-        // TODO: กด Like card
-        // TODO: ตรวจสอบ Login modal/page
-    });
+    test('Author_Desktop_009: ตรวจสอบการกดปุ่ม "Like" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
+        await navbar.openLoginOrSignup_desktop();
 
-    test('Author_Desktop_010: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         // TODO: Login
-        // TODO: กด Like
-        // TODO: ตรวจสอบสถานะ Like
+        // await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+
+        await authorPage.loveArticle_Btn.click();
+
+        // กด Like ซ้ำ
+        await authorPage.loveArticle_Btn.click();
+
+        // TODO: ตรวจสอบว่าสถานะ Like ถูกยกเลิก / จำนวน Like กลับมา
+        await expect(authorPage.loveArticle_Btn).toBeVisible();
     });
 
-    test('Author_Desktop_011: ตรวจสอบการกดปุ่ม "Like" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
+    // ============================================================
+    // Bookmark
+    // ============================================================
+
+    test('Author_Desktop_010: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
+        await expect(authorPage.bookmarkArticle_Btn).toBeVisible();
+
+        await authorPage.bookmarkArticle_Btn.click();
+
+        await expect(
+            page.getByText(/เข้าสู่ระบบ|ลงชื่อเข้าใช้|Login|Sign in/i).first()
+        ).toBeVisible();
+    });
+
+    test('Author_Desktop_011: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
+        await navbar.openLoginOrSignup_desktop();
+
         // TODO: Login
-        // TODO: Like
-        // TODO: Like ซ้ำ
-        // TODO: ตรวจสอบสถานะ
+        // await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+
+        await authorPage.bookmarkArticle_Btn.click();
+
+        // TODO: ตรวจสอบสถานะ Bookmark
+        await expect(authorPage.bookmarkArticle_Btn).toBeVisible();
     });
 
-    test('Author_Desktop_012: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
-        // TODO
+    test('Author_Desktop_012: ตรวจสอบการกดปุ่ม "Bookmark" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
+        await navbar.openLoginOrSignup_desktop();
+
+        // TODO: Login
+        // await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+
+        await authorPage.bookmarkArticle_Btn.click();
+
+        // กด Bookmark ซ้ำ
+        await authorPage.bookmarkArticle_Btn.click();
+
+        // TODO: ตรวจสอบว่าสถานะ Bookmark ถูกยกเลิก
+        await expect(authorPage.bookmarkArticle_Btn).toBeVisible();
     });
 
-    test('Author_Desktop_013: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
-        // TODO: Login + Bookmark
+    // ============================================================
+    // Share
+    // ============================================================
+
+    test('Author_Desktop_013: ตรวจสอบการกดปุ่ม "Share" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
+        await navbar.openLoginOrSignup_desktop();
+
+        // TODO: Login
+        // await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+
+        await authorPage.shareArticle_Btn.click();
+
+        await expect(authorPage.shareOnFacebook_Btn).toBeVisible();
+        await expect(authorPage.shareOnX_Btn).toBeVisible();
+        await expect(authorPage.shareOnLine_Btn).toBeVisible();
     });
 
-    test('Author_Desktop_014: ตรวจสอบการกดปุ่ม "Bookmark" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
-        // TODO: Login + Bookmark ซ้ำ
+    test('Author_Desktop_014: ตรวจสอบการกด "Icon Facebook" เพื่อ Share การ์ดต่างๆ', async ({ page }) => {
+        await navbar.openLoginOrSignup_desktop();
+
+        // TODO: Login
+        // await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+
+        await authorPage.shareArticle_Btn.click();
+
+        await expect(authorPage.shareOnFacebook_Btn).toBeVisible();
+
+        await authorPage.shareOnFacebook_Btn.click();
+
+        // TODO: ตรวจสอบการเปิด Facebook Share
     });
 
-    test('Author_Desktop_015: ตรวจสอบการกดปุ่ม "Share" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
-        // TODO: Login + Share
+    test('Author_Desktop_015: ตรวจสอบการกด "Icon X" เพื่อ Share การ์ดต่างๆ', async ({ page }) => {
+        await navbar.openLoginOrSignup_desktop();
+
+        // TODO: Login
+        // await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+
+        await authorPage.shareArticle_Btn.click();
+
+        await expect(authorPage.shareOnX_Btn).toBeVisible();
+
+        await authorPage.shareOnX_Btn.click();
+
+        // TODO: ตรวจสอบการเปิด X Share
     });
 
-    test('Author_Desktop_016: ตรวจสอบการกด "Icon Facebook" เพื่อ Share การ์ดต่างๆ', async ({ page }) => {
-        // TODO
+    test('Author_Desktop_016: ตรวจสอบการกด "Icon Line" เพื่อ Share การ์ดต่างๆ', async ({ page }) => {
+        await navbar.openLoginOrSignup_desktop();
+
+        // TODO: Login
+        // await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+
+        await authorPage.shareArticle_Btn.click();
+
+        await expect(authorPage.shareOnLine_Btn).toBeVisible();
+
+        await authorPage.shareOnLine_Btn.click();
+
+        // TODO: ตรวจสอบการเปิด LINE Share
     });
 
-    test('Author_Desktop_017: ตรวจสอบการกด "Icon X" เพื่อ Share การ์ดต่างๆ', async ({ page }) => {
-        // TODO
+    // ============================================================
+    // Scroll to Top
+    // ============================================================
+
+    test('Author_Desktop_017: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง', async ({ page }) => {
+        const scrollUpButton = page.locator('#btn-scroll-up');
+
+        await page.evaluate(() => {
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        await expect(scrollUpButton).toBeVisible();
     });
 
-    test('Author_Desktop_018: ตรวจสอบการกด "Icon Line" เพื่อ Share การ์ดต่างๆ', async ({ page }) => {
-        // TODO
-    });
+    test('Author_Desktop_018: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^"', async ({ page }) => {
+        const scrollUpButton = page.locator('#btn-scroll-up');
 
-    test('Author_Desktop_019: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง', async ({ page }) => {
-        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await page.evaluate(() => {
+            window.scrollTo(0, document.body.scrollHeight);
+        });
 
-        await expect(page.locator('#btn-scroll-up')).toBeVisible();
-    });
+        await expect(scrollUpButton).toBeVisible();
 
-    test('Author_Desktop_020: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^"', async ({ page }) => {
-        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-
-        await page.locator('#btn-scroll-up').click();
+        await scrollUpButton.click();
 
         await expect.poll(async () => {
             return await page.evaluate(() => window.scrollY);

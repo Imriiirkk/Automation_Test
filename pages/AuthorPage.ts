@@ -63,7 +63,7 @@ export class AuthorPage {
         this.authorBreadcrumb = page.getByText(/^นักเขียน/, { exact: true });
 
         // ---------- Multi-Author List Post Card ----------
-        this.listPost_Card = page.locator('[class*=""]'); //ProMultiAuthor__ListPostCard
+        this.listPost_Card = page.locator('[class*="ProMultiAuthor__ListPostCard"]'); //ProMultiAuthor__ListPostCard
         this.each_PostCard = page.locator('[class*="ProMultiAuthor__BlockArticle"]');
         this.articleCard = page.locator('[class*="CardArticle__CardComponent"]').first();
         this.promotionCard = page.locator('[class*="CardPromotion__CardComponent"]').first();

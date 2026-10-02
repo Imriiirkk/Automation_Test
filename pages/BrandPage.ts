@@ -63,7 +63,6 @@ export class BrandPage {
     // ---------- Scroll to Top ----------
     public readonly scrollToTop_Btn: Locator;
 
-
     constructor(page: Page) {
         this.page = page;
 
