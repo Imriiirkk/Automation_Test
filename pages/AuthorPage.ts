@@ -15,6 +15,7 @@ export class AuthorPage {
 
     // ---------- Breadcrumb ----------
     public readonly homeBreadcrumb: Locator;
+    public readonly homeBreadcrumbLink: Locator;
     public readonly authorBreadcrumb: Locator;
 
     // ---------- Multi-Author List Post Card ----------
@@ -28,6 +29,7 @@ export class AuthorPage {
     public readonly coverImg_ArticleCard: Locator;
     public readonly type_ArticleCard: Locator;
     public readonly title_ArticleCard: Locator;
+    public readonly title_ArticleCard_Mobile: Locator;
     public readonly description_ArticleCard: Locator;
     // ---------- Button Action in/on Card ----------
     public readonly loveArticle_Btn: Locator;
@@ -35,6 +37,7 @@ export class AuthorPage {
     public readonly shareArticle_Btn: Locator;
 
     // ---------- Element's Promotion Card ----------
+    public readonly promotionCardTest: Locator;
     public readonly promotionLink: Locator;
     public readonly coverImg_PromotionCard: Locator;
     public readonly badge_PromotionCard: Locator;
@@ -56,10 +59,11 @@ export class AuthorPage {
         this.page = page;
         this.author_heading = page.getByRole('heading', { name: /^avatar writer/ });
         this.headLayout = page.locator('[class*="HeadLayout__HeaderLayout"]');
-        this.author_title = this.headLayout.locator('[class*="HeadLayout__TitlePunpro"]');
+        this.author_title = page.locator('[class*="HeadLayout__TitlePunpro"]');
 
         // ---------- Breadcrumb ----------
         this.homeBreadcrumb = page.getByRole('link', { name: 'หน้าแรก', exact: true })
+        this.homeBreadcrumbLink = page.locator('div[class*="Breadcrumb__BreadcrumbBlock"] a[href="/"]');
         this.authorBreadcrumb = page.getByText(/^นักเขียน/, { exact: true });
 
         // ---------- Multi-Author List Post Card ----------
@@ -73,13 +77,18 @@ export class AuthorPage {
         this.coverImg_ArticleCard = this.articleCard.locator('a[href^="/p/"]').first().locator('div').first();
         this.type_ArticleCard = this.articleCard.getByText('บทความ', { exact: true });
         this.title_ArticleCard = this.articleCard.getByRole('heading');
+        this.title_ArticleCard_Mobile = this.articleCard.locator('[class*="CardArticle__Title"]');
         this.description_ArticleCard = this.articleCard.locator('[class*="CardArticle__Description"]');
         // ---------- Button Action Card ----------
-        this.loveArticle_Btn = this.articleCard.locator('.action-love');
-        this.bookmarkArticle_Btn = this.articleCard.locator('.action-bookmark');
+        this.loveArticle_Btn = this.articleCard.locator('[role="button"].action-love');
+        this.bookmarkArticle_Btn = this.articleCard.locator('[role="button"].action-bookmark');
         this.shareArticle_Btn = this.articleCard.locator('[class*="ButtonShare__ButtonWrapper"]');
 
         // ---------- Element's Promotion Card ----------
+        this.promotionCardTest = page
+            .locator('[class*="CardPromotion__CardComponent"]')
+            .filter({ hasText: 'Test Create Post ;)' })
+            .first();
         this.promotionLink = this.promotionCard.locator('a[href^="/p/"]').first();
         this.coverImg_PromotionCard = this.promotionCard.locator('a[href^="/p/"]').first().locator('div').first();
         this.badge_PromotionCard = this.promotionCard.getByText('โปรโมชัน', { exact: true });
@@ -87,8 +96,8 @@ export class AuthorPage {
         this.pro_PromotionCard = this.promotionCard.locator('[class*="CardPromotion__Label"]');
         this.dateSale_PromotionCard = this.pro_PromotionCard.filter({ hasText: /ม\.ค\.|ก\.พ\.|มี\.ค\.|เม\.ย\.|พ\.ค\.|มิ\.ย\.|ก\.ค\.|ส\.ค\.|ก\.ย\.|ต\.ค\.|พ\.ย\.|ธ\.ค\./ }).last();
         // ---------- Button Action Card ----------
-        this.lovePromotion_Btn = this.promotionCard.locator('.action-love');
-        this.bookmarkPromotion_Btn = this.promotionCard.locator('.action-bookmark');
+        this.lovePromotion_Btn = this.promotionCard.locator('[role="button"].action-love');
+        this.bookmarkPromotion_Btn = this.promotionCard.locator('[role="button"].action-bookmark');
         this.sharePromotion_Btn = page.locator('[class*="CardPromotion__BlockShare"]'); //[class*="ButtonShare__ButtonWrapper"]
 
         // ---------- Icon Share in/on ... ----------
@@ -99,4 +108,8 @@ export class AuthorPage {
     }
 
     // ==================== Page Actions ====================
+    async clickShare_Card() {
+        await this.coverImg_PromotionCard.hover();
+        await this.sharePromotion_Btn.first().click();
+    }
 }

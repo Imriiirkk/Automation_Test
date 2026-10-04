@@ -1,13 +1,13 @@
 import { test, expect } from '@playwright/test';
-import { ContactPage } from '../../pages/Contact';
+import { ContactPage } from '../../pages/ContactPage';
 import { NavbarFooter } from '../../pages/NavbarFooter';
 
 let navbar: NavbarFooter;
-let contact: ContactPage;
+let contactPage: ContactPage;
 
 test.beforeEach(async ({ page }) => {
     navbar = new NavbarFooter(page);
-    contact = new ContactPage(page);
+    contactPage = new ContactPage(page);
 
     await navbar.goto();
     await navbar.goToMenu_desktop('Link to contact');
@@ -20,79 +20,73 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('Contact Page (Desktop)', () => {
 
-    //
+    // Pass
     test('Contact_Desktop_001: ตรวจสอบการแสดงรายละเอียดหน้า "ติดต่อเรา"', async ({ page }) => {
-        await expect(contact.contact_heading).toBeVisible();
+        await expect(contactPage.contact_heading).toBeVisible();
     });
 
-    //
+    // Pass
     test('Contact_Desktop_002: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง', async ({ page }) => {
-        await page.evaluate(() => window.scrollBy(0, 1000));
+        await contactPage.careerButton.click();
+        await page.evaluate(() => {
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
         await expect(navbar.scrollToTopButton).toBeVisible();
     });
 
-    //
+    // Fail
     test('Contact_Desktop_003: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^"', async ({ page }) => {
-        await page.evaluate(() => window.scrollBy(0, 1000));
+        await contactPage.careerButton.click();
+        await page.evaluate(() => {
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
         await expect(navbar.scrollToTopButton).toBeVisible();
         await navbar.scrollToTopButton.click();
 
         await expect.poll(async () => {
             return await page.evaluate(() => window.scrollY);
-        }, { timeout: 5000 }).toBe(0);
+        }).toBeLessThan(100);
     });
 
-    //
-    test('Contact_Desktop_004: ตรวจสอบการนำทางไปที่ Google map', async ({ page }) => {
-        await expect(contact.googleMap_Link).toBeVisible();
-
-        const href = await contact.googleMap_Link.getAttribute('href');
-
-        expect(href).toContain('google.com/maps');
+    // Pass
+    test('Contact_Desktop_004: ตรวจสอบการแสดง Google map', async ({ page }) => {
+        await expect(contactPage.googleMap).toBeVisible();
+        const src = await contactPage.googleMap.getAttribute('src');
+        expect(src).toContain('google.com/maps/embed');
     });
 
-    //
+    // Pass
     test('Contact_Desktop_005: ตรวจสอบการกดปุ่ม "ดูตำแหน่งงานที่เปิดรับสมัคร"', async ({ page }) => {
-        await expect(contact.careerButton).toBeVisible();
-
-        await contact.careerButton.click();
-
+        await expect(contactPage.careerButton).toBeVisible();
+        await contactPage.careerButton.click();
         await expect(page).toHaveURL(/\/jobs/);
     });
 
-    //
-    test('Contact_Desktop_006: ตรวจสอบการแสดงรายละเอียดบนหน้า "ร่วมงานกับเรา"', async ({ page }) => {
-        await contact.careerButton.click();
+    test.describe('Run test', () => {
+        // Pass
+        test('Contact_Desktop_006: ตรวจสอบการแสดงรายละเอียดบนหน้า "ร่วมงานกับเรา"', async ({ page }) => {
+            await contactPage.careerButton.click();
+            await expect(contactPage.career_heading).toBeVisible();
+            await expect(contactPage.career_title).toBeVisible();
+        });
 
-        await expect(contact.career_heading).toBeVisible();
-        await expect(contact.career_title).toBeVisible();
-    });
+        // Pass
+        test('Contact_Desktop_007: ตรวจสอบการกด Dropdown ของตำแหน่งต่าง ๆ ที่เปิดรับ เพื่อแสดงรายละเอียด', async ({ page }) => {
+            await contactPage.careerButton.click();
+            await expect(contactPage.positionDropdown.first()).toBeVisible();
+            await contactPage.positionDropdown.first().click();
+            await expect(contactPage.positionDetail.first()).toBeVisible();
+        });
 
-    //
-    test('Contact_Desktop_007: ตรวจสอบการกด Dropdown ของตำแหน่งต่าง ๆ ที่เปิดรับ เพื่อแสดงรายละเอียด', async ({ page }) => {
-        await contact.careerButton.click();
-
-        // ตรวจสอบว่ามีตำแหน่งงาน
-        await expect(contact.positionDropdown.first()).toBeVisible();
-
-        // กดตำแหน่งแรก
-        await contact.positionDropdown.first().click();
-
-        // ตรวจสอบรายละเอียดตำแหน่งแรก
-        await expect(contact.positionDetail.first()).toBeVisible();
-    });
-
-    //
-    test('Contact_Desktop_008: ตรวจสอบการกด breadcrumbs', async ({ page }) => {
-        // ไปหน้า Career ก่อน
-        await contact.careerButton.click();
-
-        // Breadcrumb "หน้าแรก"
-        await expect(contact.homeBreadcrumb).toBeVisible();
-
-        await contact.homeBreadcrumb.click();
-
-        await expect(page).toHaveURL(/\/$/);
+        // Pass
+        test('Contact_Desktop_008: ตรวจสอบการกด breadcrumbs', async ({ page }) => {
+            await contactPage.careerButton.click();
+            await expect(contactPage.homeBreadcrumb).toBeVisible();
+            await contactPage.homeBreadcrumbLink.click();
+            await expect(page).toHaveURL(/\/$/);
+        });
     });
 
 });

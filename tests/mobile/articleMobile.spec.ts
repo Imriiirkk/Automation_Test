@@ -16,11 +16,11 @@ let authorPage: AuthorPage;
 // TODO: mobile เข้าเมนู/login ผ่าน hamburger — ถ้า NavbarFooter มี method ฝั่ง mobile
 // ให้สลับที่ helper สองตัวนี้ที่เดียว ไม่ต้องไล่แก้ทุกเคส
 async function goToArticlePage() {
-    await navbar.goToMenu_desktop('Link to article');
+    await navbar.goToMenu_mobile(navbar.articleMenu_mobile);
 }
 
 async function loginAndGoToArticle(page: Page) {
-    await navbar.openLoginOrSignup_desktop();
+    await navbar.openLoginOrSignup_mobile();
     await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
     await expect(page.locator('.swal2-container')).toBeHidden({ timeout: 10000 });
     await goToArticlePage();
@@ -63,8 +63,7 @@ test.beforeEach(async ({ page }) => {
     authorPage = new AuthorPage(page);
 
     await navbar.goto();
-    // await navbar.goToMenu_desktop('Link to article');
-    await goToArticlePage();
+    await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
 
     // ปิด popup ก่อนทำการ click หรือ interact กับ element อื่นๆ
     await navbar.dismissAppBannerIfPresent();
@@ -107,6 +106,7 @@ test.describe('Article Page (Mobile)', () => {
         await expect(articlePage.bookmark_CardBanner).toBeVisible();
         await expect(articlePage.datePublish_CardBanner).toBeVisible();
     });
+
 
     // Pass >> But not complete
     test('Article_Mobile_004: ตรวจสอบการนำทางไปหน้ารายละเอียดของบทความ เมื่อคลิก Banner', async ({ page }) => {
@@ -155,7 +155,7 @@ test.describe('Categories Tap', () => {
     // เช็คจำนวนการ์ดตั้งต้นที่มี 12 การ์ดก่อนกด "ดูเพิ่มเติม"
     for (const { id, filterName, label, urlPattern } of filterCases) {
         test(`${id}: กด Filter บทความ "${label}" ได้`, async ({ page }) => {
-            await navbar.goToMenu_desktop('Link to article');
+            await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
             await articlePage.clickArticleFilter(filterName);
             await expect(page).toHaveURL(urlPattern);
             const cardCount = await articlePage.articleCardEach.count()
@@ -185,7 +185,7 @@ test.describe('Categories Tap', () => {
 
 // Pass
 test('Article_Mobile_013: ตรวจสอบการโหลด การ์ดบทความเพิ่ม เมื่อคลิกปุ่ม "ดูเพิ่มเติม"', async () => {
-    await navbar.goToMenu_desktop('Link to article');
+    await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
     const cardBefore = await articlePage.articleCard.count()
     await articlePage.clickLoadMore();
     const cardAfter = await articlePage.articleCard.count()
@@ -194,7 +194,7 @@ test('Article_Mobile_013: ตรวจสอบการโหลด การ�
 
 // Pass
 test('Article_Mobile_014: ตรวจสอบว่าปุ่ม "ดูเพิ่มเติม" หายไปเมื่อโหลดโปรโมชันครบทุกรายการแล้ว', async ({ page }) => {
-    await navbar.goToMenu_desktop('Link to article');
+    await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
     await articlePage.clickLoadMore();
     await expect(articlePage.loadMoreButton).toBeHidden();
 });
@@ -209,7 +209,7 @@ test('Article_Mobile_015: ตรวจสอบการแสดงปุ่ม
 
 // Pass
 test('Article_Mobile_016: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^"', async ({ page }) => {
-    await navbar.goToMenu_desktop('Link to article');
+    await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
     await page.evaluate(() => window.scrollBy(0, 1000));
     await expect(navbar.scrollToTopButton).toBeVisible();
     await navbar.scrollToTopButton.click();

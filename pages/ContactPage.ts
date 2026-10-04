@@ -15,6 +15,7 @@ export class ContactPage {
 
     // ---------- Breadcrumb ----------
     public readonly homeBreadcrumb: Locator;
+    public readonly homeBreadcrumbLink: Locator;
     public readonly contactBreadcrumb: Locator;
 
     // ---------- Contact Information ----------
@@ -45,7 +46,7 @@ export class ContactPage {
         this.page = page;
 
         // ---------- Contact Header ----------
-        this.contact_heading = page.locator('');
+        this.contact_heading = page.getByRole('heading', { name: 'ติดต่อเรา' });
         // this.headLayout = page.locator('');
         // this.contact_title = page.locator('');
 
@@ -61,19 +62,20 @@ export class ContactPage {
         this.googleMap_Link = this.googleMap;
 
         // ---------- Career Page ----------
-        this.careerButton = page.locator('a[href="/jobs"]'); //ปุ่ม "ดูตำแหน่งงานที่เปิดรับสมัคร"
-        this.career_heading = page.getByRole('heading', { name: 'ร่วมงานกับเรา', level: 1 });
-        this.careerSection = page.locator('.card').filter({ has: page.locator('.cx-title') });
-        this.career_title = this.careerSection.locator('.cx-title');
+        this.careerButton = page.getByRole('link', { name: 'ดูตำแหน่งงานที่รับสมัคร' }); //ปุ่ม "ดูตำแหน่งงานที่เปิดรับสมัคร" page.locator('a[href="/jobs"]'); 
+        this.career_heading = page.getByRole('heading', { name: 'ร่วมงานกับเรา' });
+        this.careerSection = page.locator('[class*="card"]');
+        this.career_title = page.getByRole('heading', { name: 'ตำแหน่งงานที่เปิดรับสมัครทั้งหมดของ บริษัท ปันโปรโมชั่น จำกัด' });
 
         // ---------- Breadcrumb ----------
-        this.homeBreadcrumb = page.locator('a[href="/"]');
+        this.homeBreadcrumb = page.locator('[class*="Breadcrumb__BreadcrumbBlock"]');
+        this.homeBreadcrumbLink = page.locator('div[class*="Breadcrumb__BreadcrumbBlock"] a[href="/"]');
         this.contactBreadcrumb = page.getByText('ร่วมงานกับเรา', { exact: true });
 
         // ---------- Career Position Dropdown ----------
-        this.positionDropdown = this.careerSection.locator('.cx-job-title-block');
-        this.positionOption = this.careerSection.locator('.cx-job-title');
-        this.positionDetail = this.careerSection.locator('.cx-job-desc-block');
+        this.positionDropdown = this.careerSection.locator('[class*="cx-job-title-block"]');
+        this.positionOption = this.careerSection.locator('[class*="cx-job-title"]');
+        this.positionDetail = this.careerSection.locator('[class*="cx-job-desc-block"]');
 
     }
 

@@ -21,6 +21,8 @@ export class PromotionPage {
     public readonly activeSlide: Locator;
 
     // ---------- Element Promotion Card ----------
+    public readonly promotionCardTest: Locator;
+    public readonly promotionCard_titleTest: Locator;
     public readonly promotionCard: Locator;
     public readonly promotionCardEach: Locator;
     public readonly promotionCard_image: Locator;
@@ -111,6 +113,10 @@ export class PromotionPage {
         this.activeSlide = page.locator('.swiper-slide-active');
 
         // ---------- Element Promotion Card ----------
+        this.promotionCardTest = page.locator('a[href="/p/test-5000"]');
+        this.promotionCard_titleTest = this.promotionCardTest.locator('div').filter({
+            hasText: 'Test Create Post ;)'
+        });
         this.promotionCard = page.locator('[class*="PromotionCategories__ListPromotion"]');
         this.promotionCardEach = page.locator('[class*="FixSizePromotionCard__Card-sc-"]'); //PromotionCategories__BlockArticle-sc-8c9a3c8e-1.fkOMto
         this.promotionCard_image = page.locator('.ComponentLink__StyledLink-sc-86eeea75-0.jPGtZW');
@@ -202,7 +208,7 @@ export class PromotionPage {
     }
 
     async clickPromotionCard_title() {
-        await this.promotionCard_title.first().click(); //div:nth-child(4) 
+        await this.promotionCard_titleTest.click(); //div:nth-child(4) 
         await this.page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
     }
 

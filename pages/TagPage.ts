@@ -14,6 +14,7 @@ export class TagPage {
     public readonly title: Locator;
 
     // ---------- Breadcrumb ----------
+    public readonly homeBreadcrumbLink: Locator;
     public readonly breadcrumbBlock: Locator;
     public readonly homeBreadcrumb: Locator;
     public readonly tagBreadcrumb: Locator;
@@ -65,10 +66,11 @@ export class TagPage {
         // ---------- Breadcrumb ----------
         this.breadcrumbBlock = page.locator('[class*="Breadcrumb__BreadcrumbBlock"]');
         this.homeBreadcrumb = page.getByRole('link', { name: 'หน้าแรก', exact: true })
+        this.homeBreadcrumbLink = page.locator('div[class*="Breadcrumb__BreadcrumbBlock"] a[href="/"]');
         this.tagBreadcrumb = this.breadcrumbBlock.locator('[class*="Breadcrumb__BreadcrumbLast"]');// ตัวอย่าง format: #ทาสแมว page.getByText(/^นักเขียน/, { exact: true });
 
         // ---------- Tag List Post Card ----------
-        this.listPost_Card = page.locator('[class*="ProMultiTag__ListPostCard"]');
+        this.listPost_Card = page.locator('[class*="ProMultiTag__ListPostCard"]').nth(1);
         this.each_PostCard = this.listPost_Card.locator('[class*="ProMultiTag__BlockArticle"]');
         this.articleCard = page.locator('[class*="CardArticle__CardComponent"]').first();
         this.promotionCard = page.locator('[class*="CardPromotion__CardComponent"]').first();
@@ -106,5 +108,8 @@ export class TagPage {
     }
 
     // ==================== Page Actions ====================
-
+    async clickShare_Card() {
+        await this.coverImg_PromotionCard.hover();
+        await this.sharePromotion_Btn.first().click();
+    }
 }

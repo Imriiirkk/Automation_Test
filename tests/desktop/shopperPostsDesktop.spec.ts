@@ -296,13 +296,6 @@ test.describe('Shopper Posts Page (Desktop)', () => {
             await shopperPostsPage.clickItemCard_title();
             await shopperPostsPage.productType_ItemDetail.click();
             await page.waitForURL(/\/search\?s=/, { timeout: 10000 });
-            //To DO: เช็คต่อว่าชื่อที่กดกับประเภทสินค้าตรงกันไหม >> อันนี้ข้ามไปก่อนเดี๋ยวทำ pom หน้าsearchอีกที 
-            /**
-             * TimeoutError: page.waitForURL: Timeout 10000ms exceeded.
-            =========================== logs ===========================
-            waiting for navigation until "load"
-            ============================================================
-             */
         });
 
         // TODO: ยังไม่มี tag locator ใน POM (tag_ItemDetail ถูก comment ไว้)
