@@ -25,6 +25,7 @@ export class PromotionPage {
     public readonly promotionCard_titleTest: Locator;
     public readonly promotionCard: Locator;
     public readonly promotionCardEach: Locator;
+    public readonly promotionCard_ForCount: Locator;
     public readonly promotionCard_image: Locator;
     public readonly promotionCard_title: Locator;
     public readonly promotionLabel: Locator;
@@ -47,6 +48,8 @@ export class PromotionPage {
     public readonly blockView: Locator;
     public readonly shareButton_top: Locator;
     public readonly shareButton_footer: Locator;
+    public readonly shareButton_mobile: Locator;
+    public readonly bookMarkButton_mobile: Locator;
     public readonly bookMarkButton: Locator;
     public readonly coverImage: Locator;
     public readonly textContent: Locator;
@@ -119,6 +122,7 @@ export class PromotionPage {
         });
         this.promotionCard = page.locator('[class*="PromotionCategories__ListPromotion"]');
         this.promotionCardEach = page.locator('[class*="FixSizePromotionCard__Card-sc-"]'); //PromotionCategories__BlockArticle-sc-8c9a3c8e-1.fkOMto
+        this.promotionCard_ForCount = page.locator('[class*="PromotionCategories__BlockArticle"]');
         this.promotionCard_image = page.locator('.ComponentLink__StyledLink-sc-86eeea75-0.jPGtZW');
         this.promotionCard_title = page.locator('.ComponentLink__StyledLink-sc-86eeea75-0.jPGtZW');
         this.promotionLabel = page.locator('.FixSizePromotionCard__PostLabel-sc-f00d5468-4.lnHQnd');
@@ -132,8 +136,8 @@ export class PromotionPage {
         this.loadMoreButton = page.getByRole('button', { name: 'ดูเพิ่มเติม' });
 
         // ---------- Element Promotion Detail ----------
-        this.heading_detail = page.locator('.Text__H1-sc-30b53bf2-0');
         this.blockContent = page.locator('.BlockContent__RootContent-sc-766b4868-0.cAgpqz');
+        this.heading_detail = this.blockContent.locator('.Text__H1-sc-30b53bf2-0');
         this.breadcrumb = page.locator('.Breadcrumb__BreadcrumbBlock-sc-21bc5eed-0.jkrBen');
 
         this.authorNameLink_ArticleDetail = page.locator('h5[class*="BlockContent__AuthorName"] a');
@@ -144,7 +148,10 @@ export class PromotionPage {
         this.blockView = page.locator('.DateTimeContent__BlockView-sc-b3b7f32b-3'); //.DateTimeContent__BlockView-sc-b3b7f32b-3.islMME ยอดวิว
         this.shareButton_top = page.locator('.BlockContent__ContentButtonShare-sc-766b4868-2').first(); //
         this.shareButton_footer = page.locator('.BlockContent__ContentButtonFooterShare-sc-766b4868-11').first(); //
-        // this.shareButton_mobile = page.locator('.BlockContent__ShareButton-sc-766b4868-3').first(); // ปุ่มแชร์ในหน้ารายละเอียดโปรโมชันบนมือถือ
+        // ---------- Bookmark Mobile ----------
+        this.bookMarkButton_mobile = page.locator('[class*="BlockContent__BlockTopShare"].d-block.d-lg-none [class*="ButtonIconBookMarkDetail__Button"]');
+        // ---------- Share Mobile ----------
+        this.shareButton_mobile = page.locator('[class*="BlockContent__ContentButtonShare"].d-block.d-lg-none [role="button"]');
         this.bookMarkButton = page.locator('.ButtonIconBookMarkDetail__Button-sc-b157073f-0').first(); //
         this.coverImage = page.locator('.BlockContent__CoverPhotoPost-sc-766b4868-9'); //BlockContent__CoverPhotoPost-sc-766b4868-9 gHDPcc rounded
         this.textContent = page.locator('.RenderContentHTML__ContentStyle-sc-84005593-0'); //<div class="RenderContentHTML__ContentStyle-sc-84005593-0 gvlvXY py-2" id="details">
@@ -225,7 +232,7 @@ export class PromotionPage {
     }
 
     async getPromotionCardCount() {
-        return await this.promotionCardEach.count();
+        return this.promotionCardEach.count();
     }
 
     async clickAuthorName() {
@@ -234,7 +241,7 @@ export class PromotionPage {
 
     // Re-check .first()
     async clickBookMarkButton() {
-        await this.bookMarkButton.click();
+        await this.bookMarkButton.first().click();
     }
 
     async clickShareTop_Button() {
@@ -383,5 +390,12 @@ export class PromotionPage {
 
     async clickAuthorLink() {
         await this.authorNameLink_ArticleDetail.first().click();
+    }
+
+    async clickShareCopyLink_mobile() {
+        await this.shareButton_mobile.click();
+        const clipboardValue = await this.shareCopyLink.getAttribute('data-clipboard-text');
+        await this.shareCopyLink.click();
+        return clipboardValue;
     }
 }
