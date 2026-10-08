@@ -152,6 +152,7 @@ export class PromotionPage {
         this.bookMarkButton_mobile = page.locator('[class*="BlockContent__BlockTopShare"].d-block.d-lg-none [class*="ButtonIconBookMarkDetail__Button"]');
         // ---------- Share Mobile ----------
         this.shareButton_mobile = page.locator('[class*="BlockContent__ContentButtonShare"].d-block.d-lg-none [role="button"]');
+
         this.bookMarkButton = page.locator('.ButtonIconBookMarkDetail__Button-sc-b157073f-0').first(); //
         this.coverImage = page.locator('.BlockContent__CoverPhotoPost-sc-766b4868-9'); //BlockContent__CoverPhotoPost-sc-766b4868-9 gHDPcc rounded
         this.textContent = page.locator('.RenderContentHTML__ContentStyle-sc-84005593-0'); //<div class="RenderContentHTML__ContentStyle-sc-84005593-0 gvlvXY py-2" id="details">

@@ -44,7 +44,7 @@ test.beforeEach(async ({ page }) => {
 test.describe('Promotion Page (Mobile)', () => {
 
     /// ---------- Promotion (Main) ----------
-    // ผ่าน
+    // Pas
     test('Promotion_Mobile_001: ตรวจสอบการกดเข้าหน้า "โปรโมชัน" ได้', async ({ page }) => {
         await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
         await page.waitForURL(/\/promotion/, { timeout: 10000 });
@@ -96,7 +96,7 @@ test.describe('Promotion Page (Mobile)', () => {
         test(`${id}: กด Filter โปรโมชัน "${label}" ได้`, async ({ page }) => {
             // await navbar.dismissAppBannerIfPresent();
             // await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
-            // await page.waitForURL(/\/promotion/, { timeout: 10000 });
+            // await page.waitForURL(/\/promotion/, { timeout: 10000 }); 
             await promotionPage.clickFilter(filterName);
             await expect(page).toHaveURL(urlPattern);
             await expect(promotionPage.promotionCardEach.first()).toBeVisible();
@@ -141,6 +141,8 @@ test.describe('Promotion Page (Mobile)', () => {
         await expect(promotionPage.remainingTime.first()).toBeVisible();
         await expect(promotionPage.dateContent.first()).toBeVisible();
     });
+
+    // Pass
     test('Promotion_Mobile_014: ตรวจสอบการนำทางไปหน้ารายละเอียดโปรโมชัน เมื่อกดรูปภาพ บนการ์ดโปรโมชัน', async ({ page }) => {
         // await navbar.dismissAppBannerIfPresent();
         await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
@@ -405,9 +407,7 @@ test.describe('Promotion Page (Mobile)', () => {
         await bookmarkButton.click();
 
         await expect(bookmarkButton.locator('svg')).toBeVisible();
-        await expect(
-            bookmarkButton.locator('svg path')
-        ).toHaveAttribute('fill', '#BF202F');
+        await expect(bookmarkButton.locator('svg path')).toHaveAttribute('fill', '#BF202F');
 
         // กดซ้ำ → Default
         await bookmarkButton.click();
@@ -542,23 +542,22 @@ test.describe('Promotion Page (Mobile)', () => {
             await page.reload();
             await expect(promotionPage.blockComment.getByText(commentText)).toBeVisible({ timeout: 15000 });
         });
+    });
 
-        // No Run
-        test('Promotion_Mobile_047: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
-            await promotionPage.clickPromotionCard_image();
-            await page.evaluate(() => window.scrollBy(0, 1000));
-            await expect(navbar.scrollToTopButton).toBeVisible();
-        });
+    // Pass
+    test('Promotion_Mobile_047: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
+        await promotionPage.clickPromotionCard_image();
+        await page.evaluate(() => window.scrollBy(0, 1000));
+        await expect(navbar.scrollToTopButton).toBeVisible();
+    });
 
-        // No Run
-        test('Promotion_Mobile_048: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
-            await promotionPage.clickPromotionCard_image();
-            await page.evaluate(() => window.scrollBy(0, 1000));
-            await expect(navbar.scrollToTopButton).toBeVisible();
-            await navbar.scrollToTopButton.click();
-            await page.waitForTimeout(3000);
-            const scrollY = await page.evaluate(() => window.scrollY);
-            expect(scrollY).toBe(0);
-        });
+    // Pass
+    test('Promotion_Mobile_048: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
+        await promotionPage.clickPromotionCard_image();
+        await page.evaluate(() => window.scrollBy(0, 1000));
+        await expect(navbar.scrollToTopButton).toBeVisible();
+        await page.waitForTimeout(1000);
+        await navbar.scrollToTopButton.dispatchEvent('click'); // desktop ใช้ dispatchEvent เพราะ click ปกติไม่เสถียร
+        await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
     });
 });
