@@ -34,6 +34,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
 
     // ---------- Shopper Posts (Main) ----------
     // Pass
+
     test('ShopperPosts_Mobile_001: ตรวจสอบการกดเข้าหน้า "ปันโปรรับหิ้ว" ได้', async ({ page }) => {
         await page.waitForURL(/\/shopper_posts/, { timeout: 10000 });
         await expect(shopperPostsPage.shopper_heading).toBeVisible();
@@ -72,24 +73,24 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         await expect(shopperPostsPage.bannerTitle).toBeVisible();
     });
 
-    // Pass
-    test('ShopperPosts_Mobile_005: ตรวจสอบการเลื่อน Banner เมื่อกดปุ่ม "←" , "→"', async () => {
-        const initialHref = await shopperPostsPage.bannerCard.getAttribute('href');
-        expect(initialHref).toBeTruthy();
+    // ไม่มี ปุ่ม "←" , "→"
+    // test('ShopperPosts_Mobile_005: ตรวจสอบการเลื่อน Banner เมื่อกดปุ่ม "←" , "→"', async () => {
+    //     const initialHref = await shopperPostsPage.bannerCard.getAttribute('href');
+    //     expect(initialHref).toBeTruthy();
 
-        await shopperPostsPage.rightArrow.click();
-        await expect(shopperPostsPage.bannerActiveSlide.locator('a').first()).not.toHaveAttribute('href', initialHref!);    // ตรวจสอบว่า Active Slide เปลี่ยน
+    //     await shopperPostsPage.rightArrow.click();
+    //     await expect(shopperPostsPage.bannerActiveSlide.locator('a').first()).not.toHaveAttribute('href', initialHref!);    // ตรวจสอบว่า Active Slide เปลี่ยน
 
-        await shopperPostsPage.leftArrow.click();
-        await expect(shopperPostsPage.bannerCard).toHaveAttribute('href', initialHref!);    // ตรวจสอบว่ากลับมาที่ Slide เดิม
-    });
+    //     await shopperPostsPage.leftArrow.click();
+    //     await expect(shopperPostsPage.bannerCard).toHaveAttribute('href', initialHref!);    // ตรวจสอบว่ากลับมาที่ Slide เดิม
+    // });
 
     // Pass
     test('ShopperPosts_Mobile_006: ตรวจสอบการเลื่อน Banner เมื่อกดปุ่ม Indicator', async () => {
-        await expect(shopperPostsPage.indicator).toHaveCount(9);
+        await expect(shopperPostsPage.indicator).toHaveCount(10);
 
         // กด Indicator ทุกตัว
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < 10; i++) {
             const currentIndicator = shopperPostsPage.indicator.nth(i);
             await currentIndicator.click();
             await expect(currentIndicator).toHaveClass(/swiper-pagination-bullet-active/);   // ตรวจสอบว่า Indicator ที่กดเป็น Active
@@ -182,7 +183,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         await expect(shopperPostsPage.loadMoreButton).toBeHidden();
     });
 
-    // ---------- Card Details ----------
+    // ---------- Card Details ---------- //////
     test.describe('Card Details', () => {
         // Pass
         test('ShopperPosts_Mobile_017: ตรวจสอบการแสดงรายละเอียดบนการ์ดอีเวนต์ เมื่อใช้ Filter "สินค้ารายอีเวนต์"', async () => {

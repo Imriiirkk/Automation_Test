@@ -287,7 +287,7 @@ test.describe('Promotion Page (Desktop)', () => {
     });
 
     // ---------- Promotion Detail ----------
-    // Pass >> มันจะมีที่ กำหนดเวลา>>สิ้นสุดใน x วัน และ ไม่กำหนดเวลา(ไม่แสดงวันเริ่ม-วันสิ้นสุด)>>ยังไม่มีกำหนดสิ้นสุด
+    // Pass
     test('Promotion_Desktop_027: ตรวจสอบการแสดงรายละเอียดบน รายละเอียดโปรโมชัน', async ({ page }) => {
         await navbar.goToMenu_desktop('Link to promotion');
         await promotionPage.clickPromotionCard_title();
@@ -313,7 +313,7 @@ test.describe('Promotion Page (Desktop)', () => {
     });
 
     test.describe.serial('Love Detail Button', () => {
-        //Pass
+        // Pass
         test('Promotion_Desktop_028: ตรวจสอบการกด "Love" บนหน้ารายละเอียดโปรโมชัน กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
             await navbar.goToMenu_desktop('Link to promotion');
             await promotionPage.clickPromotionCard_title();
@@ -322,7 +322,7 @@ test.describe('Promotion Page (Desktop)', () => {
             await navbar.closeLoginModal()
         });
 
-        //Pass
+        // Pass
         test('Promotion_Desktop_029: ตรวจสอบการกด "Love" บนหน้ารายละเอียดโปรโมชัน กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
             await navbar.openLoginOrSignup_desktop();
             await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
@@ -332,7 +332,7 @@ test.describe('Promotion Page (Desktop)', () => {
             await expect(promotionPage.loveDetailBtnIcon).toHaveAttribute('fill', '#BF202F');
         });
 
-        //Pass
+        // Pass
         test('Promotion_Desktop_030: ตรวจสอบการกด "Love" ซ้ำบนหน้ารายละเอียดโปรโมชัน เมื่อกดไปแล้ว (กลับไปเป็น Default) กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
             await navbar.openLoginOrSignup_desktop();
             await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
@@ -690,6 +690,7 @@ test.describe('Promotion Page (Desktop)', () => {
     // ---------- Comment Section (Promotion Detail) ----------
     // ----- ยังไม่ login -----
     // Pass
+
     test('Promotion_Desktop_059: ตรวจสอบการแสดงความคิดเห็น กรณีที่ยังไม่เข้าสู่ระบบ', async ({ page }) => {
         await navbar.goToMenu_desktop('Link to promotion');
         await promotionPage.clickPromotionCard_title();
