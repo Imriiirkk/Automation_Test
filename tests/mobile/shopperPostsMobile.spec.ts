@@ -34,7 +34,6 @@ test.describe('Shopper Posts Page (Mobile)', () => {
 
     // ---------- Shopper Posts (Main) ----------
     // Pass
-
     test('ShopperPosts_Mobile_001: ตรวจสอบการกดเข้าหน้า "ปันโปรรับหิ้ว" ได้', async ({ page }) => {
         await page.waitForURL(/\/shopper_posts/, { timeout: 10000 });
         await expect(shopperPostsPage.shopper_heading).toBeVisible();
@@ -183,6 +182,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         await expect(shopperPostsPage.loadMoreButton).toBeHidden();
     });
 
+
     // ---------- Card Details ---------- //////
     test.describe('Card Details', () => {
         // Pass
@@ -206,6 +206,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
     });
+
 
     // ---------- Love Button (Item Card) ----------
     test.describe.serial('Love Button — Item Card', () => {
@@ -239,7 +240,6 @@ test.describe('Shopper Posts Page (Mobile)', () => {
 
     // ---------- Navigation from Card ----------
     test.describe('Navigate to Detail', () => {
-
         // Pass
         test('ShopperPosts_Mobile_022: ตรวจสอบการกดรูปภาพ (Cover) ที่การ์ดสินค้ารับหิ้ว เพื่อเข้าหน้ารายละเอียด', async ({ page }) => {
             await shopperPostsPage.clickItemCard_image();
@@ -292,26 +292,21 @@ test.describe('Shopper Posts Page (Mobile)', () => {
             await expect(shopperPostsPage.shareBtn_ItemDetail).toBeVisible();
         });
 
-        // Fail
+        // Pass
         test('ShopperPosts_Mobile_024: ตรวจสอบการกด "ประเภทสินค้า" ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
             await shopperPostsPage.clickFilter_Item();
             await shopperPostsPage.clickItemCard_title();
             await shopperPostsPage.productType_ItemDetail.click();
             await page.waitForURL(/\/search\?s=/, { timeout: 10000 });
-            //To DO: เช็คต่อว่าชื่อที่กดกับประเภทสินค้าตรงกันไหม >> อันนี้ข้ามไปก่อนเดี๋ยวทำ pom หน้าsearchอีกที 
-            /**
-             * TimeoutError: page.waitForURL: Timeout 10000ms exceeded.
-            =========================== logs ===========================
-            waiting for navigation until "load"
-            ============================================================
-             */
         });
 
-        // TODO: ยังไม่มี tag locator ใน POM (tag_ItemDetail ถูก comment ไว้)
-        test('ShopperPosts_Mobile_025: ตรวจสอบการกด "#" ในหน้า รายละเอียดสินค้ารายชิ้น', async () => {
-            //To DO: เช็คต่อว่าชื่อที่กดกับ#าตรงกันไหม >> อันนี้ข้ามไปก่อนเดี๋ยวทำ pom หน้าtagอีกที 
+        // Pass
+        test('ShopperPosts_Mobile_025: ตรวจสอบการกด "#" ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+            await shopperPostsPage.clickFilter_Item();
+            await shopperPostsPage.clickItemCard_title();
+            await shopperPostsPage.tag_ItemDetail.first().click();
+            await page.waitForURL(/\/search\?s=/, { timeout: 10000 });
         });
-
 
         // Pass
         test('ShopperPosts_Mobile_026: ตรวจสอบการกดปุ่ม "ฝากหิ้วชิ้นนี้" ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page, context }) => {
@@ -420,6 +415,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
 
     // ---------- Items in Same Event — TODO ทั้งกลุ่ม ----------
     // Pass
+
     test('ShopperPosts_Mobile_035: ตรวจสอบการกดปุ่ม "หัวใจ" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน โดยที่ยังไม่เข้าสู่ระบบ', async () => {
         await shopperPostsPage.clickItemCard_titleByName('หมวก1');
         await shopperPostsPage.loveBtn_ItemSameEvent.click();
@@ -470,22 +466,29 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         // To DO: เช็คต่อว่าชื่อ title_ItemSameEvent กับ title_EventDetail ตรงกันไหม >> อันนี้ข้ามไปก่อนเดี๋ยวทำ pom หน้าอีกที search
     });
 
-    // TODO: ยังไม่มี indicator locator เฉพาะของสินค้าในอีเวนต์เดียวกัน (แยกจาก banner หลัก)
-    test('ShopperPosts_Mobile_039: ตรวจสอบการเลื่อน การ์ดสินค้ารับหิ้ว เมื่อกดปุ่ม Indicator บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async () => {
-        await openItemDetail();
-        const indicators = shopperPostsPage.allIndicator.getByRole('button', { name: /Go to slide/ });
-        const count = await indicators.count();
-        expect(count).toBeGreaterThan(1); // ต้องมีมากกว่า 1 จุดถึงจะเลื่อนได้
 
-        for (let i = 0; i < count; i++) {
-            const current = indicators.nth(i);
-            await current.click();
-            await expect(current).toHaveClass(/swiper-pagination-bullet-active/);
-            await expect(current).toHaveAttribute('aria-current', 'true');
-            await expect(shopperPostsPage.itemSameEvent_ActiveSlide).toHaveCount(1);
-        }
+    // Fail
+    test.describe('Run test', () => {
+        test('ShopperPosts_Mobile_039: ตรวจสอบการเลื่อน การ์ดสินค้ารับหิ้ว เมื่อกดปุ่ม Indicator บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async () => {
+            await openItemDetail();
+            const indicators = shopperPostsPage.indicator_Btn;
+            // รอให้ Pagination แสดงผล
+            await expect(shopperPostsPage.allIndicator).toBeVisible();
+
+            const count = await indicators.count();
+            expect(count).toBeGreaterThan(1);
+
+            for (let i = 0; i < count; i++) {
+                const current = indicators.nth(i);
+                await current.click();
+                await expect(current).toHaveClass(/swiper-pagination-bullet-active/);
+                await expect(current).toHaveAttribute('aria-current', 'true');
+                await expect(shopperPostsPage.itemSameEvent_ActiveSlide).toHaveCount(1);
+            }
+        });
     });
 
+    // ไม่มีปุ่ม <, >
     test('ShopperPosts_Mobile_040: ตรวจสอบการเลื่อน การ์ดสินค้ารับหิ้ว เมื่อกดปุ่ม <, > บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async () => {
         await openItemDetail();
         const firstTitle = (await shopperPostsPage.title_ItemSameEvent.first().textContent())?.trim();
@@ -498,8 +501,9 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         await expect(shopperPostsPage.title_ItemSameEvent.first()).toHaveText(firstTitle!);       // กลับมาการ์ดเดิม
     });
 
+
     // ---------- Event Detail Page ----------
-    // page
+    // Pass
     test('ShopperPosts_Mobile_040: ตรวจสอบการแสดงรายละเอียดบนหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
         await openEventDetail();
         await expect(page).toHaveURL(/\/sp\/[a-zA-Z0-9-_]+/);
@@ -515,7 +519,8 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
     // ---------- Love / Share (Event Detail) — TODO ทั้งกลุ่ม ----------
-    // TODO: loveBtn_EventDetail, shareBtn_EventDetail ยังไม่ระบุ locator
+    // 
+
     test.describe.serial('Love Button — Event Detail', () => {
         // Pass
         test('ShopperPosts_Mobile_041: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดรายอีเวนต์ โดยที่ยังไม่เข้าสู่ระบบ', async () => {
@@ -611,94 +616,102 @@ test.describe('Shopper Posts Page (Mobile)', () => {
             expect(copiedUrl.origin).toBe(currentUrl.origin);
             expect(copiedUrl.pathname).toBe(`/s/${eventId}`);
         });
+    });
+
+    // Pass
+    test('ShopperPosts_Mobile_044: ตรวจสอบการแสดงรายละเอียดบนการ์ดสินค้าที่อยู่ในอีเวนต์เดียวกัน ในหน้า รายละเอียดรายอีเวนต์', async () => {
+        await openEventDetail();
+
+        await expect(shopperPostsPage.title_ItemOnEvent).toBeVisible();
+        await expect(shopperPostsPage.title_ItemOnEvent).not.toBeEmpty();
+
+        await expect(shopperPostsPage.coverImg_ItemOnEvent).toBeVisible();
+        await expect(shopperPostsPage.coverImg_ItemOnEvent)
+            .toHaveAttribute('style', /background-image/);
+
+        await expect(shopperPostsPage.price_ItemOnEvent).toBeVisible();
+        await expect(shopperPostsPage.price_ItemOnEvent).not.toBeEmpty();
+
+        await expect(shopperPostsPage.purchaseBtn_ItemOnEvent).toBeVisible();
+        await expect(shopperPostsPage.purchaseBtn_ItemOnEvent)
+            .toContainText('ฝากหิ้วชิ้นนี้');
+    });
+
+    // Pass
+    test('ShopperPosts_Mobile_045: ตรวจสอบการกดปุ่ม "ฝากหิ้วชิ้นนี้" บนการ์ดสินค้าในอีเวนต์นั้น ในหน้า รายละเอียดรายอีเวนต์', async ({ page, context }) => {
+        await openEventDetail();
+        const newPagePromise = context.waitForEvent('page');
+        await shopperPostsPage.purchaseBtn_ItemOnEvent.click();
+        const newPage = await newPagePromise;
+        await newPage.waitForLoadState();
+        await expect(newPage).toHaveURL(/\/s\/[a-zA-Z0-9-_]+/);
+    });
+
+    // ---------- Scroll To Top ----------
+    test.describe('Scroll To Top', () => {
+        // Pass
+        test('ShopperPosts_Mobile_046: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
+            await page.evaluate(() => window.scrollBy(0, 1000));
+            await expect(navbar.scrollToTopButton).toBeVisible();
+        });
 
         // Pass
-        test('ShopperPosts_Mobile_044: ตรวจสอบการแสดงรายละเอียดบนการ์ดสินค้าที่อยู่ในอีเวนต์เดียวกัน ในหน้า รายละเอียดรายอีเวนต์', async () => {
-            await openEventDetail();
+        test('ShopperPosts_Mobile_047: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
+            await page.evaluate(() => window.scrollBy(0, 1000));
+            await expect(navbar.scrollToTopButton).toBeVisible();
+            await navbar.scrollToTopButton.click();
 
-            await expect(shopperPostsPage.title_ItemOnEvent).toBeVisible();
-            await expect(shopperPostsPage.title_ItemOnEvent).not.toBeEmpty();
-
-            await expect(shopperPostsPage.coverImg_ItemOnEvent).toBeVisible();
-            await expect(shopperPostsPage.coverImg_ItemOnEvent)
-                .toHaveAttribute('style', /background-image/);
-
-            await expect(shopperPostsPage.price_ItemOnEvent).toBeVisible();
-            await expect(shopperPostsPage.price_ItemOnEvent).not.toBeEmpty();
-
-            await expect(shopperPostsPage.purchaseBtn_ItemOnEvent).toBeVisible();
-            await expect(shopperPostsPage.purchaseBtn_ItemOnEvent)
-                .toContainText('ฝากหิ้วชิ้นนี้');
+            await expect.poll(async () => {
+                return await page.evaluate(() => window.scrollY);
+            }, { timeout: 5000 }).toBe(0);
         });
 
         // Pass
-        test('ShopperPosts_Mobile_045: ตรวจสอบการกดปุ่ม "ฝากหิ้วชิ้นนี้" บนการ์ดสินค้าในอีเวนต์นั้น ในหน้า รายละเอียดรายอีเวนต์', async ({ page, context }) => {
+        test('ShopperPosts_Mobile_048: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+            await shopperPostsPage.clickFilter_Item();
+            await shopperPostsPage.clickItemCard_title();
+            await page.evaluate(() => window.scrollBy(0, 1000));
+            await expect(navbar.scrollToTopButton).toBeVisible();
+        });
+
+        // Pass
+        test('ShopperPosts_Mobile_049: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+            await openItemDetail();
+            await page.evaluate(() => {
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+
+            await expect(navbar.scrollToTopButton).toBeVisible();
+            await navbar.scrollToTopButton.click();
+
+            await expect.poll(async () => {
+                return await page.evaluate(() => window.scrollY);
+            }).toBeLessThan(100);
+        });
+
+        // Pass
+        test('ShopperPosts_Mobile_050: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
             await openEventDetail();
-            const newPagePromise = context.waitForEvent('page');
-            await shopperPostsPage.purchaseBtn_ItemOnEvent.click();
-            const newPage = await newPagePromise;
-            await newPage.waitForLoadState();
-            await expect(newPage).toHaveURL(/\/s\/[a-zA-Z0-9-_]+/);
+            await page.evaluate(() => {
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+
+            await expect(navbar.scrollToTopButton).toBeVisible();
         });
 
-        // 45 หายไปไหนน้อ
-
-        // ---------- Scroll To Top ----------
-        test.describe('Scroll To Top', () => {
-            // Pass
-            test('ShopperPosts_Mobile_046: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
-                await page.evaluate(() => window.scrollBy(0, 1000));
-                await expect(navbar.scrollToTopButton).toBeVisible();
-            });
-            // Pass
-            test('ShopperPosts_Mobile_047: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
-                await page.evaluate(() => window.scrollBy(0, 1000));
-                await expect(navbar.scrollToTopButton).toBeVisible();
-                await navbar.scrollToTopButton.click();
-
-                await expect.poll(async () => {
-                    return await page.evaluate(() => window.scrollY);
-                }, { timeout: 5000 }).toBe(0);
-            });
-            // Pass
-            test('ShopperPosts_Mobile_048: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
-                await shopperPostsPage.clickFilter_Item();
-                await shopperPostsPage.clickItemCard_title();
-                await page.evaluate(() => window.scrollBy(0, 1000));
-                await expect(navbar.scrollToTopButton).toBeVisible();
-            });
-            // Pass
-            test('ShopperPosts_Mobile_049: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
-                await shopperPostsPage.clickFilter_Item();
-                await shopperPostsPage.clickItemCard_title();
-                await page.evaluate(() => window.scrollBy(0, 1000));
-                await expect(navbar.scrollToTopButton).toBeVisible();
-                await navbar.scrollToTopButton.click();
-
-                await expect.poll(async () => {
-                    return await page.evaluate(() => window.scrollY);
-                }, { timeout: 5000 }).toBe(0);
+        // Pass
+        test('ShopperPosts_Mobile_051: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
+            await openEventDetail();
+            await page.evaluate(() => {
+                window.scrollTo(0, document.body.scrollHeight);
             });
 
-            // แก้แล้ว (ยังไม่ได้รัน): เดิมใช้ itemShopperPostCard
-            test('ShopperPosts_Mobile_050: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
-                await openEventDetail();
-                await page.evaluate(() => window.scrollBy(0, 1000));
-                await expect(navbar.scrollToTopButton).toBeVisible();
-            });
+            await expect(navbar.scrollToTopButton).toBeVisible();
+            await navbar.scrollToTopButton.click();
 
-            // แก้แล้ว (ยังไม่ได้รัน): เดิมใช้ itemShopperPostCard
-            test('ShopperPosts_Mobile_051: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
-                await openEventDetail();
-                await page.evaluate(() => window.scrollBy(0, 1000));
-                await expect(navbar.scrollToTopButton).toBeVisible();
-                await navbar.scrollToTopButton.click();
-
-                await expect.poll(async () => {
-                    return await page.evaluate(() => window.scrollY);
-                }, { timeout: 5000 }).toBe(0);
-            });
+            await expect.poll(async () => {
+                return await page.evaluate(() => window.scrollY);
+            }).toBeLessThan(100);
         });
-
     });
 });

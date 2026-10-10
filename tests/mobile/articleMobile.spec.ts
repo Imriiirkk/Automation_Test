@@ -107,15 +107,14 @@ test.describe('Article Page (Mobile)', () => {
         await expect(articlePage.comment).toBeVisible();
     });
 
-    // ฝั่ง desktop เคสนี้ Fail — fill อยู่ที่ svg path ไม่ใช่ตัวปุ่ม จึงเปลี่ยนมาเช็คที่ svg path
-    // และ banner อาจ auto-slide ระหว่างเทส (ยังไม่ยืนยัน)
     test('Article_Mobile_006: ตรวจสอบการกด "Bookmark" ที่การ์ดบทความ บน Banner กรณียังไม่เข้าสู่ระบบ', async () => {
         await articlePage.clickBookMarkBanner();
         await expect(navbar.loginModalCloseButton).toBeVisible();
         await navbar.closeLoginModal();
     });
 
-
+    // ฝั่ง desktop เคสนี้ Fail — fill อยู่ที่ svg path ไม่ใช่ตัวปุ่ม จึงเปลี่ยนมาเช็คที่ svg path
+    // และ banner อาจ auto-slide ระหว่างเทส (ยังไม่ยืนยัน)
     test('Article_Mobile_007: ตรวจสอบการกด "Bookmark" ที่การ์ดบทความ บน Banner กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await loginAndGoToArticle(page);
         await articlePage.clickBookMarkBanner();

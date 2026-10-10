@@ -116,99 +116,100 @@ test.describe('Tag Page (Mobile)', () => {
     // Card
     // ============================================================
     // ---------- Like ----------
-    test.describe('Run test', () => {
-        test('Tag_Mobile_007: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
-            const likeBtn = tagPage.lovePromotion_Btn;
+    // Pass
+    test('Tag_Mobile_007: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
+        const likeBtn = tagPage.lovePromotion_Btn;
+        await likeBtn.click();
+        await expect(navbar.loginModalCloseButton).toBeVisible();
+        await navbar.closeLoginModal();
+    });
+
+    // Pass
+    test('Tag_Mobile_008: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
+        await navbar.openLoginOrSignup_mobile();
+        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+
+        const likeBtn = tagPage.lovePromotion_Btn;
+        const likeIcon = likeBtn.locator('i');
+
+        if ((await likeIcon.getAttribute('class'))?.includes('gxBVIB')) {
             await likeBtn.click();
-            await expect(navbar.loginModalCloseButton).toBeVisible();
-            await navbar.closeLoginModal();
-        });
+            await expect(likeIcon).toHaveClass(/cjtKzC/);
+        }
 
-        test('Tag_Mobile_008: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
-            await navbar.openLoginOrSignup_mobile();
-            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await likeBtn.click();
+        await expect(likeIcon).toHaveClass(/gxBVIB/);
+    });
 
-            const likeBtn = tagPage.lovePromotion_Btn;
-            const likeIcon = likeBtn.locator('i');
+    // Pass
+    test('Tag_Mobile_009: ตรวจสอบการกดปุ่ม "Like" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
+        await navbar.openLoginOrSignup_mobile();
+        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
-            if ((await likeIcon.getAttribute('class'))?.includes('gxBVIB')) {
-                await likeBtn.click();
-                await expect(likeIcon).toHaveClass(/cjtKzC/);
-            }
+        const likeBtn = tagPage.lovePromotion_Btn;
+        const likeIcon = likeBtn.locator('i');
 
+        if ((await likeIcon.getAttribute('class'))?.includes('gxBVIB')) {
             await likeBtn.click();
-            await expect(likeIcon).toHaveClass(/gxBVIB/);
-        });
+            await expect(likeIcon).toHaveClass(/cjtKzC/);
+        }
+
+        await likeBtn.click();
+        await expect(likeIcon).toHaveClass(/gxBVIB/);
+
+        await likeBtn.click();
+        await expect
+            .poll(async () => await likeIcon.getAttribute('class'), {
+                timeout: 10000,
+            })
+            .toContain('cjtKzC');
+    });
 
 
-        test('Tag_Mobile_009: ตรวจสอบการกดปุ่ม "Like" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
-            await navbar.openLoginOrSignup_mobile();
-            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+    // ---------- Bookmark ----------
+    // Pass
+    test('Tag_Mobile_010: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
+        const bookmarkBtn = tagPage.bookmarkPromotion_Btn;
+        await bookmarkBtn.click();
+        await expect(navbar.loginModalCloseButton).toBeVisible();
+        await navbar.closeLoginModal();
+    });
 
-            const likeBtn = tagPage.lovePromotion_Btn;
-            const likeIcon = likeBtn.locator('i');
+    // Pass
+    test('Tag_Mobile_011: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
+        await navbar.openLoginOrSignup_mobile();
+        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
-            if ((await likeIcon.getAttribute('class'))?.includes('gxBVIB')) {
-                await likeBtn.click();
-                await expect(likeIcon).toHaveClass(/cjtKzC/);
-            }
+        const bookmarkBtn = tagPage.bookmarkPromotion_Btn;
+        const bookmarkIcon = bookmarkBtn.locator('i');
 
-            await likeBtn.click();
-            await expect(likeIcon).toHaveClass(/gxBVIB/);
-
-            await likeBtn.click();
-            await expect
-                .poll(async () => await likeIcon.getAttribute('class'), {
-                    timeout: 10000,
-                })
-                .toContain('cjtKzC');
-        });
-
-
-        // ---------- Bookmark ----------
-
-        test('Tag_Mobile_010: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
-            const bookmarkBtn = tagPage.bookmarkPromotion_Btn;
-            await bookmarkBtn.click();
-            await expect(navbar.loginModalCloseButton).toBeVisible();
-            await navbar.closeLoginModal();
-        });
-
-
-        test('Tag_Mobile_011: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
-            await navbar.openLoginOrSignup_mobile();
-            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-
-            const bookmarkBtn = tagPage.bookmarkPromotion_Btn;
-            const bookmarkIcon = bookmarkBtn.locator('i');
-
-            if ((await bookmarkIcon.getAttribute('class'))?.includes('gxBVIB')) {
-                await bookmarkBtn.click();
-                await expect(bookmarkIcon).toHaveClass(/cjtKzC/);
-            }
-
-            await bookmarkBtn.click();
-            await expect(bookmarkIcon).toHaveClass(/gxBVIB/);
-        });
-
-        test('Tag_Mobile_012: ตรวจสอบการกดปุ่ม "Bookmark" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
-            await navbar.openLoginOrSignup_mobile();
-            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-
-            const bookmarkBtn = tagPage.bookmarkPromotion_Btn;
-            const bookmarkIcon = bookmarkBtn.locator('i');
-
-            if ((await bookmarkIcon.getAttribute('class'))?.includes('gxBVIB')) {
-                await bookmarkBtn.click();
-                await expect(bookmarkIcon).toHaveClass(/cjtKzC/);
-            }
-
-            await bookmarkBtn.click();
-            await expect(bookmarkIcon).toHaveClass(/gxBVIB/);
-
+        if ((await bookmarkIcon.getAttribute('class'))?.includes('gxBVIB')) {
             await bookmarkBtn.click();
             await expect(bookmarkIcon).toHaveClass(/cjtKzC/);
-        });
+        }
+
+        await bookmarkBtn.click();
+        await expect(bookmarkIcon).toHaveClass(/gxBVIB/);
+    });
+
+    // Pass
+    test('Tag_Mobile_012: ตรวจสอบการกดปุ่ม "Bookmark" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
+        await navbar.openLoginOrSignup_mobile();
+        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+
+        const bookmarkBtn = tagPage.bookmarkPromotion_Btn;
+        const bookmarkIcon = bookmarkBtn.locator('i');
+
+        if ((await bookmarkIcon.getAttribute('class'))?.includes('gxBVIB')) {
+            await bookmarkBtn.click();
+            await expect(bookmarkIcon).toHaveClass(/cjtKzC/);
+        }
+
+        await bookmarkBtn.click();
+        await expect(bookmarkIcon).toHaveClass(/gxBVIB/);
+
+        await bookmarkBtn.click();
+        await expect(bookmarkIcon).toHaveClass(/cjtKzC/);
     });
 
     // ============================================================

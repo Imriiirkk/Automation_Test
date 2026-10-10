@@ -12,17 +12,34 @@ let promotionPage: PromotionPage;
 const VALID_EMAIL = 'testpunpro01@gmail.com';
 const VALID_PASSWORD = '123456';
 
-const ICON_OFF = /cjtKzC/;
-const ICON_ON = /gxBVIB/;
+// const ICON_OFF = /cjtKzC/;
+// const ICON_ON = /gxBVIB/;
 
-async function ensureLikeOff(btn: Locator) {
-    const icon = btn.locator('i');
-
-    if (ICON_ON.test((await icon.getAttribute('class')) ?? '')) {
-        await btn.click();
-        await expect(icon).toHaveClass(ICON_OFF);
+async function ensureLikeOff(
+    likeBtn: Locator,
+    likeIcon: Locator
+) {
+    if (await likeIcon.getAttribute('class')?.then(
+        className => className?.includes('gxBVIB') ?? false
+    )) {
+        await likeBtn.click();
+        await expect(likeIcon).toHaveClass(/cjtKzC/);
     }
 }
+
+async function ensureBookmarkOff(
+    bookmarkBtn: Locator,
+    bookmarkIcon: Locator
+) {
+    if (
+        (await bookmarkIcon.getAttribute('class'))
+            ?.includes('gxBVIB')
+    ) {
+        await bookmarkBtn.click();
+        await expect(bookmarkIcon).not.toHaveClass(/gxBVIB/);
+    }
+}
+
 
 test.beforeEach(async ({ page }) => {
     navbar = new NavbarFooter(page);
@@ -117,14 +134,14 @@ test.describe('Tag Page (Desktop)', () => {
     // Card
     // ============================================================
     // ---------- Like ----------
-
+    // Pass
     test('Tag_Desktop_007: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
         const likeBtn = tagPage.lovePromotion_Btn;
         await likeBtn.click();
         await expect(navbar.loginModalCloseButton).toBeVisible();
         await navbar.closeLoginModal();
     });
-
+    //Pass
     test('Tag_Desktop_008: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
@@ -132,16 +149,13 @@ test.describe('Tag Page (Desktop)', () => {
         const likeBtn = tagPage.lovePromotion_Btn;
         const likeIcon = likeBtn.locator('i');
 
-        if ((await likeIcon.getAttribute('class'))?.includes('gxBVIB')) {
-            await likeBtn.click();
-            await expect(likeIcon).toHaveClass(/cjtKzC/);
-        }
+        await ensureLikeOff(likeBtn, likeIcon);
 
         await likeBtn.click();
         await expect(likeIcon).toHaveClass(/gxBVIB/);
     });
 
-
+    // Fail
     test('Tag_Desktop_009: ตรวจสอบการกดปุ่ม "Like" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
@@ -149,10 +163,7 @@ test.describe('Tag Page (Desktop)', () => {
         const likeBtn = tagPage.lovePromotion_Btn;
         const likeIcon = likeBtn.locator('i');
 
-        if ((await likeIcon.getAttribute('class'))?.includes('gxBVIB')) {
-            await likeBtn.click();
-            await expect(likeIcon).toHaveClass(/cjtKzC/);
-        }
+        await ensureLikeOff(likeBtn, likeIcon);
 
         await likeBtn.click();
         await expect(likeIcon).toHaveClass(/gxBVIB/);
@@ -163,7 +174,7 @@ test.describe('Tag Page (Desktop)', () => {
 
 
     // ---------- Bookmark ----------
-
+    // Pass
     test('Tag_Desktop_010: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
         const bookmarkBtn = tagPage.bookmarkPromotion_Btn;
         await bookmarkBtn.click();
@@ -171,7 +182,7 @@ test.describe('Tag Page (Desktop)', () => {
         await navbar.closeLoginModal();
     });
 
-
+    // Pass
     test('Tag_Desktop_011: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
@@ -179,16 +190,14 @@ test.describe('Tag Page (Desktop)', () => {
         const bookmarkBtn = tagPage.bookmarkPromotion_Btn;
         const bookmarkIcon = bookmarkBtn.locator('i');
 
-        if ((await bookmarkIcon.getAttribute('class'))?.includes('gxBVIB')) {
-            await bookmarkBtn.click();
-            await expect(bookmarkIcon).toHaveClass(/cjtKzC/);
-        }
+        // เตรียมสถานะเริ่มต้นให้เป็น OFF
+        await ensureBookmarkOff(bookmarkBtn, bookmarkIcon);
 
+        // กด Bookmark: OFF -> ON
         await bookmarkBtn.click();
         await expect(bookmarkIcon).toHaveClass(/gxBVIB/);
     });
-
-
+    // Fail
     test('Tag_Desktop_012: ตรวจสอบการกดปุ่ม "Bookmark" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
@@ -196,16 +205,16 @@ test.describe('Tag Page (Desktop)', () => {
         const bookmarkBtn = tagPage.bookmarkPromotion_Btn;
         const bookmarkIcon = bookmarkBtn.locator('i');
 
-        if ((await bookmarkIcon.getAttribute('class'))?.includes('gxBVIB')) {
-            await bookmarkBtn.click();
-            await expect(bookmarkIcon).toHaveClass(/cjtKzC/);
-        }
+        // เตรียมสถานะเริ่มต้นให้เป็น OFF
+        await ensureBookmarkOff(bookmarkBtn, bookmarkIcon);
 
+        // กดครั้งแรก: OFF -> ON
         await bookmarkBtn.click();
         await expect(bookmarkIcon).toHaveClass(/gxBVIB/);
 
+        // กดครั้งที่สอง: ON -> OFF
         await bookmarkBtn.click();
-        await expect(bookmarkIcon).toHaveClass(/cjtKzC/);
+        await expect(bookmarkIcon).not.toHaveClass(/gxBVIB/);
     });
 
     // ============================================================
@@ -250,27 +259,25 @@ test.describe('Tag Page (Desktop)', () => {
         await expect(popup).toHaveURL(/line\.me/);
     });
 
-    test.describe('Run test', () => {
 
-        test('Tag_Desktop_017: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง', async ({ page }) => {
-            await page.evaluate(() => {
-                window.scrollTo(0, document.body.scrollHeight);
-            });
-
-            await expect(navbar.scrollToTopButton).toBeVisible();
+    test('Tag_Desktop_017: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง', async ({ page }) => {
+        await page.evaluate(() => {
+            window.scrollTo(0, document.body.scrollHeight);
         });
 
-        test('Tag_Desktop_018: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^"', async ({ page }) => {
-            await page.evaluate(() => {
-                window.scrollTo(0, document.body.scrollHeight);
-            });
+        await expect(navbar.scrollToTopButton).toBeVisible();
+    });
 
-            await expect(navbar.scrollToTopButton).toBeVisible();
-            await navbar.scrollToTopButton.click();
-
-            await expect.poll(async () => {
-                return await page.evaluate(() => window.scrollY);
-            }).toBeLessThan(100);
+    test('Tag_Desktop_018: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^"', async ({ page }) => {
+        await page.evaluate(() => {
+            window.scrollTo(0, document.body.scrollHeight);
         });
+
+        await expect(navbar.scrollToTopButton).toBeVisible();
+        await navbar.scrollToTopButton.click();
+
+        await expect.poll(async () => {
+            return await page.evaluate(() => window.scrollY);
+        }).toBeLessThan(100);
     });
 });

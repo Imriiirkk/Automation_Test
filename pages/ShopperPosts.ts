@@ -175,6 +175,7 @@ export class ShopperPostsPage {
         this.love_ItemCard = this.itemShopperPostCardEach.locator('[class*="FixSizeItemCard__FavouriteButton"]'); //.FixSizeItemCard__FavouriteButton-sc-2c06b627-8 role="button" aria-label="Add to favorites"
         this.inStock_lable = this.itemShopperPostCardEach.locator('[class*="FixSizeItemCard__ContentPostTypeStock"]'); //.FixSizeItemCard__ContentPostTypeStock-sc-2c06b627-2
 
+
         // ---------- Shopper Card Event ----------
         this.shopperPostCard = page.locator('[class*="ListShopperPost__ListPosts"]');   //ListShopperPost__ListPosts-sc-99cb7286-0
         this.shopperCardArticle = this.shopperPostCard.locator('[class*="ListShopperPost__BlockArticle"]');
@@ -201,7 +202,7 @@ export class ShopperPostsPage {
         this.shareCopyLink_ItemDetail = page.getByTestId('share-direction-row').getByRole('button', { name: 'share-copy-link' });
         this.owner_shopper = this.shopperDetail_ContentBox.locator('[class*="ShopperDetail__ShopperOwnerBox"]'); //.ShopperDetail__ShopperOwnerBox-sc-7a17d395-12
         this.descrition_ItemDetail = this.shopperDetail_ContentBox.locator('[class*="ShopperDetail__PostDescription"]'); //.ShopperDetail__PostDescription-sc-7a17d395-15
-        this.tag_ItemDetail = this.shopperDetail_ContentBox.locator('[class*="ShopperDetail__CategoryTagBox"]');
+        this.tag_ItemDetail = this.shopperDetail_ContentBox.locator('[class*="ShopperDetail__CategoryTagBox"] button');
 
         this.block_ItemSameEvent = page.locator('[class*="ItemList__Box"]'); //.ItemList__Box-sc-41041f1b-0
         this.viewAllBtn_ItemDetail = this.block_ItemSameEvent.locator('[class*="ItemList__BoxHeader"]').locator('[class*="ItemList__ViewAllButton"]'); //.ItemList__ViewAllButton-sc-41041f1b-3

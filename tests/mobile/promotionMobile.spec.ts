@@ -44,14 +44,14 @@ test.beforeEach(async ({ page }) => {
 test.describe('Promotion Page (Mobile)', () => {
 
     /// ---------- Promotion (Main) ----------
-    // Pas
+    // Pass
     test('Promotion_Mobile_001: ตรวจสอบการกดเข้าหน้า "โปรโมชัน" ได้', async ({ page }) => {
         await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
         await page.waitForURL(/\/promotion/, { timeout: 10000 });
         await expect(promotionPage.promotion_heading).toBeVisible();
     });
 
-    //ผ่าน
+    // Pass
     test('Promotion_Mobile_002: ตรวจสอบการแสดงรายละเอียดหน้า "โปรโมชัน"', async ({ page }) => {
         await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
         // await page.waitForURL(/\/promotion/, { timeout: 10000 });
