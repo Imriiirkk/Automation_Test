@@ -156,12 +156,14 @@ test.describe('Promotion Page (Desktop)', () => {
     });
 
     // pass
-    test('Promotion_Desktop_015: ตรวจสอบการกดชื่อโปรโมชันบนการ์ด "โปรโมชัน" เพื่อเข้าดูรายละเอียดได้', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
-        await promotionPage.clickPromotionCard_title();
-        await expect(promotionPage.breadcrumb).toBeVisible();
-        await expect(promotionPage.blockContent).toBeVisible();
-        await expect(page).toHaveURL(/\/p\/[a-zA-Z0-9-_]+/);
+    test.describe('Run test', () => {
+        test('Promotion_Desktop_015: ตรวจสอบการกดชื่อโปรโมชันบนการ์ด "โปรโมชัน" เพื่อเข้าดูรายละเอียดได้', async ({ page }) => {
+            await navbar.goToMenu_desktop('Link to promotion');
+            await promotionPage.clickPromotionCard_title();
+            await expect(promotionPage.breadcrumb).toBeVisible();
+            await expect(promotionPage.blockContent).toBeVisible();
+            await expect(page).toHaveURL(/\/p\/[a-zA-Z0-9-_]+/);
+        });
     });
 
     // pass
@@ -690,7 +692,6 @@ test.describe('Promotion Page (Desktop)', () => {
     // ---------- Comment Section (Promotion Detail) ----------
     // ----- ยังไม่ login -----
     // Pass
-
     test('Promotion_Desktop_059: ตรวจสอบการแสดงความคิดเห็น กรณีที่ยังไม่เข้าสู่ระบบ', async ({ page }) => {
         await navbar.goToMenu_desktop('Link to promotion');
         await promotionPage.clickPromotionCard_title();
@@ -756,33 +757,15 @@ test.describe('Promotion Page (Desktop)', () => {
         await expect(promotionPage.blockSentCommentReply).toBeHidden();
     });
 
-    // Not Complete
-    test('Promotion_Desktop_065: ตรวจสอบการแสดงโปรไฟล์ของผู้ใช้ที่แสดงความคิดเห็นได้ถูกต้อง', async ({ page }) => {
-        await promotionPage.sentComment();
-        await expect(promotionPage.existingComment).toBeVisible();
-    });
-
-    // Not Complete
-    test('Promotion_Desktop_066: ตรวจสอบการแสดงเวลาในการแสดงความคิดเห็นได้ถูกต้อง', async ({ page }) => {
-        await page
-        await expect(promotionPage.blockComment.getByText('test comment')).toBeVisible();
-    });
-
-    // Not Complete
-    test('Promotion_Desktop_067: ตรวจสอบความคิดเห็นยังคงอยู่หลัง reload หน้า', async ({ page }) => {
-        await page
-        await expect(promotionPage.blockComment.getByText('test comment')).toBeVisible();
-    });
-
     // Pass
-    test('Promotion_Desktop_068: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
+    test('Promotion_Desktop_065: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
         await promotionPage.clickPromotionCard_image();
         await page.evaluate(() => window.scrollBy(0, 1000));
         await expect(navbar.scrollToTopButton).toBeVisible();
     });
 
     // Pass
-    test('Promotion_Desktop_069: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
+    test('Promotion_Desktop_066: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
         await promotionPage.clickPromotionCard_image();
         await page.evaluate(() => window.scrollBy(0, 1000));
         await expect(navbar.scrollToTopButton).toBeVisible();

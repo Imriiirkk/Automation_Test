@@ -100,7 +100,7 @@ test.describe('Article Page (Mobile)', () => {
     });
 
     // Pass
-    test('Article_Mobile_004: ตรวจสอบการนำทางไปหน้ารายละเอียดของบทความ เมื่อกด Banner', async ({ page }) => {
+    test('Article_Mobile_005: ตรวจสอบการนำทางไปหน้ารายละเอียดของบทความ เมื่อกด Banner', async ({ page }) => {
         await articlePage.clickHighlightBanner();
         await expect(page).toHaveURL(/\/p\/[a-zA-Z0-9-_]+/);
         await expectArticleDetailInfo();
@@ -348,18 +348,13 @@ test.describe('Article Page (Mobile)', () => {
                     await expect(commentSection.existingComment).toHaveCount(countBefore + 1);
                 });
 
-                // ใช้ test.skip แทนเทสเปล่า เพื่อไม่ให้รายงานขึ้น pass ทั้งที่ยังไม่ได้เช็คอะไร
-                test.skip('Article_Mobile_032: ตรวจสอบการแสดงโปรไฟล์ของผู้ใช้ที่แสดงความคิดเห็นได้ถูกต้อง', async () => { });
-                test.skip('Article_Mobile_033: ตรวจสอบการแสดงเวลาในการแสดงความคิดเห็นได้ถูกต้อง', async () => { });
-
-
-                test('Article_Mobile_034: ตรวจสอบการแสดงความคิดเห็นตอบกลับทั้งหมด เมื่อคลิกปุ่ม "ตอบกลับ"', async () => {
+                test('Article_Mobile_032: ตรวจสอบการแสดงความคิดเห็นตอบกลับทั้งหมด เมื่อคลิกปุ่ม "ตอบกลับ"', async () => {
                     await articlePage.clickArticleCard_title();
                     await commentSection.replyComment_bth.click();
                     await expect(commentSection.blockSentCommentReply).toBeVisible();
                 });
 
-                test('Article_Mobile_035: ตรวจสอบการซ่อนการตอบกลับความคิดเห็น เมื่อคลิกปุ่ม "ซ่อน"', async () => {
+                test('Article_Mobile_033: ตรวจสอบการซ่อนการตอบกลับความคิดเห็น เมื่อคลิกปุ่ม "ซ่อน"', async () => {
                     await articlePage.clickArticleCard_title();
                     await commentSection.replyComment_bth.click();
                     await expect(commentSection.blockSentCommentReply).toBeVisible();
@@ -372,7 +367,7 @@ test.describe('Article Page (Mobile)', () => {
 
         // ---------- Bookmark ----------
         // Pass
-        test('Article_Mobile_036: ตรวจสอบการคลิกปุ่ม "Bookmark" บนหน้ารายละเอียดบทความ ยังไม่เข้าสู่ระบบ', async () => {
+        test('Article_Mobile_034: ตรวจสอบการคลิกปุ่ม "Bookmark" บนหน้ารายละเอียดบทความ ยังไม่เข้าสู่ระบบ', async () => {
             await articlePage.clickArticleCard_title();
             await articlePage.bookMarkButton_mobile.click();
             await expect(navbar.loginModalCloseButton).toBeVisible();
@@ -380,7 +375,7 @@ test.describe('Article Page (Mobile)', () => {
         });
 
         // Pass
-        test('Article_Mobile_037: ตรวจสอบการคลิกปุ่ม "Bookmark" บนหน้ารายละเอียดบทความ เข้าสู่ระบบแล้ว', async ({ page }) => {
+        test('Article_Mobile_035: ตรวจสอบการคลิกปุ่ม "Bookmark" บนหน้ารายละเอียดบทความ เข้าสู่ระบบแล้ว', async ({ page }) => {
             await loginAndGoToArticle(page);
             await articlePage.clickArticleCard_title();
             const bookmarkIcon = articlePage.bookMarkButton_mobile.locator('i.fa-bookmark');
@@ -397,7 +392,7 @@ test.describe('Article Page (Mobile)', () => {
         });
 
         // Pass
-        test('Article_Mobile_038: ตรวจสอบการคลิกปุ่ม "Bookmark" ซ้ำ บนหน้ารายละเอียดบทความ เข้าสู่ระบบแล้ว', async ({ page }) => {
+        test('Article_Mobile_036: ตรวจสอบการคลิกปุ่ม "Bookmark" ซ้ำ บนหน้ารายละเอียดบทความ เข้าสู่ระบบแล้ว', async ({ page }) => {
             await loginAndGoToArticle(page);
             await articlePage.clickArticleCard_title();
 
@@ -423,7 +418,7 @@ test.describe('Article Page (Mobile)', () => {
 
         // ---------- Share Button (ด้านบน) ----------
         // Pass
-        test('Article_Mobile_039: ตรวจสอบการกดปุ่ม "แชร์" บนหน้ารายละเอียดบทความ (ด้านบน)', async () => {
+        test('Article_Mobile_037: ตรวจสอบการกดปุ่ม "แชร์" บนหน้ารายละเอียดบทความ (ด้านบน)', async () => {
             await articlePage.clickArticleCard_title();
             await articlePage.shareButton_mobile.click();
             await expect(articlePage.shareOnFacebook).toBeVisible();
@@ -433,7 +428,7 @@ test.describe('Article Page (Mobile)', () => {
         });
 
         // Pass
-        test('Article_Mobile_040: ตรวจสอบการกด "Icon Facebook" เพื่อแชร์บทความ ไปที่ facebook.com (ด้านบน)', async ({ page }) => {
+        test('Article_Mobile_038: ตรวจสอบการกด "Icon Facebook" เพื่อแชร์บทความ ไปที่ facebook.com (ด้านบน)', async ({ page }) => {
             await articlePage.clickArticleCard_title();
             await articlePage.shareButton_mobile.click();
             const popupPromise = page.waitForEvent('popup');
@@ -443,7 +438,7 @@ test.describe('Article Page (Mobile)', () => {
         });
 
         // Pass
-        test('Article_Mobile_041: ตรวจสอบการกด "Icon Line" เพื่อแชร์บทความ ไปที่ line.me (ด้านบน)', async ({ page }) => {
+        test('Article_Mobile_039: ตรวจสอบการกด "Icon Line" เพื่อแชร์บทความ ไปที่ line.me (ด้านบน)', async ({ page }) => {
             await articlePage.clickArticleCard_title();
             await articlePage.shareButton_mobile.click();
             const popupPromise = page.waitForEvent('popup');
@@ -453,7 +448,7 @@ test.describe('Article Page (Mobile)', () => {
         });
 
         // Pass
-        test('Article_Mobile_042: ตรวจสอบการกด "Icon X" เพื่อแชร์บทความ ไปที่ x.com (ด้านบน)', async ({ page }) => {
+        test('Article_Mobile_040: ตรวจสอบการกด "Icon X" เพื่อแชร์บทความ ไปที่ x.com (ด้านบน)', async ({ page }) => {
             await articlePage.clickArticleCard_title();
             await articlePage.shareButton_mobile.click();
             const popupPromise = page.waitForEvent('popup');
@@ -463,7 +458,7 @@ test.describe('Article Page (Mobile)', () => {
         });
 
         // Pass
-        test('Article_Mobile_043: ตรวจสอบการกด "Icon Copy Link" เพื่อคัดลอกลิงก์บทความ (ด้านบน)', async ({ page, context }) => {
+        test('Article_Mobile_041: ตรวจสอบการกด "Icon Copy Link" เพื่อคัดลอกลิงก์บทความ (ด้านบน)', async ({ page, context }) => {
             await articlePage.clickArticleCard_title();
             await expect(page).toHaveURL(/\/p\/[a-zA-Z0-9-_]+/);
             const currentUrl = new URL(page.url());
@@ -476,14 +471,14 @@ test.describe('Article Page (Mobile)', () => {
 
         // ---------- Scroll to top (หน้ารายละเอียดบทความ) ----------
         // Pass
-        test('Article_Mobile_044: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดบทความ', async ({ page }) => {
+        test('Article_Mobile_042: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดบทความ', async ({ page }) => {
             await articlePage.clickArticleCard_title();
             await page.evaluate(() => window.scrollBy(0, 1000));
             await expect(navbar.scrollToTopButton).toBeVisible();
         });
 
         // Pass
-        test('Article_Mobile_045: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดบทความ', async ({ page }) => {
+        test('Article_Mobile_043: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดบทความ', async ({ page }) => {
             await articlePage.clickArticleCard_title();
             await page.evaluate(() => window.scrollBy(0, 1000));
             await expect(navbar.scrollToTopButton).toBeVisible();
@@ -494,7 +489,7 @@ test.describe('Article Page (Mobile)', () => {
 
         // ---------- Author ----------
         // Pass
-        test('Article_Mobile_046: ตรวจสอบการนำทางไปที่หน้า "นักเขียน" เมื่อกดชื่อและรูปโปรไฟล์ผู้เขียน บนหน้ารายละเอียดบทความ', async ({ page }) => {
+        test('Article_Mobile_044: ตรวจสอบการนำทางไปที่หน้า "นักเขียน" เมื่อกดชื่อและรูปโปรไฟล์ผู้เขียน บนหน้ารายละเอียดบทความ', async ({ page }) => {
             await articlePage.clickArticleCard_title();
             await articlePage.clickAuthorLink();
             await expect(page).toHaveURL(/\/author\/.+/);

@@ -197,6 +197,7 @@ test.describe('Tag Page (Desktop)', () => {
         await bookmarkBtn.click();
         await expect(bookmarkIcon).toHaveClass(/gxBVIB/);
     });
+
     // Fail
     test('Tag_Desktop_012: ตรวจสอบการกดปุ่ม "Bookmark" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
@@ -258,7 +259,6 @@ test.describe('Tag Page (Desktop)', () => {
         const popup = await popupPromise;
         await expect(popup).toHaveURL(/line\.me/);
     });
-
 
     test('Tag_Desktop_017: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง', async ({ page }) => {
         await page.evaluate(() => {

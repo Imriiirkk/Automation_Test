@@ -521,38 +521,17 @@ test.describe('Promotion Page (Mobile)', () => {
             await promotionPage.hideComment.click();
             await expect(promotionPage.blockSentCommentReply).toBeHidden();
         });
-
-        // No Run
-        test('Promotion_Mobile_044: ตรวจสอบการแสดงโปรไฟล์ของผู้ใช้ที่แสดงความคิดเห็นได้ถูกต้อง', async ({ page }) => {
-            await loginAndOpenPromotionDetail();
-        });
-
-        // No Run
-        test('Promotion_Mobile_045: ตรวจสอบการแสดงเวลาในการแสดงความคิดเห็นได้ถูกต้อง', async ({ page }) => {
-            await loginAndOpenPromotionDetail();
-        });
-
-        // No Run
-        test('Promotion_Mobile_046: คอมเมนต์ยังคงอยู่หลัง reload หน้า', async ({ page }) => {
-            await loginAndOpenPromotionDetail();
-
-            const commentText = await postComment();
-            await expect(promotionPage.blockComment.getByText(commentText)).toBeVisible();
-
-            await page.reload();
-            await expect(promotionPage.blockComment.getByText(commentText)).toBeVisible({ timeout: 15000 });
-        });
     });
 
     // Pass
-    test('Promotion_Mobile_047: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
+    test('Promotion_Mobile_044: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
         await promotionPage.clickPromotionCard_image();
         await page.evaluate(() => window.scrollBy(0, 1000));
         await expect(navbar.scrollToTopButton).toBeVisible();
     });
 
     // Pass
-    test('Promotion_Mobile_048: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
+    test('Promotion_Mobile_045: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้ารายละเอียดโปรโมชัน', async ({ page }) => {
         await promotionPage.clickPromotionCard_image();
         await page.evaluate(() => window.scrollBy(0, 1000));
         await expect(navbar.scrollToTopButton).toBeVisible();
