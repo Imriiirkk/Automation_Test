@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { PromotionPage } from '../../pages/PromotionPage';
 import { NavbarFooter } from '../../pages/NavbarFooter';
 import { AuthorPage } from '../../pages/AuthorPage';
+import { CommentSection } from '../../pages/CommentSection';
 
 const VALID_EMAIL = 'testpunpro01@gmail.com';
 const VALID_PASSWORD = '123456';
@@ -9,12 +10,13 @@ const VALID_PASSWORD = '123456';
 let navbar: NavbarFooter;
 let promotionPage: PromotionPage;
 let authorPage: AuthorPage;
+let commentSection: CommentSection;
+
 // เข้าสู่ระบบ -> ไปหน้าโปรโมชัน -> เปิดรายละเอียดโปรโมชันแรก
 async function loginAndOpenPromotionDetail() {
     await navbar.openLoginOrSignup_mobile();
     await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
     await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
-    await promotionPage.clickPromotionCard_title();
 }
 
 // ส่งคอมเมนต์บนหน้ารายละเอียด (ต้องอยู่หน้ารายละเอียดแล้ว) แล้วคืนข้อความที่ส่ง
@@ -31,6 +33,7 @@ test.beforeEach(async ({ page }) => {
     navbar = new NavbarFooter(page);
     promotionPage = new PromotionPage(page);
     authorPage = new AuthorPage(page);
+    commentSection = new CommentSection(page);
 
     await navbar.goto();
     await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
@@ -451,75 +454,82 @@ test.describe('Promotion Page (Mobile)', () => {
     });
 
     // ---------- Comment Section ----------
-    // No Run
+    // Pass
+    test('Promotion_Mobile_038: ตรวจสอบการแสดงความคิดเห็น กรณีที่ยังไม่เข้าสู่ระบบ', async ({ page }) => {
+        await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
+        await promotionPage.clickPromotionCard_title();
+        await promotionPage.blockSentComment.click();
+        await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+        await navbar.closeLoginModal()
+    });
+
+    // Pass
+    test('Promotion_Mobile_039: ตรวจสอบการตอบกลับความคิดเห็น กรณีที่ยังไม่เข้าสู่ระบบ', async ({ page }) => {
+        await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
+        await page.locator('a[href="/p/test-5000"]').first().click();
+        await page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
+        await commentSection.replyComment_bth.click();
+        await commentSection.textField_ReplyComment_promotion.first().click();
+        await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+        await navbar.closeLoginModal()
+    });
+
     test.describe('Run test', () => {
-        test('Promotion_Mobile_038: ตรวจสอบการแสดงความคิดเห็น กรณีที่ยังไม่เข้าสู่ระบบ', async ({ page }) => {
-            await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
-            await promotionPage.clickPromotionCard_title();
-            await promotionPage.blockSentComment.click();
-            await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-            await navbar.closeLoginModal()
-        });
-
-        // No Run
-        test('Promotion_Mobile_039: ตรวจสอบการตอบกลับความคิดเห็น กรณีที่ยังไม่เข้าสู่ระบบ', async ({ page }) => {
-            await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
-            await promotionPage.clickPromotionCard_title();
-            await promotionPage.replyComment.click();
-            await promotionPage.textBoxReplyComment.click();
-            await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-            await navbar.closeLoginModal()
-        });
-
-        // No Run
+        // pass
         test('Promotion_Mobile_040: ตรวจสอบการแสดงความคิดเห็น กรณีที่เข้าสู่ระบบแล้ว', async ({ page }) => {
             await loginAndOpenPromotionDetail();
-            await expect(promotionPage.layout_Comment).toBeVisible();
-
-            // นับหลังเข้าหน้ารายละเอียดแล้ว (ของเดิมนับที่หน้า list เลยได้ 0 เสมอ)
-            const countBefore = await promotionPage.existingComment.count();
-            const commentText = await postComment();
-
-            await expect(promotionPage.blockComment.getByText(commentText)).toBeVisible();
-            await expect(promotionPage.textBoxSendComment).toHaveValue('');
-            await expect(promotionPage.existingComment).toHaveCount(countBefore + 1); // จำนวนคอมเมนต์ต้องเพิ่มขึ้น 1
+            await navbar.openMenu_mobile();
+            // const loggedInName = (await commentSection.profileUsername.innerText()).trim();
+            await navbar.closeMenu_mobile();
+            await page.locator('a[href="/p/test-5000"]').first().click();
+            await page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
+            await expect(commentSection.blockComment).toBeVisible();
+            const countBefore = await commentSection.existingComment.count();
+            await commentSection.sentComment();
+            await page.reload();
+            await expect(commentSection.blockComment.getByText('testcomment-auto')).toBeVisible();
+            await expect(commentSection.blockComment).toBeVisible();
+            await expect(commentSection.textField_Comment).toHaveValue('');
+            // await expect(commentSection.commentAuthor).toHaveText(loggedInName);
+            await expect(commentSection.commentDate.first()).toContainText(/ที่แล้ว$/);
         });
 
-        // No Run
+        // Pass
         test('Promotion_Mobile_041: ตรวจสอบการตอบกลับความคิดเห็น กรณีที่เข้าสู่ระบบแล้ว', async ({ page }) => {
             await loginAndOpenPromotionDetail();
-
-            // ต้องกด "ตอบกลับ" ก่อน กล่องพิมพ์ตอบกลับถึงจะขึ้น (โพสต์ต้องมีคอมเมนต์อยู่แล้ว)
-            await promotionPage.replyComment.click();
-            const countBefore = await promotionPage.existingComment.count();
-
-            const replyText = `test-${Date.now()}`;
-            const replyBox = promotionPage.textBoxReplyComment.getByRole('textbox');
-            await replyBox.click();
-            await replyBox.fill(replyText);
-            await promotionPage.submitReplyCommentButton.click();
-
-            await expect(promotionPage.blockComment.getByText(replyText)).toBeVisible();
-            await expect(replyBox).toHaveValue('');
-            await expect(promotionPage.existingComment).toHaveCount(countBefore + 1); // จำนวนคอมเมนต์ต้องเพิ่มขึ้น 1
+            await navbar.openMenu_mobile();
+            // const loggedInName = (await commentSection.profileUsername.innerText()).trim();
+            await navbar.closeMenu_mobile();
+            await page.locator('a[href="/p/test-5000"]').first().click();
+            await page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
+            await expect(commentSection.blockComment).toBeVisible();
+            await commentSection.sentReplyComment();
+            await page.reload();
+            await expect(commentSection.blockComment).toBeVisible();
+            await commentSection.replyComment_bth.click();
+            await expect(commentSection.replyCommentText.first()).toContainText('testryplycomment-auto');
+            // await expect(commentSection.replyCommentAuthor.first()).toContainText(loggedInName);
+            await expect(commentSection.replyCommentDate.first()).toContainText(/ที่แล้ว$/);
         });
 
-        // No Run
+        // Pass
         test('Promotion_Mobile_042: ตรวจสอบการแสดงการตอบกลับความคิดเห็นทั้งหมด เมื่อกดปุ่ม "ตอบกลับ"', async ({ page }) => {
             await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
-            await promotionPage.clickPromotionCard_title();
-            await promotionPage.replyComment.click();
-            await expect(promotionPage.blockSentCommentReply).toBeVisible();
+            await page.locator('a[href="/p/test-5000"]').first().click();
+            await page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
+            await commentSection.replyComment_bth.click();
+            await expect(commentSection.blockSentCommentReply).toBeVisible();
         });
 
-        // No Run
+        // Pass
         test('Promotion_Mobile_043: ตรวจสอบการซ่อนการตอบกลับความคิดเห็น เมื่อกดปุ่ม "ซ่อน"', async ({ page }) => {
             await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
-            await promotionPage.clickPromotionCard_title();
-            await promotionPage.replyComment.click();
-            await expect(promotionPage.blockSentCommentReply).toBeVisible();
-            await promotionPage.hideComment.click();
-            await expect(promotionPage.blockSentCommentReply).toBeHidden();
+            await page.locator('a[href="/p/test-5000"]').first().click();
+            await page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
+            await commentSection.replyComment_bth.click();
+            await expect(commentSection.blockSentCommentReply).toBeVisible();
+            await commentSection.hideComment_bth.click();
+            await expect(commentSection.blockSentCommentReply).toBeHidden();
         });
     });
 

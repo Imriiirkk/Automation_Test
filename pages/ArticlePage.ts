@@ -30,6 +30,7 @@ export class ArticlePage {
 
     // ---------- Article Card ----------
     public readonly articleCard: Locator;
+    public readonly blockArticle: Locator;
     public readonly articleCardEach: Locator;
     public readonly imgCover_ArticleCard: Locator;
     public readonly label_ArticleCard: Locator;
@@ -136,8 +137,9 @@ export class ArticlePage {
         this.loadMoreButton = page.getByRole('button', { name: 'ดูเพิ่มเติม' });
 
         // ---------- Article Card ----------
-        this.articleCard = page.locator('.BlogMultiCategories__ListArticle-sc-a10bddd5-0');
-        this.articleCardEach = page.locator('[class*="FixSizeArticleCard__Card-sc-"]'); //.BlogMultiCategories__BlockArticle-sc-a10bddd5-1
+        this.articleCard = page.locator('[class*="BlogMultiCategories__ListArticle"]'); //-sc-a10bddd5-0
+        this.blockArticle = page.locator('[class*="BlogMultiCategories__BlockArticle"]');   //.BlogMultiCategories__BlockArticle-sc-a10bddd5-1 
+        this.articleCardEach = page.locator('[class*="FixSizeArticleCard__Card-sc-"]');
         this.imgCover_ArticleCard = page.locator('.ComponentLink__StyledLink-sc-86eeea75-0');
         this.label_ArticleCard = page.locator('.FixSizeArticleCard__ArticleLabel-sc-a3159c29-8');
         this.title_ArticleCard = page.locator('.ComponentLink__StyledLink-sc-86eeea75-0'); //FixSizeArticleCard__Title-sc-a3159c29-2
@@ -301,18 +303,18 @@ export class ArticlePage {
         return await popupPromise;
     }
 
-    async clickShareCopyLink_top(page: Page): Promise<string> {
-        await this.shareDetail_btn.click();
-        await this.shareCopyLink_top.click(); // คลิกจริง trigger การ copy
-        return await page.evaluate(() => navigator.clipboard.readText()); // อ่านจาก clipboard จริง
-    }
-
-    //     async clickShareCopyLink_top() {
+    // async clickShareCopyLink_top(page: Page): Promise<string> {
     //     await this.shareDetail_btn.click();
-    //     const clipboardValue = await this.shareCopyLink_top.getAttribute('data-clipboard-text'); // อ่านตอน element ยังอยู่
-    //     await this.shareCopyLink_top.click(); // ค่อยคลิกจริงทีหลัง (จำลอง user คลิกจริง)
-    //     return clipboardValue;
+    //     await this.shareCopyLink_top.click(); // คลิกจริง trigger การ copy
+    //     return await page.evaluate(() => navigator.clipboard.readText()); // อ่านจาก clipboard จริง
     // }
+
+    async clickShareCopyLink_top() {
+        await this.shareDetail_btn.click();
+        const clipboardValue = await this.shareCopyLink_top.getAttribute('data-clipboard-text'); // อ่านตอน element ยังอยู่
+        await this.shareCopyLink_top.click(); // ค่อยคลิกจริงทีหลัง (จำลอง user คลิกจริง)
+        return clipboardValue;
+    }
 
     // --------- FOOTER ---------
     async clickShareOnFacebook_footer(page: Page): Promise<Page> {

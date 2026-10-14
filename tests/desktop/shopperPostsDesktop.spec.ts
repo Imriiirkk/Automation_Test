@@ -461,7 +461,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
         // To DO: เช็คต่อว่าชื่อ title_ItemSameEvent กับ title_EventDetail ตรงกันไหม >> อันนี้ข้ามไปก่อนเดี๋ยวทำ pom หน้าอีกที search
     });
 
-    // TODO: ยังไม่มี indicator locator เฉพาะของสินค้าในอีเวนต์เดียวกัน (แยกจาก banner หลัก)
+    // Pass
     test('ShopperPosts_Desktop_039: ตรวจสอบการเลื่อน การ์ดสินค้ารับหิ้ว เมื่อกดปุ่ม Indicator บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async () => {
         await openItemDetail();
         const indicators = shopperPostsPage.allIndicator.getByRole('button', { name: /Go to slide/ });
@@ -477,6 +477,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
         }
     });
 
+    // Pass
     test('ShopperPosts_Desktop_040: ตรวจสอบการเลื่อน การ์ดสินค้ารับหิ้ว เมื่อกดปุ่ม <, > บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async () => {
         await openItemDetail();
         const firstTitle = (await shopperPostsPage.title_ItemSameEvent.first().textContent())?.trim();
@@ -491,7 +492,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
 
     // ---------- Event Detail Page ----------
     // page
-    test('ShopperPosts_Desktop_040: ตรวจสอบการแสดงรายละเอียดบนหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
+    test('ShopperPosts_Desktop_041: ตรวจสอบการแสดงรายละเอียดบนหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
         await openEventDetail();
         await expect(page).toHaveURL(/\/sp\/[a-zA-Z0-9-_]+/);
         await expect(shopperPostsPage.title_EventDetail).toBeVisible();
@@ -507,189 +508,184 @@ test.describe('Shopper Posts Page (Desktop)', () => {
 
     // ---------- Love / Share (Event Detail) — TODO ทั้งกลุ่ม ----------
     // TODO: loveBtn_EventDetail, shareBtn_EventDetail ยังไม่ระบุ locator
-    test.describe.serial('Love Button — Event Detail', () => {
-        // Pass
-        test('ShopperPosts_Desktop_041: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดรายอีเวนต์ โดยที่ยังไม่เข้าสู่ระบบ', async () => {
-            await shopperPostsPage.clickFilter_Event();
-            await shopperPostsPage.clickEventCard_titleByName('ทดสอบการสร้างโพสรับหิ้ว');
+    // Pass
+    test('ShopperPosts_Desktop_042: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดรายอีเวนต์ โดยที่ยังไม่เข้าสู่ระบบ', async () => {
+        await shopperPostsPage.clickFilter_Event();
+        await shopperPostsPage.clickEventCard_titleByName('ทดสอบการสร้างโพสรับหิ้ว');
+        await shopperPostsPage.loveBtn_EventDetail.click();
+        await expect(navbar.loginModalCloseButton).toBeVisible();
+        await navbar.closeLoginModal();
+    });
+
+    // Pass
+    test('ShopperPosts_Desktop_043: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดรายอีเวนต์ เมื่อเข้าสู่ระบบแล้ว', async () => {
+        await navbar.openLoginOrSignup_desktop();
+        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await shopperPostsPage.clickFilter_Event();
+        await shopperPostsPage.clickEventCard_titleByName('ทดสอบการสร้างโพสรับหิ้ว');
+        const fill = await shopperPostsPage.loveBtn_EventDetail.locator('svg path').getAttribute('fill');
+
+        if (fill === '#BF202F') {
             await shopperPostsPage.loveBtn_EventDetail.click();
-            await expect(navbar.loginModalCloseButton).toBeVisible();
-            await navbar.closeLoginModal();
-        });
+        }
 
-        // Pass
-        test('ShopperPosts_Desktop_042: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดรายอีเวนต์ เมื่อเข้าสู่ระบบแล้ว', async () => {
-            await navbar.openLoginOrSignup_desktop();
-            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-            await shopperPostsPage.clickFilter_Event();
-            await shopperPostsPage.clickEventCard_titleByName('ทดสอบการสร้างโพสรับหิ้ว');
-            const fill = await shopperPostsPage.loveBtn_EventDetail.locator('svg path').getAttribute('fill');
+        await shopperPostsPage.loveBtn_EventDetail.click();
+        await expect(shopperPostsPage.loveBtn_EventDetail.locator('svg path')).toHaveAttribute('fill', '#BF202F');
+    });
 
-            if (fill === '#BF202F') {
-                await shopperPostsPage.loveBtn_EventDetail.click();
-            }
+    // Pass
+    test('ShopperPosts_Desktop_044: ตรวจสอบการกดปุ่ม "หัวใจ" อีกครั้ง ในหน้า รายละเอียดรายอีเวนต์ เมื่อเข้าสู่ระบบแล้ว', async () => {
+        await navbar.openLoginOrSignup_desktop();
+        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await shopperPostsPage.clickFilter_Event();
+        await shopperPostsPage.clickEventCard_titleByName('ทดสอบการสร้างโพสรับหิ้ว');
+        const fill = await shopperPostsPage.loveBtn_EventDetail.locator('svg path').getAttribute('fill');
 
+        if (fill === '#686868') {
             await shopperPostsPage.loveBtn_EventDetail.click();
-            await expect(shopperPostsPage.loveBtn_EventDetail.locator('svg path')).toHaveAttribute('fill', '#BF202F');
-        });
+        }
 
-        // Pass
-        test('ShopperPosts_Desktop_043: ตรวจสอบการกดปุ่ม "หัวใจ" อีกครั้ง ในหน้า รายละเอียดรายอีเวนต์ เมื่อเข้าสู่ระบบแล้ว', async () => {
-            await navbar.openLoginOrSignup_desktop();
-            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-            await shopperPostsPage.clickFilter_Event();
-            await shopperPostsPage.clickEventCard_titleByName('ทดสอบการสร้างโพสรับหิ้ว');
-            const fill = await shopperPostsPage.loveBtn_EventDetail.locator('svg path').getAttribute('fill');
+        await expect(shopperPostsPage.loveBtn_EventDetail.locator('svg path')).toHaveAttribute('fill', '#BF202F');
+        await shopperPostsPage.loveBtn_EventDetail.click();
+        await expect(shopperPostsPage.loveBtn_EventDetail.locator('svg path')).toHaveAttribute('fill', '#686868');
+    });
 
-            if (fill === '#686868') {
-                await shopperPostsPage.loveBtn_EventDetail.click();
-            }
+    // Pass
+    test('ShopperPosts_Desktop_045: ตรวจสอบการกดปุ่ม "แชร์" ในหน้า รายละเอียดรายอีเวนต์', async () => {
+        await openEventDetail();
+        await shopperPostsPage.shareBtn_EventDetail.click();
+        await expect(shopperPostsPage.shareOnFacebook_EventDetail).toBeVisible();
+        await expect(shopperPostsPage.shareOnLine_EventDetail).toBeVisible();
+        await expect(shopperPostsPage.shareOnX_EventDetail).toBeVisible();
+        await expect(shopperPostsPage.shareCopyLink_EventDetail).toBeVisible();
+    });
 
-            await expect(shopperPostsPage.loveBtn_EventDetail.locator('svg path')).toHaveAttribute('fill', '#BF202F');
-            await shopperPostsPage.loveBtn_EventDetail.click();
-            await expect(shopperPostsPage.loveBtn_EventDetail.locator('svg path')).toHaveAttribute('fill', '#686868');
-        });
+    // Pass
+    test('ShopperPosts_Desktop_044: ตรวจสอบการกดแชร์ผ่าน Facebook เปิด Popup ไปที่ facebook.com ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
+        await openEventDetail();
+        await shopperPostsPage.shareBtn_EventDetail.click();
+        const popupPromise = page.waitForEvent('popup');
+        await shopperPostsPage.shareOnFacebook_EventDetail.click();
+        const popup = await popupPromise;
+        await expect(popup).toHaveURL(/facebook\.com/);
+    });
 
-        // Pass
-        test('ShopperPosts_Desktop_044: ตรวจสอบการกดปุ่ม "แชร์" ในหน้า รายละเอียดรายอีเวนต์', async () => {
-            await openEventDetail();
-            await shopperPostsPage.shareBtn_EventDetail.click();
-            await expect(shopperPostsPage.shareOnFacebook_EventDetail).toBeVisible();
-            await expect(shopperPostsPage.shareOnLine_EventDetail).toBeVisible();
-            await expect(shopperPostsPage.shareOnX_EventDetail).toBeVisible();
-            await expect(shopperPostsPage.shareCopyLink_EventDetail).toBeVisible();
-        });
+    // Pass
+    test('ShopperPosts_Desktop_045: ตรวจสอบการกดแชร์ผ่าน Line เปิด Popup ไปที่ line.me ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
+        await openEventDetail();
+        await shopperPostsPage.shareBtn_EventDetail.click();
+        const popupPromise = page.waitForEvent('popup');
+        await shopperPostsPage.shareOnLine_EventDetail.click();
+        const popup = await popupPromise;
+        await expect(popup).toHaveURL(/line\.me/);
+    });
 
-        // Pass
-        test('ShopperPosts_Desktop_031: ตรวจสอบการกดแชร์ผ่าน Facebook เปิด Popup ไปที่ facebook.com ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
-            await openEventDetail();
-            await shopperPostsPage.shareBtn_EventDetail.click();
-            const popupPromise = page.waitForEvent('popup');
-            await shopperPostsPage.shareOnFacebook_EventDetail.click();
-            const popup = await popupPromise;
-            await expect(popup).toHaveURL(/facebook\.com/);
-        });
+    // Pass
+    test('ShopperPosts_Desktop_046: ตรวจสอบการกดแชร์ผ่าน X เปิด Popup ไปที่ x.com ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
+        await openEventDetail();
+        await shopperPostsPage.shareBtn_EventDetail.click();
+        const popupPromise = page.waitForEvent('popup');
+        await shopperPostsPage.shareOnX_EventDetail.click();
+        const popup = await popupPromise;
+        await expect(popup).toHaveURL(/x\.com|twitter\.com/); // บางที redirect มาจาก twitter.com
+    });
 
-        // Pass
-        test('ShopperPosts_Desktop_032: ตรวจสอบการกดแชร์ผ่าน Line เปิด Popup ไปที่ line.me ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
-            await openEventDetail();
-            await shopperPostsPage.shareBtn_EventDetail.click();
-            const popupPromise = page.waitForEvent('popup');
-            await shopperPostsPage.shareOnLine_EventDetail.click();
-            const popup = await popupPromise;
-            await expect(popup).toHaveURL(/line\.me/);
-        });
+    // Pass
+    test('ShopperPosts_Desktop_047: ตรวจสอบการกดแชร์ผ่าน Copy Link ในหน้า รายละเอียดรายอีเวนต์', async ({ page, context }) => {
+        await openEventDetail();
+        await expect(page).toHaveURL(/\/sp\/[a-zA-Z0-9-_]+/);
+        const currentUrl = new URL(page.url());
+        const eventId = currentUrl.pathname.split('/').pop();
+        const copyValue = await shopperPostsPage.clickShareCopyLink_EventDetail();
+        expect(copyValue).not.toBeNull();
+        const copiedUrl = new URL(copyValue!);
+        expect(copiedUrl.origin).toBe(currentUrl.origin);
+        expect(copiedUrl.pathname).toBe(`/s/${eventId}`);
+    });
 
-        // Pass
-        test('ShopperPosts_Desktop_033: ตรวจสอบการกดแชร์ผ่าน X เปิด Popup ไปที่ x.com ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
-            await openEventDetail();
-            await shopperPostsPage.shareBtn_EventDetail.click();
-            const popupPromise = page.waitForEvent('popup');
-            await shopperPostsPage.shareOnX_EventDetail.click();
-            const popup = await popupPromise;
-            await expect(popup).toHaveURL(/x\.com|twitter\.com/); // บางที redirect มาจาก twitter.com
-        });
+    // Pass
+    test('ShopperPosts_Desktop_048: ตรวจสอบการแสดงรายละเอียดบนการ์ดสินค้าที่อยู่ในอีเวนต์เดียวกัน ในหน้า รายละเอียดรายอีเวนต์', async () => {
+        await openEventDetail();
 
-        // Pass
-        test('ShopperPosts_Desktop_034: ตรวจสอบการกดแชร์ผ่าน Copy Link ในหน้า รายละเอียดรายอีเวนต์', async ({ page, context }) => {
-            await openEventDetail();
-            await expect(page).toHaveURL(/\/sp\/[a-zA-Z0-9-_]+/);
-            const currentUrl = new URL(page.url());
-            const eventId = currentUrl.pathname.split('/').pop();
-            const copyValue = await shopperPostsPage.clickShareCopyLink_EventDetail();
-            expect(copyValue).not.toBeNull();
-            const copiedUrl = new URL(copyValue!);
-            expect(copiedUrl.origin).toBe(currentUrl.origin);
-            expect(copiedUrl.pathname).toBe(`/s/${eventId}`);
-        });
+        await expect(shopperPostsPage.title_ItemOnEvent).toBeVisible();
+        await expect(shopperPostsPage.title_ItemOnEvent).not.toBeEmpty();
 
-        // Pass
-        test('ShopperPosts_Desktop_044: ตรวจสอบการแสดงรายละเอียดบนการ์ดสินค้าที่อยู่ในอีเวนต์เดียวกัน ในหน้า รายละเอียดรายอีเวนต์', async () => {
-            await openEventDetail();
+        await expect(shopperPostsPage.coverImg_ItemOnEvent).toBeVisible();
+        await expect(shopperPostsPage.coverImg_ItemOnEvent)
+            .toHaveAttribute('style', /background-image/);
 
-            await expect(shopperPostsPage.title_ItemOnEvent).toBeVisible();
-            await expect(shopperPostsPage.title_ItemOnEvent).not.toBeEmpty();
+        await expect(shopperPostsPage.price_ItemOnEvent).toBeVisible();
+        await expect(shopperPostsPage.price_ItemOnEvent).not.toBeEmpty();
 
-            await expect(shopperPostsPage.coverImg_ItemOnEvent).toBeVisible();
-            await expect(shopperPostsPage.coverImg_ItemOnEvent)
-                .toHaveAttribute('style', /background-image/);
+        await expect(shopperPostsPage.purchaseBtn_ItemOnEvent).toBeVisible();
+        await expect(shopperPostsPage.purchaseBtn_ItemOnEvent)
+            .toContainText('ฝากหิ้วชิ้นนี้');
+    });
 
-            await expect(shopperPostsPage.price_ItemOnEvent).toBeVisible();
-            await expect(shopperPostsPage.price_ItemOnEvent).not.toBeEmpty();
+    // Pass
+    test('ShopperPosts_Desktop_049: ตรวจสอบการกดปุ่ม "ฝากหิ้วชิ้นนี้" บนการ์ดสินค้าในอีเวนต์นั้น ในหน้า รายละเอียดรายอีเวนต์', async ({ page, context }) => {
+        await openEventDetail();
+        const newPagePromise = context.waitForEvent('page');
+        await shopperPostsPage.purchaseBtn_ItemOnEvent.click();
+        const newPage = await newPagePromise;
+        await newPage.waitForLoadState();
+        await expect(newPage).toHaveURL(/\/s\/[a-zA-Z0-9-_]+/);
+    });
 
-            await expect(shopperPostsPage.purchaseBtn_ItemOnEvent).toBeVisible();
-            await expect(shopperPostsPage.purchaseBtn_ItemOnEvent)
-                .toContainText('ฝากหิ้วชิ้นนี้');
-        });
+    // 45 หายไปไหนน้อ
 
-        // Pass
-        test('ShopperPosts_Desktop_045: ตรวจสอบการกดปุ่ม "ฝากหิ้วชิ้นนี้" บนการ์ดสินค้าในอีเวนต์นั้น ในหน้า รายละเอียดรายอีเวนต์', async ({ page, context }) => {
-            await openEventDetail();
-            const newPagePromise = context.waitForEvent('page');
-            await shopperPostsPage.purchaseBtn_ItemOnEvent.click();
-            const newPage = await newPagePromise;
-            await newPage.waitForLoadState();
-            await expect(newPage).toHaveURL(/\/s\/[a-zA-Z0-9-_]+/);
-        });
+    // ---------- Scroll To Top ----------
+    // Pass
+    test('ShopperPosts_Desktop_050: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
+        await page.evaluate(() => window.scrollBy(0, 1000));
+        await expect(navbar.scrollToTopButton).toBeVisible();
+    });
+    // Pass
+    test('ShopperPosts_Desktop_051: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
+        await page.evaluate(() => window.scrollBy(0, 1000));
+        await expect(navbar.scrollToTopButton).toBeVisible();
+        await navbar.scrollToTopButton.click();
 
-        // 45 หายไปไหนน้อ
+        await expect.poll(async () => {
+            return await page.evaluate(() => window.scrollY);
+        }, { timeout: 5000 }).toBe(0);
+    });
+    // Pass
+    test('ShopperPosts_Desktop_052: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+        await shopperPostsPage.clickFilter_Item();
+        await shopperPostsPage.clickItemCard_title();
+        await page.evaluate(() => window.scrollBy(0, 1000));
+        await expect(navbar.scrollToTopButton).toBeVisible();
+    });
+    // Pass
+    test('ShopperPosts_Desktop_053: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+        await shopperPostsPage.clickFilter_Item();
+        await shopperPostsPage.clickItemCard_title();
+        await page.evaluate(() => window.scrollBy(0, 1000));
+        await expect(navbar.scrollToTopButton).toBeVisible();
+        await navbar.scrollToTopButton.click();
 
-        // ---------- Scroll To Top ----------
-        test.describe('Scroll To Top', () => {
-            // Pass
-            test('ShopperPosts_Desktop_046: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
-                await page.evaluate(() => window.scrollBy(0, 1000));
-                await expect(navbar.scrollToTopButton).toBeVisible();
-            });
-            // Pass
-            test('ShopperPosts_Desktop_047: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
-                await page.evaluate(() => window.scrollBy(0, 1000));
-                await expect(navbar.scrollToTopButton).toBeVisible();
-                await navbar.scrollToTopButton.click();
+        await expect.poll(async () => {
+            return await page.evaluate(() => window.scrollY);
+        }, { timeout: 5000 }).toBe(0);
+    });
 
-                await expect.poll(async () => {
-                    return await page.evaluate(() => window.scrollY);
-                }, { timeout: 5000 }).toBe(0);
-            });
-            // Pass
-            test('ShopperPosts_Desktop_048: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
-                await shopperPostsPage.clickFilter_Item();
-                await shopperPostsPage.clickItemCard_title();
-                await page.evaluate(() => window.scrollBy(0, 1000));
-                await expect(navbar.scrollToTopButton).toBeVisible();
-            });
-            // Pass
-            test('ShopperPosts_Desktop_049: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
-                await shopperPostsPage.clickFilter_Item();
-                await shopperPostsPage.clickItemCard_title();
-                await page.evaluate(() => window.scrollBy(0, 1000));
-                await expect(navbar.scrollToTopButton).toBeVisible();
-                await navbar.scrollToTopButton.click();
+    // แก้แล้ว (ยังไม่ได้รัน): เดิมใช้ itemShopperPostCard
+    test('ShopperPosts_Desktop_054: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
+        await openEventDetail();
+        await page.evaluate(() => window.scrollBy(0, 1000));
+        await expect(navbar.scrollToTopButton).toBeVisible();
+    });
 
-                await expect.poll(async () => {
-                    return await page.evaluate(() => window.scrollY);
-                }, { timeout: 5000 }).toBe(0);
-            });
+    // แก้แล้ว (ยังไม่ได้รัน): เดิมใช้ itemShopperPostCard
+    test('ShopperPosts_Desktop_055: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
+        await openEventDetail();
+        await page.evaluate(() => window.scrollBy(0, 1000));
+        await expect(navbar.scrollToTopButton).toBeVisible();
+        await navbar.scrollToTopButton.click();
 
-            // แก้แล้ว (ยังไม่ได้รัน): เดิมใช้ itemShopperPostCard
-            test('ShopperPosts_Desktop_050: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
-                await openEventDetail();
-                await page.evaluate(() => window.scrollBy(0, 1000));
-                await expect(navbar.scrollToTopButton).toBeVisible();
-            });
-
-            // แก้แล้ว (ยังไม่ได้รัน): เดิมใช้ itemShopperPostCard
-            test('ShopperPosts_Desktop_051: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
-                await openEventDetail();
-                await page.evaluate(() => window.scrollBy(0, 1000));
-                await expect(navbar.scrollToTopButton).toBeVisible();
-                await navbar.scrollToTopButton.click();
-
-                await expect.poll(async () => {
-                    return await page.evaluate(() => window.scrollY);
-                }, { timeout: 5000 }).toBe(0);
-            });
-        });
-
+        await expect.poll(async () => {
+            return await page.evaluate(() => window.scrollY);
+        }, { timeout: 5000 }).toBe(0);
     });
 });

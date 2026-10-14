@@ -141,6 +141,7 @@ test.describe('Tag Page (Desktop)', () => {
         await expect(navbar.loginModalCloseButton).toBeVisible();
         await navbar.closeLoginModal();
     });
+
     //Pass
     test('Tag_Desktop_008: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
@@ -155,7 +156,7 @@ test.describe('Tag Page (Desktop)', () => {
         await expect(likeIcon).toHaveClass(/gxBVIB/);
     });
 
-    // Fail
+    // Pass
     test('Tag_Desktop_009: ตรวจสอบการกดปุ่ม "Like" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
@@ -198,7 +199,7 @@ test.describe('Tag Page (Desktop)', () => {
         await expect(bookmarkIcon).toHaveClass(/gxBVIB/);
     });
 
-    // Fail
+    // Pass
     test('Tag_Desktop_012: ตรวจสอบการกดปุ่ม "Bookmark" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);

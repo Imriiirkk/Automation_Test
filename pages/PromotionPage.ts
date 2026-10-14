@@ -352,7 +352,7 @@ export class PromotionPage {
     }
 
     async sentComment() {
-        const testComment = `test-${Date.now()}`;
+        const testComment = 'testcomment-auto';
         await this.promotionCard_image.first().click();
         await this.textBoxSendComment.click();
         await this.textBoxSendComment.fill(testComment);
@@ -360,7 +360,7 @@ export class PromotionPage {
     }
 
     async sentReplyComment() {
-        const testComment = `test-${Date.now()}`;
+        const testComment = 'testcomment-auto'
         await this.promotionCard_image.first().click();
         await this.textBoxReplyComment.click();
         await this.textBoxReplyComment.fill(testComment);

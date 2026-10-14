@@ -110,8 +110,7 @@ test.describe('Author Page (Desktop)', () => {
         await navbar.closeLoginModal();
     });
 
-
-    // Fail
+    // Pass
     test('Author_Desktop_008: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
@@ -136,7 +135,7 @@ test.describe('Author Page (Desktop)', () => {
         await ensureOff(loveBtn);
     });
 
-    // Fail
+    // Pass
     test('Author_Desktop_009: ตรวจสอบการกดปุ่ม "Like" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
@@ -180,6 +179,7 @@ test.describe('Author Page (Desktop)', () => {
         await navbar.closeLoginModal();
     });
 
+    // Pass
     test('Author_Desktop_011: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
@@ -193,6 +193,7 @@ test.describe('Author Page (Desktop)', () => {
         await ensureOff(bookmarkBtn);
     });
 
+    // Pass
     test('Author_Desktop_012: ตรวจสอบการกดปุ่ม "Bookmark" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);

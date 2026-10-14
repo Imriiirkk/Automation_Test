@@ -295,75 +295,73 @@ test.describe('Article Page (Mobile)', () => {
             }
         });
 
-
-
         // ---------- Comment Section ----------
-        test.describe('Run test', () => {
-            test.describe('Comment Section', () => {
-                // ----- ยังไม่ login -----
-                // Not Complete
-                test('Article_Mobile_028: ตรวจสอบการแสดงความคิดเห็น ในกรณีที่ยังไม่เข้าสู่ระบบ', async ({ page }) => {
-                    // const articleCard_Test = articlePage.articleCardEach.filter({ hasText: 'ทดสอบสร้างบทความ' });
-                    // await articleCard_Test.click();
-                    await articlePage.clickArticleCard_title();
-                    const title = await articlePage.title_ArticleDetail.innerText();
-                    console.log('ชื่อโปรโมชัน:', title);
-                    await expect(commentSection.blockSentComment).toBeVisible();
-                    await commentSection.blockSentComment.click();
-                    await expect(navbar.loginModalCloseButton).toBeVisible();
-                });
-
-                test('Article_Mobile_029: ตรวจสอบการตอบกลับความคิดเห็น ในกรณีที่ยังไม่เข้าสู่ระบบ', async ({ page }) => {
-                    // const articleCard_Test = articlePage.articleCardEach.filter({ hasText: 'ทดสอบสร้างบทความ' });
-                    // await articleCard_Test.click();
-                    await articlePage.clickArticleCard_title();
-                    const title = await articlePage.title_ArticleDetail.innerText();
-                    console.log('ชื่อโปรโมชัน:', title);
-                    await expect(commentSection.replyComment_bth).toBeVisible();
-                    await commentSection.replyComment_bth.click();
-                    await commentSection.textField_ReplyComment.click();
-                    await expect(navbar.loginModalCloseButton).toBeVisible();
-                });
-
-                // ----- login แล้ว -----
-                // TODO (041-042, ยกมาจาก desktop 054-055 ทั้งสองจุดนี้ยังไม่ถูก):
-                //  1) countBefore ถูกนับก่อนเข้าหน้าบทความ ค่าจึงไม่ใช่จำนวนคอมเมนต์ของบทความ
-                //  2) `test-${Date.now()}` ตอน assert เป็นคนละเวลากับตอนพิมพ์ จะไม่ตรงกัน
-                //  ต้องดู CommentSection.sentComment ว่าพิมพ์ข้อความอะไร แล้วเทียบด้วยค่านั้นแทน
-                test('Article_Mobile_030: ตรวจสอบการแสดงความคิดเห็น ในกรณีที่เข้าสู่ระบบแล้ว', async ({ page }) => {
-                    const countBefore = await commentSection.existingComment.count();
-                    await loginAndGoToArticle(page);
-                    await commentSection.sentComment(articlePage.title_ArticleCard.first());
-                    await expect(commentSection.blockComment.getByText(`test-${Date.now()}`)).toBeVisible();
-                    await expect(commentSection.textField_Comment).toHaveValue('');
-                    await expect(commentSection.existingComment).toHaveCount(countBefore + 1);
-                });
-
-                test('Article_Mobile_031: ตรวจสอบการตอบกลับความคิดเห็น ในกรณีที่เข้าสู่ระบบแล้ว', async ({ page }) => {
-                    const countBefore = await commentSection.existingComment.count();
-                    await loginAndGoToArticle(page);
-                    await commentSection.sentReplyComment(articlePage.title_ArticleCard.first());
-                    await expect(commentSection.blockComment.getByText(`test-${Date.now()}`)).toBeVisible();
-                    await expect(commentSection.textField_ReplyComment).toHaveValue('');
-                    await expect(commentSection.existingComment).toHaveCount(countBefore + 1);
-                });
-
-                test('Article_Mobile_032: ตรวจสอบการแสดงความคิดเห็นตอบกลับทั้งหมด เมื่อคลิกปุ่ม "ตอบกลับ"', async () => {
-                    await articlePage.clickArticleCard_title();
-                    await commentSection.replyComment_bth.click();
-                    await expect(commentSection.blockSentCommentReply).toBeVisible();
-                });
-
-                test('Article_Mobile_033: ตรวจสอบการซ่อนการตอบกลับความคิดเห็น เมื่อคลิกปุ่ม "ซ่อน"', async () => {
-                    await articlePage.clickArticleCard_title();
-                    await commentSection.replyComment_bth.click();
-                    await expect(commentSection.blockSentCommentReply).toBeVisible();
-                    await commentSection.hideComment_bth.click();
-                    await expect(commentSection.blockSentCommentReply).toBeHidden();
-                });
-            });
+        // ----- ยังไม่ login -----
+        // Pass
+        test('Article_Mobile_028: ตรวจสอบการแสดงความคิดเห็น ในกรณีที่ยังไม่เข้าสู่ระบบ', async ({ page }) => {
+            await articlePage.clickArticleCard_title();
+            await commentSection.blockSentComment.click();
+            await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+            await navbar.closeLoginModal()
         });
 
+        // Pass
+        test('Article_Mobile_029: ตรวจสอบการตอบกลับความคิดเห็น ในกรณีที่ยังไม่เข้าสู่ระบบ', async ({ page }) => {
+            await page.locator('a[href="/p/testar-001"]').first().click();
+            // await articlePage.clickArticleCard_title();
+            await commentSection.replyComment_bth.click();
+            await commentSection.textField_ReplyComment.click();
+            await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+            await navbar.closeLoginModal()
+        });
+
+        // ----- login แล้ว -----
+        // Pass
+        test('Article_Mobile_030: ตรวจสอบการแสดงความคิดเห็น ในกรณีที่เข้าสู่ระบบแล้ว', async ({ page }) => {
+            await navbar.openLoginOrSignup_mobile();
+            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+            await page.locator('a[href="/p/testar-001"]').first().click();
+            await expect(commentSection.blockComment).toBeVisible();
+            const countBefore = await commentSection.existingComment.count();
+            await commentSection.sentComment();
+            await expect(commentSection.blockComment.getByText('testcomment-auto')).toBeVisible();
+            await page.reload();
+            await expect(commentSection.blockComment).toBeVisible();
+            await expect(commentSection.textField_Comment).toHaveValue('');
+            await expect(commentSection.existingComment).toHaveCount(countBefore + 2); // จำนวนคอมเมนต์ต้องเพิ่มขึ้น 1
+            await expect(commentSection.commentDate.first()).toContainText(/ที่แล้ว$/);
+        });
+
+        // Pass
+        test('Article_Mobile_031: ตรวจสอบการตอบกลับความคิดเห็น ในกรณีที่เข้าสู่ระบบแล้ว', async ({ page }) => {
+            await navbar.openLoginOrSignup_mobile();
+            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+            await page.locator('a[href="/p/testar-001"]').first().click();
+            await expect(commentSection.blockComment).toBeVisible();
+            await commentSection.sentReplyComment();
+            await page.reload();
+            await expect(commentSection.blockComment).toBeVisible();
+            await commentSection.replyComment_bth.click();
+            await expect(commentSection.replyCommentText.first()).toContainText('testryplycomment-auto');
+            await expect(commentSection.replyCommentDate.first()).toContainText(/ที่แล้ว$/);
+        });
+
+        // Pass
+        test('Article_Mobile_032: ตรวจสอบการแสดงความคิดเห็นตอบกลับทั้งหมด เมื่อคลิกปุ่ม "ตอบกลับ"', async ({ page }) => {
+            await navbar.goToMenu_mobile(navbar.articleMenu_mobile);
+            await page.locator('a[href="/p/testar-001"]').first().click();
+            await commentSection.replyComment_bth.click();
+            await expect(commentSection.blockSentCommentReply).toBeVisible();
+        });
+
+        test('Article_Mobile_033: ตรวจสอบการซ่อนการตอบกลับความคิดเห็น เมื่อคลิกปุ่ม "ซ่อน"', async ({ page }) => {
+            await navbar.goToMenu_mobile(navbar.articleMenu_mobile);
+            await page.locator('a[href="/p/testar-001"]').first().click();
+            await commentSection.replyComment_bth.click();
+            await expect(commentSection.blockSentCommentReply).toBeVisible();
+            await commentSection.hideComment_bth.click();
+            await expect(commentSection.blockSentCommentReply).toBeHidden();
+        });
 
         // ---------- Bookmark ----------
         // Pass

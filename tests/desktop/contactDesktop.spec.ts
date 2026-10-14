@@ -35,7 +35,7 @@ test.describe('Contact Page (Desktop)', () => {
         await expect(navbar.scrollToTopButton).toBeVisible();
     });
 
-    // Fail
+    // Pass
     test('Contact_Desktop_003: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^"', async ({ page }) => {
         await contactPage.careerButton.click();
         await page.evaluate(() => {
