@@ -67,6 +67,21 @@ export class ProfilePage {
     public couponPopupCloseButton: Locator;
     public couponPopupUseButton: Locator;
 
+    public confirmModal: Locator;
+    public confirmModalIcon: Locator;
+    public confirmModalDesc: Locator;
+    public confirmModalCancelButton: Locator;
+    public confirmModalConfirmButton: Locator;
+
+    public codeModal: Locator;
+    public codeModalImage: Locator;
+    public codeModalQrTab: Locator;
+    public codeModalBarcodeTab: Locator;
+    public codeModalQrImage: Locator;
+    public codeModalBarcodeImage: Locator;
+    public codeModalRefNumber: Locator;
+    public codeModalCloseButton: Locator;
+
     // privacy
     private privacyDeleteAccountButton: Locator;
     public deleteAccountPopup: Locator;
@@ -137,6 +152,21 @@ export class ProfilePage {
         this.couponPopupDescription = this.couponPopup.locator('[class*="DialogUseCoupon__Descript"]');
         this.couponPopupCloseButton = this.couponPopup.locator('[class*="DialogUseCoupon__Button"]').getByText('ปิด');
         this.couponPopupUseButton = this.couponPopup.locator('[class*="DialogUseCoupon__Button"]').getByText('กดใช้งานคูปอง');
+
+        this.confirmModal = page.locator('[class*="DialogConfirmUseCoupon__DialogContent-"]'); // ปรับตาม library modal จริง (SweetAlert2 หรืออื่น)
+        this.confirmModalIcon = this.confirmModal.locator('[class*="DialogConfirmUseCoupon__Icon"]');
+        this.confirmModalDesc = this.confirmModal.locator('[class*="DialogConfirmUseCoupon__Descript"]');
+        this.confirmModalCancelButton = this.confirmModal.getByRole('button', { name: 'ยกเลิก' });
+        this.confirmModalConfirmButton = this.confirmModal.getByRole('button', { name: 'ยืนยัน' });
+
+        this.codeModal = page.locator('[class*="DialogUseCoupon__Dialog-"]');
+        this.codeModalImage = this.codeModal.locator('div > div > [style*="background-image"]');
+        this.codeModalQrTab = this.codeModal.locator('[class*="DialogUseCoupon__CodeMenu-"]').filter({ hasText: 'QR Code' });
+        this.codeModalBarcodeTab = this.codeModal.locator('[class*="DialogUseCoupon__CodeMenu-"]').filter({ hasText: 'Bar Code' });
+        this.codeModalQrImage = this.codeModal.locator('div > div > div > div > svg'); // ปรับตามที่ render จริง
+        this.codeModalBarcodeImage = this.codeModal.locator('div > div > div > svg');
+        this.codeModalRefNumber = this.codeModal.locator('div > div > div > span'); // ต้องดู class จริงของเลขอ้างอิงเพิ่ม ยังไม่เห็นใน screenshot นี้
+        this.codeModalCloseButton = this.codeModal.getByRole('button', { name: 'ปิด' });
 
         // privacy
         this.privacyDeleteAccountButton = page.locator('button:has-text("ขอลบบัญชี")');
@@ -265,6 +295,45 @@ export class ProfilePage {
     // privacy
     async clickPrivacyDeleteAccount() {
         await this.privacyDeleteAccountButton.click();
+    }
+
+    async getCouponStatus(index: number): Promise<string> {
+        const item = this.couponCardItem.nth(index);
+        const button = item.getByRole('button');
+        const text = (await button.textContent())?.trim() ?? '';
+
+        if (text === 'ใช้งานคูปอง') return 'ยังไม่ใช้คูปอง';
+        if (text === 'คูปองถูกใช้งานไปแล้ว') return 'ใช้คูปองแล้ว';
+        if (text === 'หมดอายุ') return 'คูปองหมดอายุ';
+
+        throw new Error(`ไม่รู้จักข้อความปุ่มบนการ์ด index ${index}: "${text}"`);
+    }
+
+    async countCouponsByStatus(status: string): Promise<number> {
+        const count = await this.couponCardItem.count();
+        let matched = 0;
+        for (let i = 0; i < count; i++) {
+            if ((await this.getCouponStatus(i)) === status) matched++;
+        }
+        return matched;
+    }
+
+    async loadAllCoupons(maxScrolls = 30): Promise<void> {
+        let previousCount = -1;
+        let currentCount = await this.couponCardItem.count();
+        let attempts = 0;
+
+        while (currentCount !== previousCount && attempts < maxScrolls) {
+            previousCount = currentCount;
+            await this.couponCardItem.last().scrollIntoViewIfNeeded();
+            await this.page.waitForTimeout(500);
+            currentCount = await this.couponCardItem.count();
+            attempts++;
+        }
+
+        if (attempts >= maxScrolls) {
+            throw new Error(`โหลดคูปองไม่ครบภายใน ${maxScrolls} รอบ scroll`);
+        }
     }
 }
 

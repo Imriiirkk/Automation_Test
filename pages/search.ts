@@ -60,7 +60,7 @@ export class SearchComponent {
         return this.resultCardShopper.nth(index).locator('[class*="FixSizeItemCard__PriceContent"]');
     }
 
-    private cardFavoriteButton(index: number): Locator {
+    public cardFavoriteButton(index: number): Locator {
         return this.resultCardShopper.nth(index).locator('[class*="FixSizeItemCard__FavouriteButton"]');
     }
 
@@ -70,7 +70,7 @@ export class SearchComponent {
         this.searchToggle = page.getByRole('button', { name: 'Toggle navigation' }).nth(1);
         this.searchInput = page.getByRole('textbox', { name: 'text' });
         this.searchButton = page.getByRole('button', { name: 'search' });
-        this.searchSuggestionContainer = page.locator('[class*="ContentSuggestBlockSearch__SuggestionContainer"]');
+        this.searchSuggestionContainer = page.locator('[class*="ContentSuggestBlockSearch__SuggestionContainer"]:visible');
         this.searchSuggestionSeeMoreButton = this.searchSuggestionContainer.getByRole('button', { name: 'ดูเพิ่มเติม' });
         this.searchSuggestionDeleteAllButton = this.searchSuggestionContainer.getByRole('button', { name: 'ลบทั้งหมด' });
         this.searchInputClearButton = page.locator('[class*="InputSearch__InputAndClearWrapper"]').getByRole('button', { name: '×' });
@@ -295,6 +295,9 @@ export class SearchComponent {
         await this.cardFavoriteButton(index).click();
     }
 
+    getCardFavoriteButton(index: number): Locator {
+        return this.cardFavoriteButton(index).locator('svg > path');
+    }
     // ยืนยันแล้วว่า default aria-label = "Add to favorites"
     // TODO: ยังไม่เห็นตัวอย่าง state หลังกดแล้ว (เดาว่าเปลี่ยนเป็น "Remove from favorites" ตาม a11y pattern ทั่วไป) - ลองกดจริงแล้วดู aria-label เพื่อยืนยัน
     async isCardFavorited(index: number) {

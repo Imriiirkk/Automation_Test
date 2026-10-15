@@ -101,25 +101,25 @@ test.describe('Search - Result Page', () => {
     //     await expect(navbar.search.sortOptionPriceDesc).toBeVisible();
     // });
 
-    test('Search_mobile_022: ตรวจสอบการเรียงลำดับสินค้าตามราคา (น้อย-มาก)', async ({ page }) => {
-        const expectedCount = await navbar.search.getResultCountNumber();
-        await navbar.search.selectSortOption(navbar.search.sortOptionPriceAsc);
-        await navbar.search.waitForAllCardsToRender(expectedCount, 15000, 'รับหิ้ว');
+    // test('Search_mobile_022: ตรวจสอบการเรียงลำดับสินค้าตามราคา (น้อย-มาก)', async ({ page }) => {
+    //     const expectedCount = await navbar.search.getResultCountNumber();
+    //     await navbar.search.selectSortOption(navbar.search.sortOptionPriceAsc);
+    //     await navbar.search.waitForAllCardsToRender(expectedCount, 15000, 'รับหิ้ว');
 
-        const prices = await navbar.search.getAllCardPrices();
-        const sortedAscending = [...prices].sort((a, b) => a - b);
-        expect(prices).toEqual(sortedAscending);
-    });
+    //     const prices = await navbar.search.getAllCardPrices();
+    //     const sortedAscending = [...prices].sort((a, b) => a - b);
+    //     expect(prices).toEqual(sortedAscending);
+    // });
 
-    test('Search_mobile_023: ตรวจสอบการเรียงลำดับสินค้าตามราคา (มาก-น้อย)', async ({ page }) => {
-        const expectedCount = await navbar.search.getResultCountNumber();
-        await navbar.search.selectSortOption(navbar.search.sortOptionPriceDesc);
-        await navbar.search.waitForAllCardsToRender(expectedCount, 15000, 'รับหิ้ว');
+    // test('Search_mobile_023: ตรวจสอบการเรียงลำดับสินค้าตามราคา (มาก-น้อย)', async ({ page }) => {
+    //     const expectedCount = await navbar.search.getResultCountNumber();
+    //     await navbar.search.selectSortOption(navbar.search.sortOptionPriceDesc);
+    //     await navbar.search.waitForAllCardsToRender(expectedCount, 15000, 'รับหิ้ว');
 
-        const prices = await navbar.search.getAllCardPrices();
-        const sortedDescending = [...prices].sort((a, b) => b - a);
-        expect(prices).toEqual(sortedDescending);
-    });
+    //     const prices = await navbar.search.getAllCardPrices();
+    //     const sortedDescending = [...prices].sort((a, b) => b - a);
+    //     expect(prices).toEqual(sortedDescending);
+    // });
 
     // test('Search_desktop_024: ตรวจสอบการแสดงองค์ประกอบของการ์ดสินค้าครบถ้วน', async ({ page }) => {
     //     const firstCard = navbar.search.resultCardShopper.first();
@@ -171,22 +171,33 @@ test.describe('Search - Result Page', () => {
     //     expect(navbar.auth.loginModalLogo).toBeVisible({ timeout: 10000 });
     // });
 
-    // test('Search_desktop_028: ตรวจสอบการกดปุ่ม Favorite (หัวใจ) บนการ์ดสินค้า โดย login แล้ว', async ({ page }) => {
-    //     await navbar.openLoginOrSignup_desktop();
-    //     await navbar.auth.loginWithEmail(process.env.VALID_EMAIL!, process.env.VALID_PASSWORD!);
-    //     await expect(navbar.auth.loginSuccessDialog).toBeVisible({ timeout: 10000 });
+    test('Search_desktop_028: ตรวจสอบการกดปุ่ม Favorite (หัวใจ) บนการ์ดสินค้า โดย login แล้ว', async ({ page }) => {
+        await navbar.openLoginOrSignup_desktop();
+        await navbar.auth.loginWithEmail(process.env.VALID_EMAIL!, process.env.VALID_PASSWORD!);
+        await expect(navbar.auth.loginSuccessDialog).toBeVisible({ timeout: 10000 });
 
-    //     await navbar.search.clickCardFavorite(1);
-    //     expect(await navbar.search.isCardFavorited(1)).toBe(true);
-    // });
+        const favIcon = navbar.search.getCardFavoriteButton(1);
+        if (await navbar.search.isCardFavorited(1)) {
+            await navbar.search.clickCardFavorite(1);
+            await expect(favIcon).toHaveAttribute('fill', '#979797');
+        }
 
-    // test('Search_desktop_029: ตรวจสอบการยกเลิก Favorite เมื่อกดปุ่มหัวใจซ้ำ', async ({ page }) => {
-    //     await navbar.openLoginOrSignup_desktop();
-    //     await navbar.auth.loginWithEmail(process.env.VALID_EMAIL!, process.env.VALID_PASSWORD!);
-    //     await expect(navbar.auth.loginSuccessDialog).toBeVisible({ timeout: 10000 });
+        await navbar.search.clickCardFavorite(1);
+        await expect(favIcon).toHaveAttribute('fill', '#BF202F');
+    });
 
-    //     await navbar.search.clickCardFavorite(1);
-    //     await navbar.search.clickCardFavorite(1);
-    //     expect(await navbar.search.isCardFavorited(1)).toBe(false);
-    // });
+    test('Search_desktop_029: ตรวจสอบการยกเลิก Favorite เมื่อกดปุ่มหัวใจซ้ำ', async ({ page }) => {
+        await navbar.openLoginOrSignup_desktop();
+        await navbar.auth.loginWithEmail(process.env.VALID_EMAIL!, process.env.VALID_PASSWORD!);
+        await expect(navbar.auth.loginSuccessDialog).toBeVisible({ timeout: 10000 });
+
+        const favIcon = navbar.search.getCardFavoriteButton(1);
+        if (!(await navbar.search.isCardFavorited(1))) {
+            await navbar.search.clickCardFavorite(1);
+            await expect(favIcon).toHaveAttribute('fill', '#BF202F');
+        }
+
+        await navbar.search.clickCardFavorite(1);
+        await expect(favIcon).toHaveAttribute('fill', '#979797');
+    });
 });

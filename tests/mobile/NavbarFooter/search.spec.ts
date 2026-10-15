@@ -54,8 +54,8 @@ test.describe('Search', () => {
 
     test('Search_mobile_005: ตรวจสอบการไม่แสดงปุ่ม "ดูเพิ่มเติม" เมื่อค้นหาล่าสุดไม่เกิน 5 รายการ', async ({ page }) => {
         await navbar.search.searchWithKeyword(['สร้อย', 'เสื้อ', 'กางเกง', 'รองเท้า', 'หมวก']);
-        await navbar.search.clickSearchToggle();
         await navbar.search.clickSearchInput();
+        await navbar.search.searchInput.clear();
 
         const seeMoreButton = navbar.search.searchSuggestionContainer.getByRole('button', { name: 'ดูเพิ่มเติม' });
         await expect(seeMoreButton).toBeHidden();
@@ -63,8 +63,8 @@ test.describe('Search', () => {
 
     test('Search_mobile_006: ตรวจสอบการแสดงปุ่ม "ดูเพิ่มเติม" เมื่อค้นหาล่าสุดมากกว่า 5 รายการ', async ({ page }) => {
         await navbar.search.searchWithKeyword(['สร้อย', 'เสื้อ', 'กางเกง', 'รองเท้า', 'หมวก', 'กำไล']);
-        await navbar.search.clickSearchToggle();
         await navbar.search.clickSearchInput();
+        await navbar.search.searchInput.clear();
 
         const seeMoreButton = navbar.search.searchSuggestionContainer.getByRole('button', { name: 'ดูเพิ่มเติม' });
         await expect(seeMoreButton).toBeVisible();
@@ -72,8 +72,9 @@ test.describe('Search', () => {
 
     test('Search_mobile_007: ตรวจสอบการนำทางไปหน้าผลการค้นหาเมื่อกดคำค้นหาล่าสุด', async ({ page }) => {
         await navbar.search.searchWithKeyword(['สร้อย', 'เสื้อ']);
-        await navbar.search.clickSearchToggle();
         await navbar.search.clickSearchInput();
+        await navbar.search.searchInput.clear();
+
         await page.waitForTimeout(5000);
         await navbar.dismissAppBannerIfPresent();
         await navbar.search.clickRecentSearch('เสื้อ');
@@ -85,8 +86,9 @@ test.describe('Search', () => {
 
     test('Search_mobile_008: ตรวจสอบการลบรายการค้นหาล่าสุดด้วยปุ่ม "x"', async ({ page }) => {
         await navbar.search.searchWithKeyword(['สร้อย', 'กระเป๋า']);
-        await navbar.search.clickSearchToggle();
         await navbar.search.clickSearchInput();
+        await navbar.search.searchInput.clear();
+
         const countBefore = await navbar.search.recentSearchItems.count();
         await navbar.search.removeRecentSearch('กระเป๋า');
         await expect(navbar.search.recentSearchItems.filter({ hasText: /^กระเป๋า$/ })).toBeHidden();
@@ -95,8 +97,8 @@ test.describe('Search', () => {
 
     test('Search_mobile_009: ตรวจสอบการแสดงคำค้นหาล่าสุดทั้งหมดและปุ่ม "ลบทั้งหมด" เมื่อกด "ดูเพิ่มเติม"', async ({ page }) => {
         await navbar.search.searchWithKeyword(['สร้อย', 'เสื้อ', 'กางเกง', 'รองเท้า', 'หมวก', 'กระเป๋า']);
-        await navbar.search.clickSearchToggle();
         await navbar.search.clickSearchInput();
+        await navbar.search.searchInput.clear();
 
         const seeMoreButton = navbar.search.searchSuggestionContainer.getByRole('button', { name: 'ดูเพิ่มเติม' });
         await seeMoreButton.click();
@@ -108,8 +110,8 @@ test.describe('Search', () => {
 
     test('Search_mobile_010: ตรวจสอบการลบค้นหาล่าสุดทั้งหมดเมื่อกดปุ่ม "ลบทั้งหมด"', async ({ page }) => {
         await navbar.search.searchWithKeyword(['สร้อย', 'เสื้อ', 'กางเกง', 'รองเท้า', 'หมวก', 'กระเป๋า']);
-        await navbar.search.clickSearchToggle();
         await navbar.search.clickSearchInput();
+        await navbar.search.searchInput.clear();
 
         const seeMoreButton = navbar.search.searchSuggestionContainer.getByRole('button', { name: 'ดูเพิ่มเติม' });
         await seeMoreButton.click();
