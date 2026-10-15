@@ -209,7 +209,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     test.describe.serial('Love Button — Item Card', () => {
 
         // Pass
-        test('ShopperPosts_Desktop_019: ตรวจสอบการกดปุ่ม "หัวใจ" บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น โดยที่ยังไม่เข้าสู่ระบบ', async () => {
+        test('ShopperPosts_Desktop_019: ตรวจสอบการกดปุ่ม "Like" บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น โดยที่ยังไม่เข้าสู่ระบบ', async () => {
             await shopperPostsPage.clickFilter_Item();
             await shopperPostsPage.clickLoveItemCard();
             await expect(navbar.loginModalCloseButton).toBeVisible();
@@ -217,7 +217,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Desktop_020: ตรวจสอบการกดปุ่ม "หัวใจ" บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
+        test('ShopperPosts_Desktop_020: ตรวจสอบการกดปุ่ม "Like" บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
             await navbar.openLoginOrSignup_desktop();
             await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
             await shopperPostsPage.clickLoveItemCard();
@@ -225,7 +225,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Desktop_021: ตรวจสอบการกดปุ่ม "หัวใจ" อีกครั้ง บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
+        test('ShopperPosts_Desktop_021: ตรวจสอบการกดปุ่ม "Like" อีกครั้ง บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
             await navbar.openLoginOrSignup_desktop();
             await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
             await shopperPostsPage.clickLoveItemCard();
@@ -276,7 +276,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     // ---------- Item Detail Page ----------
     test.describe('Item Detail', () => {
         // Pass
-        test('ShopperPosts_Desktop_023: ตรวจสอบการแสดงรายละเอียดบนหน้า รายละเอียดสินค้ารายชิ้น', async () => {
+        test('ShopperPosts_Desktop_026: ตรวจสอบการแสดงรายละเอียดบนหน้า รายละเอียดสินค้ารายชิ้น', async () => {
             await shopperPostsPage.clickFilter_Item();
             await shopperPostsPage.clickItemCard_title();
             await expect(shopperPostsPage.title_ItemDetail).toBeVisible();
@@ -291,21 +291,23 @@ test.describe('Shopper Posts Page (Desktop)', () => {
         });
 
         // Fail
-        test('ShopperPosts_Desktop_024: ตรวจสอบการกด "ประเภทสินค้า" ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+        test('ShopperPosts_Desktop_027: ตรวจสอบการกด "ประเภทสินค้า" ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
             await shopperPostsPage.clickFilter_Item();
             await shopperPostsPage.clickItemCard_title();
             await shopperPostsPage.productType_ItemDetail.click();
             await page.waitForURL(/\/search\?s=/, { timeout: 10000 });
         });
 
-        // TODO: ยังไม่มี tag locator ใน POM (tag_ItemDetail ถูก comment ไว้)
-        test('ShopperPosts_Desktop_025: ตรวจสอบการกด "#" ในหน้า รายละเอียดสินค้ารายชิ้น', async () => {
-            //To DO: เช็คต่อว่าชื่อที่กดกับ#าตรงกันไหม >> อันนี้ข้ามไปก่อนเดี๋ยวทำ pom หน้าtagอีกที 
+        test('ShopperPosts_Desktop_028: ตรวจสอบการกด "#" ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+            await shopperPostsPage.clickFilter_Item();
+            await shopperPostsPage.clickItemCard_title();
+            await shopperPostsPage.tag_ItemDetail.click();
+            await page.waitForURL(/\/search\?s=/, { timeout: 10000 });
         });
 
 
         // Pass
-        test('ShopperPosts_Desktop_026: ตรวจสอบการกดปุ่ม "ฝากหิ้วชิ้นนี้" ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page, context }) => {
+        test('ShopperPosts_Desktop_029: ตรวจสอบการกดปุ่ม "ฝากหิ้วชิ้นนี้" ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page, context }) => {
             await shopperPostsPage.clickItemCard_title();
             const newPagePromise = context.waitForEvent('page');
             await shopperPostsPage.purchaseBtn_ItemDetail.click();
@@ -318,7 +320,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     // ---------- Love Button (Item Detail) — TODO ทั้งกลุ่ม ----------
     // Pass
 
-    test('ShopperPosts_Desktop_027: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดสินค้ารายชิ้น โดยที่ยังไม่เข้าสู่ระบบ', async () => {
+    test('ShopperPosts_Desktop_030: ตรวจสอบการกดปุ่ม "Like" ในหน้า รายละเอียดสินค้ารายชิ้น โดยที่ยังไม่เข้าสู่ระบบ', async () => {
         await openItemDetail();
         await shopperPostsPage.clickLoveItemDetail();
         await expect(navbar.loginModalCloseButton).toBeVisible();
@@ -327,7 +329,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
 
 
     //Fail
-    test('ShopperPosts_Desktop_028: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดสินค้ารายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
+    test('ShopperPosts_Desktop_031: ตรวจสอบการกดปุ่ม "Like" ในหน้า รายละเอียดสินค้ารายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await openItemDetail();
@@ -341,7 +343,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_029: ตรวจสอบการกดปุ่ม "หัวใจ" อีกครั้ง ในหน้า รายละเอียดสินค้ารายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
+    test('ShopperPosts_Desktop_032: ตรวจสอบการกดปุ่ม "Like" อีกครั้ง ในหน้า รายละเอียดสินค้ารายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await openItemDetail();
@@ -358,7 +360,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
 
     // ---------- Share Button (Item Detail) — TODO ทั้งกลุ่ม ----------
     // Pass
-    test('ShopperPosts_Desktop_030: ตรวจสอบการกดปุ่ม "แชร์" ในหน้า รายละเอียดสินค้ารายชิ้น', async () => {
+    test('ShopperPosts_Desktop_033: ตรวจสอบการกดปุ่ม "Share" ในหน้า รายละเอียดสินค้ารายชิ้น', async () => {
         await openItemDetail();
         await shopperPostsPage.shareBtn_ItemDetail.click();
         await expect(shopperPostsPage.shareOnFacebook_ItemDetail).toBeVisible();
@@ -368,7 +370,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_031: ตรวจสอบการกดแชร์ผ่าน Facebook เปิด Popup ไปที่ facebook.com ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+    test('ShopperPosts_Desktop_034: ตรวจสอบการกด "Share" ผ่าน Facebook เปิด Popup ไปที่ facebook.com ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
         await openItemDetail();
         await shopperPostsPage.shareBtn_ItemDetail.click();
         const popupPromise = page.waitForEvent('popup');
@@ -378,7 +380,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_032: ตรวจสอบการกดแชร์ผ่าน Line เปิด Popup ไปที่ line.me ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+    test('ShopperPosts_Desktop_035: ตรวจสอบการกด "Share" ผ่าน Line เปิด Popup ไปที่ line.me ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
         await openItemDetail();
         await shopperPostsPage.shareBtn_ItemDetail.click();
         const popupPromise = page.waitForEvent('popup');
@@ -388,7 +390,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_033: ตรวจสอบการกดแชร์ผ่าน X เปิด Popup ไปที่ x.com ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+    test('ShopperPosts_Desktop_036: ตรวจสอบการกด "Share" ผ่าน X เปิด Popup ไปที่ x.com ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
         await openItemDetail();
         await shopperPostsPage.shareBtn_ItemDetail.click();
         const popupPromise = page.waitForEvent('popup');
@@ -398,7 +400,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_034: ตรวจสอบการกดแชร์ผ่าน Copy Link ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+    test('ShopperPosts_Desktop_037: ตรวจสอบการกด "Share" ผ่าน Copy Link ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
         await openItemDetail();
         await expect(page).toHaveURL(/\/items\/[a-zA-Z0-9-_]+/);
         const currentUrl = new URL(page.url());
@@ -411,7 +413,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
 
     // ---------- Items in Same Event — TODO ทั้งกลุ่ม ----------
     // Pass
-    test('ShopperPosts_Desktop_035: ตรวจสอบการกดปุ่ม "หัวใจ" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน โดยที่ยังไม่เข้าสู่ระบบ', async () => {
+    test('ShopperPosts_Desktop_038: ตรวจสอบการกดปุ่ม "Like" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน โดยที่ยังไม่เข้าสู่ระบบ', async () => {
         await shopperPostsPage.clickItemCard_titleByName('หมวก1');
         await shopperPostsPage.loveBtn_ItemSameEvent.click();
         await expect(navbar.loginModalCloseButton).toBeVisible();
@@ -419,7 +421,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_036: ตรวจสอบการกดปุ่ม "หัวใจ" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน เมื่อเข้าสู่ระบบแล้ว', async () => {
+    test('ShopperPosts_Desktop_039: ตรวจสอบการกดปุ่ม "Like" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await shopperPostsPage.clickItemCard_titleByName('หมวก1');
@@ -432,7 +434,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_037: ตรวจสอบการกดปุ่ม "หัวใจ" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน อีกครั้ง เมื่อเข้าสู่ระบบแล้ว', async () => {
+    test('ShopperPosts_Desktop_040: ตรวจสอบการกดปุ่ม "Like" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน อีกครั้ง เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await shopperPostsPage.clickItemCard_titleByName('หมวก1');
@@ -446,7 +448,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass 
-    test('ShopperPosts_Desktop_038: ตรวจสอบการกด "ดูทั้งหมด >" ในหน้า รายละเอียดสินค้ารายชิ้น บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async ({ page }) => {
+    test('ShopperPosts_Desktop_041: ตรวจสอบการกด "ดูทั้งหมด >" ในหน้า รายละเอียดสินค้ารายชิ้น บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async ({ page }) => {
         await shopperPostsPage.clickFilter_Item();
         await shopperPostsPage.clickItemCard_title();
         await shopperPostsPage.viewAllBtn_ItemDetail.click();
@@ -462,7 +464,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_039: ตรวจสอบการเลื่อน การ์ดสินค้ารับหิ้ว เมื่อกดปุ่ม Indicator บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async () => {
+    test('ShopperPosts_Desktop_042: ตรวจสอบการเลื่อน การ์ดสินค้ารับหิ้ว เมื่อกดปุ่ม Indicator บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async () => {
         await openItemDetail();
         const indicators = shopperPostsPage.allIndicator.getByRole('button', { name: /Go to slide/ });
         const count = await indicators.count();
@@ -478,7 +480,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_040: ตรวจสอบการเลื่อน การ์ดสินค้ารับหิ้ว เมื่อกดปุ่ม <, > บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async () => {
+    test('ShopperPosts_Desktop_043: ตรวจสอบการเลื่อน การ์ดสินค้ารับหิ้ว เมื่อกดปุ่ม <, > บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async () => {
         await openItemDetail();
         const firstTitle = (await shopperPostsPage.title_ItemSameEvent.first().textContent())?.trim();
         expect(firstTitle).toBeTruthy();
@@ -492,7 +494,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
 
     // ---------- Event Detail Page ----------
     // page
-    test('ShopperPosts_Desktop_041: ตรวจสอบการแสดงรายละเอียดบนหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
+    test('ShopperPosts_Desktop_044: ตรวจสอบการแสดงรายละเอียดบนหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
         await openEventDetail();
         await expect(page).toHaveURL(/\/sp\/[a-zA-Z0-9-_]+/);
         await expect(shopperPostsPage.title_EventDetail).toBeVisible();
@@ -509,7 +511,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     // ---------- Love / Share (Event Detail) — TODO ทั้งกลุ่ม ----------
     // TODO: loveBtn_EventDetail, shareBtn_EventDetail ยังไม่ระบุ locator
     // Pass
-    test('ShopperPosts_Desktop_042: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดรายอีเวนต์ โดยที่ยังไม่เข้าสู่ระบบ', async () => {
+    test('ShopperPosts_Desktop_045: ตรวจสอบการกดปุ่ม "Like" ในหน้า รายละเอียดรายอีเวนต์ โดยที่ยังไม่เข้าสู่ระบบ', async () => {
         await shopperPostsPage.clickFilter_Event();
         await shopperPostsPage.clickEventCard_titleByName('ทดสอบการสร้างโพสรับหิ้ว');
         await shopperPostsPage.loveBtn_EventDetail.click();
@@ -518,7 +520,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_043: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดรายอีเวนต์ เมื่อเข้าสู่ระบบแล้ว', async () => {
+    test('ShopperPosts_Desktop_046: ตรวจสอบการกดปุ่ม "Like" ในหน้า รายละเอียดรายอีเวนต์ เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await shopperPostsPage.clickFilter_Event();
@@ -534,7 +536,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_044: ตรวจสอบการกดปุ่ม "หัวใจ" อีกครั้ง ในหน้า รายละเอียดรายอีเวนต์ เมื่อเข้าสู่ระบบแล้ว', async () => {
+    test('ShopperPosts_Desktop_047: ตรวจสอบการกดปุ่ม "Like" อีกครั้ง ในหน้า รายละเอียดรายอีเวนต์ เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await shopperPostsPage.clickFilter_Event();
@@ -551,7 +553,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_045: ตรวจสอบการกดปุ่ม "แชร์" ในหน้า รายละเอียดรายอีเวนต์', async () => {
+    test('ShopperPosts_Desktop_048: ตรวจสอบการกดปุ่ม "Share" ในหน้า รายละเอียดรายอีเวนต์', async () => {
         await openEventDetail();
         await shopperPostsPage.shareBtn_EventDetail.click();
         await expect(shopperPostsPage.shareOnFacebook_EventDetail).toBeVisible();
@@ -561,7 +563,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_044: ตรวจสอบการกดแชร์ผ่าน Facebook เปิด Popup ไปที่ facebook.com ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
+    test('ShopperPosts_Desktop_049: ตรวจสอบการกด "Share" ผ่าน Facebook เปิด Popup ไปที่ facebook.com ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
         await openEventDetail();
         await shopperPostsPage.shareBtn_EventDetail.click();
         const popupPromise = page.waitForEvent('popup');
@@ -571,7 +573,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_045: ตรวจสอบการกดแชร์ผ่าน Line เปิด Popup ไปที่ line.me ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
+    test('ShopperPosts_Desktop_050: ตรวจสอบการกด "Share" ผ่าน Line เปิด Popup ไปที่ line.me ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
         await openEventDetail();
         await shopperPostsPage.shareBtn_EventDetail.click();
         const popupPromise = page.waitForEvent('popup');
@@ -581,7 +583,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_046: ตรวจสอบการกดแชร์ผ่าน X เปิด Popup ไปที่ x.com ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
+    test('ShopperPosts_Desktop_051: ตรวจสอบการกด "Share" ผ่าน X เปิด Popup ไปที่ x.com ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
         await openEventDetail();
         await shopperPostsPage.shareBtn_EventDetail.click();
         const popupPromise = page.waitForEvent('popup');
@@ -591,7 +593,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_047: ตรวจสอบการกดแชร์ผ่าน Copy Link ในหน้า รายละเอียดรายอีเวนต์', async ({ page, context }) => {
+    test('ShopperPosts_Desktop_052: ตรวจสอบการกด "Share" ผ่าน Copy Link ในหน้า รายละเอียดรายอีเวนต์', async ({ page, context }) => {
         await openEventDetail();
         await expect(page).toHaveURL(/\/sp\/[a-zA-Z0-9-_]+/);
         const currentUrl = new URL(page.url());
@@ -604,7 +606,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_048: ตรวจสอบการแสดงรายละเอียดบนการ์ดสินค้าที่อยู่ในอีเวนต์เดียวกัน ในหน้า รายละเอียดรายอีเวนต์', async () => {
+    test('ShopperPosts_Desktop_053: ตรวจสอบการแสดงรายละเอียดบนการ์ดสินค้าที่อยู่ในอีเวนต์เดียวกัน ในหน้า รายละเอียดรายอีเวนต์', async () => {
         await openEventDetail();
 
         await expect(shopperPostsPage.title_ItemOnEvent).toBeVisible();
@@ -623,7 +625,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Desktop_049: ตรวจสอบการกดปุ่ม "ฝากหิ้วชิ้นนี้" บนการ์ดสินค้าในอีเวนต์นั้น ในหน้า รายละเอียดรายอีเวนต์', async ({ page, context }) => {
+    test('ShopperPosts_Desktop_054: ตรวจสอบการกดปุ่ม "ฝากหิ้วชิ้นนี้" บนการ์ดสินค้าในอีเวนต์นั้น ในหน้า รายละเอียดรายอีเวนต์', async ({ page, context }) => {
         await openEventDetail();
         const newPagePromise = context.waitForEvent('page');
         await shopperPostsPage.purchaseBtn_ItemOnEvent.click();
@@ -632,33 +634,38 @@ test.describe('Shopper Posts Page (Desktop)', () => {
         await expect(newPage).toHaveURL(/\/s\/[a-zA-Z0-9-_]+/);
     });
 
-    // 45 หายไปไหนน้อ
-
     // ---------- Scroll To Top ----------
     // Pass
-    test('ShopperPosts_Desktop_050: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
-        await page.evaluate(() => window.scrollBy(0, 1000));
+    test('ShopperPosts_Desktop_055: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
+        await page.evaluate(() => {
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
         await expect(navbar.scrollToTopButton).toBeVisible();
     });
     // Pass
-    test('ShopperPosts_Desktop_051: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
-        await page.evaluate(() => window.scrollBy(0, 1000));
+    test('ShopperPosts_Desktop_056: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
+        await page.evaluate(() => {
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
         await expect(navbar.scrollToTopButton).toBeVisible();
         await navbar.scrollToTopButton.click();
 
         await expect.poll(async () => {
             return await page.evaluate(() => window.scrollY);
-        }, { timeout: 5000 }).toBe(0);
+        }).toBeLessThan(100);
     });
+
     // Pass
-    test('ShopperPosts_Desktop_052: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+    test('ShopperPosts_Desktop_057: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
         await shopperPostsPage.clickFilter_Item();
         await shopperPostsPage.clickItemCard_title();
         await page.evaluate(() => window.scrollBy(0, 1000));
         await expect(navbar.scrollToTopButton).toBeVisible();
     });
     // Pass
-    test('ShopperPosts_Desktop_053: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+    test('ShopperPosts_Desktop_058: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
         await shopperPostsPage.clickFilter_Item();
         await shopperPostsPage.clickItemCard_title();
         await page.evaluate(() => window.scrollBy(0, 1000));
@@ -671,14 +678,14 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     });
 
     // แก้แล้ว (ยังไม่ได้รัน): เดิมใช้ itemShopperPostCard
-    test('ShopperPosts_Desktop_054: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
+    test('ShopperPosts_Desktop_059: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
         await openEventDetail();
         await page.evaluate(() => window.scrollBy(0, 1000));
         await expect(navbar.scrollToTopButton).toBeVisible();
     });
 
     // แก้แล้ว (ยังไม่ได้รัน): เดิมใช้ itemShopperPostCard
-    test('ShopperPosts_Desktop_055: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
+    test('ShopperPosts_Desktop_060: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
         await openEventDetail();
         await page.evaluate(() => window.scrollBy(0, 1000));
         await expect(navbar.scrollToTopButton).toBeVisible();

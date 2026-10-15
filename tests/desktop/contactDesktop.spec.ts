@@ -38,6 +38,7 @@ test.describe('Contact Page (Desktop)', () => {
     // Pass
     test('Contact_Desktop_003: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^"', async ({ page }) => {
         await contactPage.careerButton.click();
+        await expect(page).toHaveURL(/\/jobs/);
         await page.evaluate(() => {
             window.scrollTo(0, document.body.scrollHeight);
         });
@@ -64,29 +65,26 @@ test.describe('Contact Page (Desktop)', () => {
         await expect(page).toHaveURL(/\/jobs/);
     });
 
-    test.describe('Run test', () => {
-        // Pass
-        test('Contact_Desktop_006: ตรวจสอบการแสดงรายละเอียดบนหน้า "ร่วมงานกับเรา"', async ({ page }) => {
-            await contactPage.careerButton.click();
-            await expect(contactPage.career_heading).toBeVisible();
-            await expect(contactPage.career_title).toBeVisible();
-        });
-
-        // Pass
-        test('Contact_Desktop_007: ตรวจสอบการกด Dropdown ของตำแหน่งต่าง ๆ ที่เปิดรับ เพื่อแสดงรายละเอียด', async ({ page }) => {
-            await contactPage.careerButton.click();
-            await expect(contactPage.positionDropdown.first()).toBeVisible();
-            await contactPage.positionDropdown.first().click();
-            await expect(contactPage.positionDetail.first()).toBeVisible();
-        });
-
-        // Pass
-        test('Contact_Desktop_008: ตรวจสอบการกด breadcrumbs', async ({ page }) => {
-            await contactPage.careerButton.click();
-            await expect(contactPage.homeBreadcrumb).toBeVisible();
-            await contactPage.homeBreadcrumbLink.click();
-            await expect(page).toHaveURL(/\/$/);
-        });
+    // Pass
+    test('Contact_Desktop_006: ตรวจสอบการแสดงรายละเอียดบนหน้า "ร่วมงานกับเรา"', async ({ page }) => {
+        await contactPage.careerButton.click();
+        await expect(contactPage.career_heading).toBeVisible();
+        await expect(contactPage.career_title).toBeVisible();
     });
 
+    // Pass
+    test('Contact_Desktop_007: ตรวจสอบการกด Dropdown ของตำแหน่งต่าง ๆ ที่เปิดรับ เพื่อแสดงรายละเอียด', async ({ page }) => {
+        await contactPage.careerButton.click();
+        await expect(contactPage.positionDropdown.first()).toBeVisible();
+        await contactPage.positionDropdown.first().click();
+        await expect(contactPage.positionDetail.first()).toBeVisible();
+    });
+
+    // Pass
+    test('Contact_Desktop_008: ตรวจสอบการกด breadcrumbs', async ({ page }) => {
+        await contactPage.careerButton.click();
+        await expect(contactPage.homeBreadcrumb).toBeVisible();
+        await contactPage.homeBreadcrumbLink.click();
+        await expect(page).toHaveURL(/\/$/);
+    });
 });

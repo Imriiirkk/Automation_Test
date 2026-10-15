@@ -72,20 +72,8 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         await expect(shopperPostsPage.bannerTitle).toBeVisible();
     });
 
-    // ไม่มี ปุ่ม "←" , "→"
-    // test('ShopperPosts_Mobile_005: ตรวจสอบการเลื่อน Banner เมื่อกดปุ่ม "←" , "→"', async () => {
-    //     const initialHref = await shopperPostsPage.bannerCard.getAttribute('href');
-    //     expect(initialHref).toBeTruthy();
-
-    //     await shopperPostsPage.rightArrow.click();
-    //     await expect(shopperPostsPage.bannerActiveSlide.locator('a').first()).not.toHaveAttribute('href', initialHref!);    // ตรวจสอบว่า Active Slide เปลี่ยน
-
-    //     await shopperPostsPage.leftArrow.click();
-    //     await expect(shopperPostsPage.bannerCard).toHaveAttribute('href', initialHref!);    // ตรวจสอบว่ากลับมาที่ Slide เดิม
-    // });
-
     // Pass
-    test('ShopperPosts_Mobile_006: ตรวจสอบการเลื่อน Banner เมื่อกดปุ่ม Indicator', async () => {
+    test('ShopperPosts_Mobile_005: ตรวจสอบการเลื่อน Banner เมื่อกดปุ่ม Indicator', async () => {
         await expect(shopperPostsPage.indicator).toHaveCount(10);
 
         // กด Indicator ทุกตัว
@@ -100,7 +88,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Mobile_007: ตรวจสอบการกดรูปภาพ (Cover) ของ Banner', async ({ page }) => {
+    test('ShopperPosts_Mobile_006: ตรวจสอบการกดรูปภาพ (Cover) ของ Banner', async ({ page }) => {
         const expectedHref = await shopperPostsPage.bannerCover.locator('xpath=ancestor::a').getAttribute('href');  // เก็บ href ของ Cover
         expect(expectedHref).toBeTruthy();
         const expectedUrl = new URL(expectedHref!, page.url()).href; // แปลงเป็น URL เต็ม
@@ -110,7 +98,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Mobile_008: ตรวจสอบการกดชื่ออีเวนต์ของ Banner', async ({ page }) => {
+    test('ShopperPosts_Mobile_007: ตรวจสอบการกดชื่ออีเวนต์ของ Banner', async ({ page }) => {
         const expectedHref = await shopperPostsPage.bannerTitleLink.getAttribute('href');
         expect(expectedHref).toBeTruthy();
         const expectedUrl = new URL(expectedHref!, page.url()).href;
@@ -122,12 +110,12 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     // ---------- Tab x Filter Combinations ----------
     test.describe('Tab x Filter', () => {
         const tabCases = [
-            { id: '009', tab: 'allItem', tabLabel: 'ทั้งหมด' },
-            { id: '010', tab: 'onEvent', tabLabel: 'รับหิ้วหน้างาน' },
-            { id: '011', tab: 'inStock', tabLabel: 'สินค้าในสต็อก' },
+            { id: '008', tab: 'allItem', tabLabel: 'ทั้งหมด' },
+            { id: '009', tab: 'onEvent', tabLabel: 'รับหิ้วหน้างาน' },
+            { id: '010', tab: 'inStock', tabLabel: 'สินค้าในสต็อก' },
         ];
 
-        // 009-011: Tab x Filter "สินค้ารายอีเวนต์"
+        // 008-010: Tab x Filter "สินค้ารายอีเวนต์"
         // Pass
         for (const { id, tab, tabLabel } of tabCases) {
             test(`ShopperPosts_Mobile_${id}: ตรวจสอบการแสดงการ์ดสินค้ารับหิ้ว เมื่อกด Tab "${tabLabel}" และใช้ Filter "สินค้ารายอีเวนต์"`, async ({ page }) => {
@@ -147,7 +135,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
             });
         }
 
-        // 012-014: Tab x Filter "สินค้ารายชิ้น"
+        // 011-013: Tab x Filter "สินค้ารายชิ้น"
         // Pass
         for (const { id, tab, tabLabel } of tabCases.map((c, i) => ({ ...c, id: String(12 + i).padStart(3, '0') }))) {
             test(`ShopperPosts_Mobile_${id}: ตรวจสอบการแสดงการ์ดสินค้ารับหิ้ว เมื่อกด Tab "${tabLabel}" และใช้ Filter "สินค้ารายชิ้น"`, async ({ page }) => {
@@ -169,7 +157,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Mobile_015: ตรวจสอบการโหลดการ์ดสินค้ารับหิ้วเพิ่ม เมื่อกดปุ่ม "ดูเพิ่มเติม"', async ({ page }) => {
+    test('ShopperPosts_Mobile_014: ตรวจสอบการโหลดการ์ดสินค้ารับหิ้วเพิ่ม เมื่อกดปุ่ม "ดูเพิ่มเติม"', async ({ page }) => {
         const cardBefore = await shopperPostsPage.itemShopperPostCardEach.count()
         await shopperPostsPage.clickLoadMore();
         const cardAfter = await shopperPostsPage.itemShopperPostCardEach.count()
@@ -177,7 +165,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
     // Pass 
-    test('ShopperPosts_Mobile_016: ตรวจสอบว่าปุ่ม "ดูเพิ่มเติม" หายไปเมื่อโหลดการ์ดสินค้ารับหิ้วครบทุกรายการแล้ว', async ({ page }) => {
+    test('ShopperPosts_Mobile_015: ตรวจสอบว่าปุ่ม "ดูเพิ่มเติม" หายไปเมื่อโหลดการ์ดสินค้ารับหิ้วครบทุกรายการแล้ว', async ({ page }) => {
         await shopperPostsPage.clickLoadMore();
         await expect(shopperPostsPage.loadMoreButton).toBeHidden();
     });
@@ -186,7 +174,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     // ---------- Card Details ---------- //////
     test.describe('Card Details', () => {
         // Pass
-        test('ShopperPosts_Mobile_017: ตรวจสอบการแสดงรายละเอียดบนการ์ดอีเวนต์ เมื่อใช้ Filter "สินค้ารายอีเวนต์"', async () => {
+        test('ShopperPosts_Mobile_016: ตรวจสอบการแสดงรายละเอียดบนการ์ดอีเวนต์ เมื่อใช้ Filter "สินค้ารายอีเวนต์"', async () => {
             await shopperPostsPage.clickFilter_Event();
             const eventCard = shopperPostsPage.shopperPostCardEach.first();
             await expect(eventCard).toBeVisible();
@@ -195,7 +183,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_018: ตรวจสอบการแสดงรายละเอียดบนการ์ดสินค้ารับหิ้ว เมื่อใช้ Filter "สินค้ารายชิ้น"', async () => {
+        test('ShopperPosts_Mobile_017: ตรวจสอบการแสดงรายละเอียดบนการ์ดสินค้ารับหิ้ว เมื่อใช้ Filter "สินค้ารายชิ้น"', async () => {
             await shopperPostsPage.clickFilter_Item();
             const itemCard = shopperPostsPage.itemShopperPostCardEach.first();
             await expect(itemCard).toBeVisible();
@@ -212,7 +200,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     test.describe.serial('Love Button — Item Card', () => {
 
         // Pass
-        test('ShopperPosts_Mobile_019: ตรวจสอบการกดปุ่ม "หัวใจ" บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น โดยที่ยังไม่เข้าสู่ระบบ', async () => {
+        test('ShopperPosts_Mobile_018: ตรวจสอบการกดปุ่ม "Like" บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น โดยที่ยังไม่เข้าสู่ระบบ', async () => {
             await shopperPostsPage.clickFilter_Item();
             await shopperPostsPage.clickLoveItemCard();
             await expect(navbar.loginModalCloseButton).toBeVisible();
@@ -220,7 +208,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_020: ตรวจสอบการกดปุ่ม "หัวใจ" บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
+        test('ShopperPosts_Mobile_019: ตรวจสอบการกดปุ่ม "Like" บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
             await navbar.openLoginOrSignup_mobile();
             await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
             await shopperPostsPage.clickLoveItemCard();
@@ -228,7 +216,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_021: ตรวจสอบการกดปุ่ม "หัวใจ" อีกครั้ง บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
+        test('ShopperPosts_Mobile_020: ตรวจสอบการกดปุ่ม "Like" อีกครั้ง บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
             await navbar.openLoginOrSignup_mobile();
             await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
             await shopperPostsPage.clickLoveItemCard();
@@ -241,14 +229,14 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     // ---------- Navigation from Card ----------
     test.describe('Navigate to Detail', () => {
         // Pass
-        test('ShopperPosts_Mobile_022: ตรวจสอบการกดรูปภาพ (Cover) ที่การ์ดสินค้ารับหิ้ว เพื่อเข้าหน้ารายละเอียด', async ({ page }) => {
+        test('ShopperPosts_Mobile_021: ตรวจสอบการกดรูปภาพ (Cover) ที่การ์ดสินค้ารับหิ้ว เพื่อเข้าหน้ารายละเอียด', async ({ page }) => {
             await shopperPostsPage.clickItemCard_image();
             await expect(page).toHaveURL(/\/items\/[a-zA-Z0-9-_]+/);
             await expect(shopperPostsPage.title_ItemDetail).toBeVisible();
         });
 
         // Pass
-        test('ShopperPosts_Mobile_023: ตรวจสอบการกดชื่อสินค้า ที่การ์ดสินค้ารับหิ้ว เพื่อเข้าหน้ารายละเอียด', async ({ page }) => {
+        test('ShopperPosts_Mobile_022: ตรวจสอบการกดชื่อสินค้า ที่การ์ดสินค้ารับหิ้ว เพื่อเข้าหน้ารายละเอียด', async ({ page }) => {
             const itemTitle = await shopperPostsPage.title_ItemCard.first().innerText();
             await shopperPostsPage.clickItemCard_title();
             await expect(page).toHaveURL(/\/items\/[a-zA-Z0-9-_]+/);
@@ -257,7 +245,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_024: ตรวจสอบการกดรูปภาพ (Cover) ที่การ์ดอีเวนต์ เพื่อเข้าหน้ารายละเอียด', async ({ page }) => {
+        test('ShopperPosts_Mobile_023: ตรวจสอบการกดรูปภาพ (Cover) ที่การ์ดอีเวนต์ เพื่อเข้าหน้ารายละเอียด', async ({ page }) => {
             await shopperPostsPage.clickFilter_Event();
             await shopperPostsPage.clickEventCard_image();
             await expect(page).toHaveURL(/\/sp\/[a-zA-Z0-9_-]+/);
@@ -265,7 +253,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_025: ตรวจสอบการกดชื่ออีเวนต์ ที่การ์ดอีเวนต์ เพื่อเข้าหน้ารายละเอียด', async ({ page }) => {
+        test('ShopperPosts_Mobile_024: ตรวจสอบการกดชื่ออีเวนต์ ที่การ์ดอีเวนต์ เพื่อเข้าหน้ารายละเอียด', async ({ page }) => {
             await shopperPostsPage.clickFilter_Event();
             const itemTitle = await shopperPostsPage.title_EventCard.first().innerText();
             await shopperPostsPage.clickEventCard_title();
@@ -278,7 +266,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     // ---------- Item Detail Page ----------
     test.describe('Item Detail', () => {
         // Pass
-        test('ShopperPosts_Mobile_023: ตรวจสอบการแสดงรายละเอียดบนหน้า รายละเอียดสินค้ารายชิ้น', async () => {
+        test('ShopperPosts_Mobile_025: ตรวจสอบการแสดงรายละเอียดบนหน้า รายละเอียดสินค้ารายชิ้น', async () => {
             await shopperPostsPage.clickFilter_Item();
             await shopperPostsPage.clickItemCard_title();
             await expect(shopperPostsPage.title_ItemDetail).toBeVisible();
@@ -293,7 +281,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_024: ตรวจสอบการกด "ประเภทสินค้า" ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+        test('ShopperPosts_Mobile_026: ตรวจสอบการกด "ประเภทสินค้า" ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
             await shopperPostsPage.clickFilter_Item();
             await shopperPostsPage.clickItemCard_title();
             await shopperPostsPage.productType_ItemDetail.click();
@@ -301,7 +289,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_025: ตรวจสอบการกด "#" ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+        test('ShopperPosts_Mobile_027: ตรวจสอบการกด "#" ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
             await shopperPostsPage.clickFilter_Item();
             await shopperPostsPage.clickItemCard_title();
             await shopperPostsPage.tag_ItemDetail.first().click();
@@ -309,7 +297,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_026: ตรวจสอบการกดปุ่ม "ฝากหิ้วชิ้นนี้" ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page, context }) => {
+        test('ShopperPosts_Mobile_028: ตรวจสอบการกดปุ่ม "ฝากหิ้วชิ้นนี้" ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page, context }) => {
             await shopperPostsPage.clickItemCard_title();
             const newPagePromise = context.waitForEvent('page');
             await shopperPostsPage.purchaseBtn_ItemDetail.click();
@@ -322,7 +310,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     // ---------- Love Button (Item Detail) — TODO ทั้งกลุ่ม ----------
     // Pass
 
-    test('ShopperPosts_Mobile_027: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดสินค้ารายชิ้น โดยที่ยังไม่เข้าสู่ระบบ', async () => {
+    test('ShopperPosts_Mobile_029: ตรวจสอบการกดปุ่ม "Like" ในหน้า รายละเอียดสินค้ารายชิ้น โดยที่ยังไม่เข้าสู่ระบบ', async () => {
         await openItemDetail();
         await shopperPostsPage.clickLoveItemDetail();
         await expect(navbar.loginModalCloseButton).toBeVisible();
@@ -331,7 +319,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
 
 
     //Fail
-    test('ShopperPosts_Mobile_028: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดสินค้ารายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
+    test('ShopperPosts_Mobile_030: ตรวจสอบการกดปุ่ม "Like" ในหน้า รายละเอียดสินค้ารายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_mobile();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await openItemDetail();
@@ -345,7 +333,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Mobile_029: ตรวจสอบการกดปุ่ม "หัวใจ" อีกครั้ง ในหน้า รายละเอียดสินค้ารายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
+    test('ShopperPosts_Mobile_031: ตรวจสอบการกดปุ่ม "Like" อีกครั้ง ในหน้า รายละเอียดสินค้ารายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_mobile();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await openItemDetail();
@@ -362,7 +350,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
 
     // ---------- Share Button (Item Detail) — TODO ทั้งกลุ่ม ----------
     // Pass
-    test('ShopperPosts_Mobile_030: ตรวจสอบการกดปุ่ม "แชร์" ในหน้า รายละเอียดสินค้ารายชิ้น', async () => {
+    test('ShopperPosts_Mobile_032: ตรวจสอบการกดปุ่ม "Share" ในหน้า รายละเอียดสินค้ารายชิ้น', async () => {
         await openItemDetail();
         await shopperPostsPage.shareBtn_ItemDetail.click();
         await expect(shopperPostsPage.shareOnFacebook_ItemDetail).toBeVisible();
@@ -372,7 +360,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Mobile_031: ตรวจสอบการกดแชร์ผ่าน Facebook เปิด Popup ไปที่ facebook.com ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+    test('ShopperPosts_Mobile_033: ตรวจสอบการกด "Share" ผ่าน Facebook เปิด Popup ไปที่ facebook.com ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
         await openItemDetail();
         await shopperPostsPage.shareBtn_ItemDetail.click();
         const popupPromise = page.waitForEvent('popup');
@@ -382,7 +370,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Mobile_032: ตรวจสอบการกดแชร์ผ่าน Line เปิด Popup ไปที่ line.me ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+    test('ShopperPosts_Mobile_034: ตรวจสอบการกด "Share" ผ่าน Line เปิด Popup ไปที่ line.me ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
         await openItemDetail();
         await shopperPostsPage.shareBtn_ItemDetail.click();
         const popupPromise = page.waitForEvent('popup');
@@ -392,7 +380,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Mobile_033: ตรวจสอบการกดแชร์ผ่าน X เปิด Popup ไปที่ x.com ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+    test('ShopperPosts_Mobile_035: ตรวจสอบการกด "Share" ผ่าน X เปิด Popup ไปที่ x.com ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
         await openItemDetail();
         await shopperPostsPage.shareBtn_ItemDetail.click();
         const popupPromise = page.waitForEvent('popup');
@@ -402,7 +390,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Mobile_034: ตรวจสอบการกดแชร์ผ่าน Copy Link ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+    test('ShopperPosts_Mobile_036: ตรวจสอบการกด "Share" ผ่าน Copy Link ในหน้า รายละเอียดสินค้ารายชิ้น', async ({ page }) => {
         await openItemDetail();
         await expect(page).toHaveURL(/\/items\/[a-zA-Z0-9-_]+/);
         const currentUrl = new URL(page.url());
@@ -416,7 +404,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     // ---------- Items in Same Event — TODO ทั้งกลุ่ม ----------
     // Pass
 
-    test('ShopperPosts_Mobile_035: ตรวจสอบการกดปุ่ม "หัวใจ" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน โดยที่ยังไม่เข้าสู่ระบบ', async () => {
+    test('ShopperPosts_Mobile_037: ตรวจสอบการกดปุ่ม "Like" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน โดยที่ยังไม่เข้าสู่ระบบ', async () => {
         await shopperPostsPage.clickItemCard_titleByName('หมวก1');
         await shopperPostsPage.loveBtn_ItemSameEvent.click();
         await expect(navbar.loginModalCloseButton).toBeVisible();
@@ -424,7 +412,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Mobile_036: ตรวจสอบการกดปุ่ม "หัวใจ" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน เมื่อเข้าสู่ระบบแล้ว', async () => {
+    test('ShopperPosts_Mobile_038: ตรวจสอบการกดปุ่ม "Like" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_mobile();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await shopperPostsPage.clickItemCard_titleByName('หมวก1');
@@ -437,7 +425,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Mobile_037: ตรวจสอบการกดปุ่ม "หัวใจ" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน อีกครั้ง เมื่อเข้าสู่ระบบแล้ว', async () => {
+    test('ShopperPosts_Mobile_039: ตรวจสอบการกดปุ่ม "Like" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน อีกครั้ง เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_mobile();
         await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await shopperPostsPage.clickItemCard_titleByName('หมวก1');
@@ -451,7 +439,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
     // Pass 
-    test('ShopperPosts_Mobile_038: ตรวจสอบการกด "ดูทั้งหมด >" ในหน้า รายละเอียดสินค้ารายชิ้น บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async ({ page }) => {
+    test('ShopperPosts_Mobile_040: ตรวจสอบการกด "ดูทั้งหมด >" ในหน้า รายละเอียดสินค้ารายชิ้น บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async ({ page }) => {
         await shopperPostsPage.clickFilter_Item();
         await shopperPostsPage.clickItemCard_title();
         await shopperPostsPage.viewAllBtn_ItemDetail.click();
@@ -467,9 +455,9 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
 
-    // Fail
+    // Pass
     test.describe('Run test', () => {
-        test('ShopperPosts_Mobile_039: ตรวจสอบการเลื่อน การ์ดสินค้ารับหิ้ว เมื่อกดปุ่ม Indicator บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async () => {
+        test('ShopperPosts_Mobile_041: ตรวจสอบการเลื่อน การ์ดสินค้ารับหิ้ว เมื่อกดปุ่ม Indicator บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async () => {
             await openItemDetail();
             const indicators = shopperPostsPage.indicator_Btn;
             // รอให้ Pagination แสดงผล
@@ -488,23 +476,9 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
     });
 
-    // ไม่มีปุ่ม <, >
-    test('ShopperPosts_Mobile_040: ตรวจสอบการเลื่อน การ์ดสินค้ารับหิ้ว เมื่อกดปุ่ม <, > บนสินค้าอื่นๆ ในอีเวนต์เดียวกัน', async () => {
-        await openItemDetail();
-        const firstTitle = (await shopperPostsPage.title_ItemSameEvent.first().textContent())?.trim();
-        expect(firstTitle).toBeTruthy();
-
-        await shopperPostsPage.nextSlide_Btn.click();
-        await expect(shopperPostsPage.title_ItemSameEvent.first()).not.toHaveText(firstTitle!);   // Active Slide เปลี่ยน
-
-        await shopperPostsPage.previousSlide_Btn.click();
-        await expect(shopperPostsPage.title_ItemSameEvent.first()).toHaveText(firstTitle!);       // กลับมาการ์ดเดิม
-    });
-
-
     // ---------- Event Detail Page ----------
     // Pass
-    test('ShopperPosts_Mobile_040: ตรวจสอบการแสดงรายละเอียดบนหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
+    test('ShopperPosts_Mobile_042: ตรวจสอบการแสดงรายละเอียดบนหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
         await openEventDetail();
         await expect(page).toHaveURL(/\/sp\/[a-zA-Z0-9-_]+/);
         await expect(shopperPostsPage.title_EventDetail).toBeVisible();
@@ -523,7 +497,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
 
     test.describe.serial('Love Button — Event Detail', () => {
         // Pass
-        test('ShopperPosts_Mobile_041: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดรายอีเวนต์ โดยที่ยังไม่เข้าสู่ระบบ', async () => {
+        test('ShopperPosts_Mobile_043: ตรวจสอบการกดปุ่ม "Like" ในหน้า รายละเอียดรายอีเวนต์ โดยที่ยังไม่เข้าสู่ระบบ', async () => {
             await shopperPostsPage.clickFilter_Event();
             await shopperPostsPage.clickEventCard_titleByName('ทดสอบการสร้างโพสรับหิ้ว');
             await shopperPostsPage.loveBtn_EventDetail.click();
@@ -532,7 +506,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_042: ตรวจสอบการกดปุ่ม "หัวใจ" ในหน้า รายละเอียดรายอีเวนต์ เมื่อเข้าสู่ระบบแล้ว', async () => {
+        test('ShopperPosts_Mobile_044: ตรวจสอบการกดปุ่ม "Like" ในหน้า รายละเอียดรายอีเวนต์ เมื่อเข้าสู่ระบบแล้ว', async () => {
             await navbar.openLoginOrSignup_mobile();
             await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
             await shopperPostsPage.clickFilter_Event();
@@ -548,7 +522,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_043: ตรวจสอบการกดปุ่ม "หัวใจ" อีกครั้ง ในหน้า รายละเอียดรายอีเวนต์ เมื่อเข้าสู่ระบบแล้ว', async () => {
+        test('ShopperPosts_Mobile_045: ตรวจสอบการกดปุ่ม "Like" อีกครั้ง ในหน้า รายละเอียดรายอีเวนต์ เมื่อเข้าสู่ระบบแล้ว', async () => {
             await navbar.openLoginOrSignup_mobile();
             await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
             await shopperPostsPage.clickFilter_Event();
@@ -565,7 +539,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_044: ตรวจสอบการกดปุ่ม "แชร์" ในหน้า รายละเอียดรายอีเวนต์', async () => {
+        test('ShopperPosts_Mobile_046: ตรวจสอบการกดปุ่ม "Share" ในหน้า รายละเอียดรายอีเวนต์', async () => {
             await openEventDetail();
             await shopperPostsPage.shareBtn_EventDetail.click();
             await expect(shopperPostsPage.shareOnFacebook_EventDetail).toBeVisible();
@@ -574,8 +548,8 @@ test.describe('Shopper Posts Page (Mobile)', () => {
             await expect(shopperPostsPage.shareCopyLink_EventDetail).toBeVisible();
         });
 
-        // Pass
-        test('ShopperPosts_Mobile_031: ตรวจสอบการกดแชร์ผ่าน Facebook เปิด Popup ไปที่ facebook.com ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
+        // Pass  
+        test('ShopperPosts_Mobile_047: ตรวจสอบการกด "Share"ผ่าน Facebook เปิด Popup ไปที่ facebook.com ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
             await openEventDetail();
             await shopperPostsPage.shareBtn_EventDetail.click();
             const popupPromise = page.waitForEvent('popup');
@@ -585,7 +559,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_032: ตรวจสอบการกดแชร์ผ่าน Line เปิด Popup ไปที่ line.me ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
+        test('ShopperPosts_Mobile_048: ตรวจสอบการกด "Share"ผ่าน Line เปิด Popup ไปที่ line.me ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
             await openEventDetail();
             await shopperPostsPage.shareBtn_EventDetail.click();
             const popupPromise = page.waitForEvent('popup');
@@ -595,7 +569,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_033: ตรวจสอบการกดแชร์ผ่าน X เปิด Popup ไปที่ x.com ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
+        test('ShopperPosts_Mobile_049: ตรวจสอบการกด "Share" ผ่าน X เปิด Popup ไปที่ x.com ในหน้า รายละเอียดรายอีเวนต์', async ({ page }) => {
             await openEventDetail();
             await shopperPostsPage.shareBtn_EventDetail.click();
             const popupPromise = page.waitForEvent('popup');
@@ -605,7 +579,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_034: ตรวจสอบการกดแชร์ผ่าน Copy Link ในหน้า รายละเอียดรายอีเวนต์', async ({ page, context }) => {
+        test('ShopperPosts_Mobile_050: ตรวจสอบการกด "Share" ผ่าน Copy Link ในหน้า รายละเอียดรายอีเวนต์', async ({ page, context }) => {
             await openEventDetail();
             await expect(page).toHaveURL(/\/sp\/[a-zA-Z0-9-_]+/);
             const currentUrl = new URL(page.url());
@@ -619,7 +593,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Mobile_044: ตรวจสอบการแสดงรายละเอียดบนการ์ดสินค้าที่อยู่ในอีเวนต์เดียวกัน ในหน้า รายละเอียดรายอีเวนต์', async () => {
+    test('ShopperPosts_Mobile_051: ตรวจสอบการแสดงรายละเอียดบนการ์ดสินค้าที่อยู่ในอีเวนต์เดียวกัน ในหน้า รายละเอียดรายอีเวนต์', async () => {
         await openEventDetail();
 
         await expect(shopperPostsPage.title_ItemOnEvent).toBeVisible();
@@ -638,7 +612,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     });
 
     // Pass
-    test('ShopperPosts_Mobile_045: ตรวจสอบการกดปุ่ม "ฝากหิ้วชิ้นนี้" บนการ์ดสินค้าในอีเวนต์นั้น ในหน้า รายละเอียดรายอีเวนต์', async ({ page, context }) => {
+    test('ShopperPosts_Mobile_052: ตรวจสอบการกดปุ่ม "ฝากหิ้วชิ้นนี้" บนการ์ดสินค้าในอีเวนต์นั้น ในหน้า รายละเอียดรายอีเวนต์', async ({ page, context }) => {
         await openEventDetail();
         const newPagePromise = context.waitForEvent('page');
         await shopperPostsPage.purchaseBtn_ItemOnEvent.click();
@@ -650,13 +624,13 @@ test.describe('Shopper Posts Page (Mobile)', () => {
     // ---------- Scroll To Top ----------
     test.describe('Scroll To Top', () => {
         // Pass
-        test('ShopperPosts_Mobile_046: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
+        test('ShopperPosts_Mobile_053: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
             await page.evaluate(() => window.scrollBy(0, 1000));
             await expect(navbar.scrollToTopButton).toBeVisible();
         });
 
         // Pass
-        test('ShopperPosts_Mobile_047: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
+        test('ShopperPosts_Mobile_054: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้าปันโปรรับหิ้ว', async ({ page }) => {
             await page.evaluate(() => window.scrollBy(0, 1000));
             await expect(navbar.scrollToTopButton).toBeVisible();
             await navbar.scrollToTopButton.click();
@@ -667,7 +641,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_048: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+        test('ShopperPosts_Mobile_055: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
             await shopperPostsPage.clickFilter_Item();
             await shopperPostsPage.clickItemCard_title();
             await page.evaluate(() => window.scrollBy(0, 1000));
@@ -675,7 +649,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_049: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
+        test('ShopperPosts_Mobile_056: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดสินค้ารายชิ้น', async ({ page }) => {
             await openItemDetail();
             await page.evaluate(() => {
                 window.scrollTo(0, document.body.scrollHeight);
@@ -690,7 +664,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_050: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
+        test('ShopperPosts_Mobile_057: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll หน้าจอลง ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
             await openEventDetail();
             await page.evaluate(() => {
                 window.scrollTo(0, document.body.scrollHeight);
@@ -700,7 +674,7 @@ test.describe('Shopper Posts Page (Mobile)', () => {
         });
 
         // Pass
-        test('ShopperPosts_Mobile_051: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
+        test('ShopperPosts_Mobile_058: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" ในหน้ารายละเอียดรายอีเวนต์', async ({ page }) => {
             await openEventDetail();
             await page.evaluate(() => {
                 window.scrollTo(0, document.body.scrollHeight);

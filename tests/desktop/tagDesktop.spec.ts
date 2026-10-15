@@ -173,7 +173,6 @@ test.describe('Tag Page (Desktop)', () => {
         await expect(likeIcon).toHaveClass(/cjtKzC/);
     });
 
-
     // ---------- Bookmark ----------
     // Pass
     test('Tag_Desktop_010: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
@@ -200,23 +199,25 @@ test.describe('Tag Page (Desktop)', () => {
     });
 
     // Pass
-    test('Tag_Desktop_012: ตรวจสอบการกดปุ่ม "Bookmark" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
-        await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+    test.describe('Run test', () => {
+        test('Tag_Desktop_012: ตรวจสอบการกดปุ่ม "Bookmark" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
+            await navbar.openLoginOrSignup_desktop();
+            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
-        const bookmarkBtn = tagPage.bookmarkPromotion_Btn;
-        const bookmarkIcon = bookmarkBtn.locator('i');
+            const bookmarkBtn = tagPage.bookmarkPromotion_Btn;
+            const bookmarkIcon = bookmarkBtn.locator('i');
 
-        // เตรียมสถานะเริ่มต้นให้เป็น OFF
-        await ensureBookmarkOff(bookmarkBtn, bookmarkIcon);
+            // เตรียมสถานะเริ่มต้นให้เป็น OFF
+            await ensureBookmarkOff(bookmarkBtn, bookmarkIcon);
 
-        // กดครั้งแรก: OFF -> ON
-        await bookmarkBtn.click();
-        await expect(bookmarkIcon).toHaveClass(/gxBVIB/);
+            // กดครั้งแรก: OFF -> ON
+            await bookmarkBtn.click();
+            await expect(bookmarkIcon).toHaveClass(/gxBVIB/);
 
-        // กดครั้งที่สอง: ON -> OFF
-        await bookmarkBtn.click();
-        await expect(bookmarkIcon).not.toHaveClass(/gxBVIB/);
+            // กดครั้งที่สอง: ON -> OFF
+            await bookmarkBtn.click();
+            await expect(bookmarkIcon).not.toHaveClass(/gxBVIB/);
+        });
     });
 
     // ============================================================
