@@ -113,7 +113,7 @@ test.describe('Authentication', () => {
             expect(page.url()).toContain('/bookmark');
         });
 
-        test('Auth_desktop_012: ตรวจสอบการออกจากระบบเมื่อกดปุ่มออกจากระบบ', async ({ page }) => {
+        test('Auth_desktop_011: ตรวจสอบการออกจากระบบเมื่อกดปุ่มออกจากระบบ', async ({ page }) => {
             await navbarfooter.goToMenu_desktop(navbarfooter.auth.username);
             await navbarfooter.auth.logoutInDesktop();
             await page.waitForTimeout(3000);

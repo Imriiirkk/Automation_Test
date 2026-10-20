@@ -5,7 +5,8 @@ import { Page, Locator } from '@playwright/test';
  * Owner: NUBT
  */
 
-type SuggestCardType = 'shopper' | 'promotion' | 'article';
+export type SuggestCardType = 'shopper' | 'promotion' | 'article';
+
 export class HomePage {
     private page: Page;
 
@@ -25,13 +26,6 @@ export class HomePage {
     public categorySeeMoreButton: Locator;
     public categoryItemList: Locator;
 
-    // --------- All Category Page ----------
-    private categoryGroupContainer(title: string) {
-        return this.page
-            .locator('[class*="BlockCategoryGroups__ComponentContainer"]')
-            .filter({ has: this.page.locator('[class*="TitleHead"]', { hasText: title }) });
-    }
-
     // ---------- Services Section ----------
     private servicesSectionContainer: Locator;
 
@@ -44,7 +38,7 @@ export class HomePage {
     private shopperCardContainer: Locator;
     public shopperIndicatorContainer: Locator;
 
-    // ---------- Article --------------
+    // ---------- Article Section --------------
     private articleSectionContainer: Locator;
     public articleSeeMoreButton: Locator;
     public articleCardContainer: Locator;
@@ -64,7 +58,8 @@ export class HomePage {
     public punproCardItem: Locator;
     public punproSeeMoreButton: Locator;
 
-    public suggestCardComponentPrefix: Record<'shopper' | 'promotion' | 'article', string> = {
+    // map type -> prefix ของ styled-component จริง (ยืนยันจาก DevTools)
+    public suggestCardComponentPrefix: Record<SuggestCardType, string> = {
         shopper: 'LargeCardShopperPost',
         promotion: 'LargeCardPromotion',
         article: 'LargeCardArticle',
@@ -273,16 +268,21 @@ export class HomePage {
         await this.punproArticleTab.click();
     }
 
+    async clickSeeMoreSuggest() {
+        await this.punproSeeMoreButton.click();
+    }
+
     async clickSuggestCard(type: SuggestCardType, index: number = 0) {
         const card = this.getSuggestCard(type, index);
         await card.scrollIntoViewIfNeeded();
         await card.locator('a[aria-label="link"]').first().click();
     }
 
-    /**
-     * หาการ์ดประเภทที่ต้องการในแท็บปัจจุบัน โดยกด "ดูเพิ่มเติม" โหลดเพิ่มถ้ายังไม่เจอ
-     * คืน locator ของการ์ดที่เจอ หรือคืน locator ที่มี count = 0 ถ้าโหลดจนสุดแล้วไม่เจอ (ให้ test.skip เอง)
-    */
+    // กด favorite ของการ์ดตาม index - scope เข้าการ์ดก่อนเสมอ กันชนกับการ์ดอื่นที่ favorite = 0 เหมือนกัน
+    async clickFavoritePost(index: number) {
+        await this.punproCardItem.nth(index).locator('[class*="BorderImageLove"][role="button"]').click();
+    }
+
     async findSuggestCard(type: SuggestCardType, index: number = 0, maxLoadMore = 5): Promise<Locator> {
         let card = this.getSuggestCard(type, index);
 
@@ -305,15 +305,6 @@ export class HomePage {
         if (await card.count() === 0) return card; // ไม่เจอการ์ดเลย
 
         return this.getSuggestCardHeartButton(card);
-    }
-
-    // กด favorite ของการ์ดตาม index - scope เข้าการ์ดก่อนเสมอ กันชนกับการ์ดอื่นที่ favorite = 0 เหมือนกัน
-    async clickFavoritePost(index: number) {
-        await this.punproCardItem.nth(index).locator('[class*="BorderImageLove"][role="button"]').click();
-    }
-
-    async clickSeeMoreSuggest() {
-        await this.punproSeeMoreButton.click();
     }
 
     // ================================================================
@@ -371,7 +362,7 @@ export class HomePage {
         return this.punproSuggestionContainer;
     }
 
-    /** คืนการ์ดตาม type ที่ index ที่ระบุ (default = ใบแรก) — scope อยู่ใน punproSuggestionContainer เสมอ */
+    /** การ์ดตาม type ที่ index ที่ระบุ (default = ใบแรก) — scope อยู่ใน punproSuggestionContainer เสมอ */
     getSuggestCard(type: SuggestCardType, index: number = 0): Locator {
         const prefix = this.suggestCardComponentPrefix[type];
         return this.punproSuggestionContainer

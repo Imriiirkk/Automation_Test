@@ -4,9 +4,6 @@ import { Page, Locator } from '@playwright/test';
  * POM: Coupon Page
  * Owner: NUBT
  */
-// ================================
-// coupons page (list)
-// ================================
 export class CouponsPage {
     protected page: Page;
 

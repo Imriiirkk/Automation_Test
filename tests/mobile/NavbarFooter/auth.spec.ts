@@ -100,7 +100,7 @@ test.describe('Authentication', () => {
             await expect(navbar.getLoginSuccess()).toBeVisible({ timeout: 10000 });
 
             await expect(page).toHaveURL('https://staging-www2.punpro.com/');
-
+            await navbar.dismissAllOverlaysIfPresent();
         });
 
         test('Auth_mobile_007: ตรวจสอบการแสดงชื่อผู้ใช้แทนปุ่ม Login หลังสำเร็จ', async ({ page }) => {
@@ -113,6 +113,22 @@ test.describe('Authentication', () => {
             await navbar.goToMenu_mobile(navbar.editProfile_mobile);
             await page.waitForURL(/\/profile/, { timeout: 10000 });
             expect(page.url()).toContain('/profile');
+        });
+
+        test('Auth_mobile_011: ตรวจสอบการแสดงปุ่ม "ออกจากระบบ" เมื่อเข้าสู่ระบบแล้ว', async ({ page }) => {
+            await navbar.openMenu_mobile();
+            await expect(navbar.auth.logoutLink).toBeVisible({ timeout: 10000 });
+        });
+
+        test('Auth_mobile_011: ตรวจสอบการออกจากระบบเมื่อกดปุ่มออกจากระบบ', async ({ page }) => {
+            await navbar.openMenu_mobile();
+            await navbar.auth.logout();
+            await page.waitForTimeout(3000);
+
+            await expect(page).toHaveURL('https://staging-www2.punpro.com/');
+            await navbar.dismissAllOverlaysIfPresent();
+            await navbar.openMenu_mobile();
+            await expect(navbar.auth.loginButton_mobile).toBeVisible({ timeout: 10000 });
         });
     });
 });

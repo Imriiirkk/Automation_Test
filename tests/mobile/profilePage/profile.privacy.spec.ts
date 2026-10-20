@@ -28,15 +28,15 @@ test.describe('Profile - Menu', () => {
         await profilePage.clickPrivacyDeleteAccount();
     });
 
-    test('Profile_mobile_031: ตรวจสอบการแสดง Popup ยืนยัน เมื่อกดปุ่ม "ขอลบบัญชี"', async () => {
-        await expect(profilePage.deleteAccountPopup).toBeVisible();
+    test('Profile_mobile_038: ตรวจสอบการแสดง Popup ยืนยัน เมื่อกดปุ่ม "ขอลบบัญชี"', async () => {
+        await expect(profilePage.deleteAccountPopup).toBeHidden();
         await expect(profilePage.deleteAccountPopupReason).toBeVisible();
         await expect(profilePage.deleteAccountPopupCheckBox).toBeVisible();
         await expect(profilePage.deleteAccountPopupConfirmButton).toBeVisible();
         await expect(profilePage.deleteAccountPopupCloseButton).toBeVisible();
     });
 
-    test('Profile_mobile_032: ตรวจสอบว่าปุ่ม "ดำเนินการลบบัญชี" ไม่สามารถกดได้ ถ้ายังไม่ติ๊ก Checkbox ยืนยัน', async () => {
+    test('Profile_mobile_039: ตรวจสอบว่าปุ่ม "ดำเนินการลบบัญชี" ไม่สามารถกดได้ ถ้ายังไม่ติ๊ก Checkbox ยืนยัน', async () => {
         await profilePage.deleteAccountPopupReason.fill('ลบบัญชี');
         await profilePage.deleteAccountPopupConfirmButton.click().catch(() => { });
 
@@ -47,7 +47,7 @@ test.describe('Profile - Menu', () => {
         await expect(profilePage.deleteAccountPopupCloseButton).toBeVisible();
     });
 
-    test('Profile_mobile_033: ตรวจสอบว่าปุ่ม "ดำเนินการลบบัญชี" ไม่สามารถกดได้ ถ้ายังไม่กรอกสาเหตุในการลบ', async () => {
+    test('Profile_mobile_040: ตรวจสอบว่าปุ่ม "ดำเนินการลบบัญชี" ไม่สามารถกดได้ ถ้ายังไม่กรอกสาเหตุในการลบ', async () => {
         await profilePage.deleteAccountPopupCheckBox.click();
         await profilePage.deleteAccountPopupConfirmButton.click().catch(() => { });
 
@@ -58,7 +58,7 @@ test.describe('Profile - Menu', () => {
         await expect(profilePage.deleteAccountPopupCloseButton).toBeVisible();
     });
 
-    test('Profile_mobile_034: ตรวจสอบการยกเลิกคำขอลบสมาชิก เมื่อกดลิงก์ "เป็นสมาชิกต่อไป"', async () => {
+    test('Profile_mobile_041: ตรวจสอบการยกเลิกคำขอลบสมาชิก เมื่อกดลิงก์ "เป็นสมาชิกต่อไป"', async () => {
         await expect(profilePage.deleteAccountPopup).toBeVisible();
         await expect(profilePage.deleteAccountPopupReason).toBeVisible();
         await expect(profilePage.deleteAccountPopupCheckBox).toBeVisible();

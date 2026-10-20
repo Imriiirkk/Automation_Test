@@ -1,108 +1,54 @@
 /**
+ * Spec (Mobile): Coupons - แท็บ "คูปองของฉัน" + Use Coupon Flow
+ * ครอบคลุม: Coupon_mobile_012, 014 ถึง 027
+ *
+ * ================================================================
  * Test Data Setup
- *
- * [All Coupons] ต้องมีคูปองครอบคลุม 3 สถานะ โดยระบุตำแหน่งชัดเจน
- * (ลำดับการ์ดมีผลต่อ test เพราะ assert ตาม index):
- *   1. ใบแรก  = ยังไม่รับสิทธิ์ — แนะนำตั้งค่า "สิทธิ์/คน" ไว้สูงๆ เพื่อรองรับการรันเทสซ้ำหลายรอบโดยไม่ชนสิทธิ์
- *   2. ใบที่ 2 = รับสิทธิ์แล้ว
- *   3. ใบหลังสุด (default) = หมดสิทธิ์ (sold out)
- *
+ * ================================================================
  * [My Coupons] ต้องมีคูปองครอบคลุม 3 สถานะ — ไม่ต้องระบุตำแหน่ง
  * เพราะลำดับใน list นี้ไม่คงที่อยู่แล้ว (ขึ้นกับว่า user รับ/ใช้คูปองไหนก่อน):
  *   - ยังไม่ใช้งาน (ควรมีไว้หลายใบ เผื่อรันเทสซ้ำหลายรอบไม่ให้คูปองหมด)
  *   - ใช้งานแล้ว
  *   - หมดอายุ
+ *
+ * Coupon_mobile_012 ต้องใช้คูปองใน All Coupons ที่รับสิทธิ์ซ้ำได้หลายรอบ
+ * (ชื่อ 'test coupon', ตั้ง "สิทธิ์/คน" ไว้สูงๆ)
+ *
+ * ================================================================
+ * หมายเหตุการรัน (สำคัญ)
+ * ================================================================
+ * - Test ในไฟล์นี้ที่แก้ข้อมูลจริงของบัญชีทดสอบ:
+ *     012 (รับคูปองเพิ่ม → การ์ด "ยังไม่ใช้" เพิ่ม)
+ *     023 ถึง 025 (ยืนยันใช้คูปอง → การ์ด "ยังไม่ใช้" ลด / "ใช้แล้ว" เพิ่ม)
+ * - Coupon_mobile_025 นับจำนวนการ์ดก่อน/หลังแล้วคาดว่าเปลี่ยน ±1 พอดี
+ *   ถ้ามี test อื่นที่ใช้บัญชีเดียวกันรันแทรกพร้อมกัน (เช่น Coupon_mobile_010
+ *   ใน couponsPage.allCoupons.spec.ts ที่รับคูปองเพิ่ม) จำนวนจะเพี้ยนและ fail แบบสุ่ม
+ * - ให้รัน couponsPage.allCoupons.spec.ts กับไฟล์นี้แบบไม่ขนานกัน
+ *     โดย npx playwright test couponsPage --workers=1
+ * - ภายในไฟล์เดียวกัน Playwright รัน test แบบเรียงลำดับอยู่แล้ว (ไม่ต้องตั้งค่าเพิ่ม)
+ * - 019 ถึง 027 ต้องมีการ์ด "ยังไม่ใช้" อย่างน้อย 1 ใบ (023 ถึง 025 ใช้หมดไปทีละใบ)
+ *   ถ้ารันซ้ำหลายรอบต้องเติมคูปองให้พอ (ดู Test Data Setup)
  */
 
 import { test, expect } from '@playwright/test';
-import { NavbarFooter } from '../../pages/NavbarFooter';
-import { CouponsPage } from '../../pages/couponPage';
-import { ProfilePage } from '../../pages/profilePage';
+import { NavbarFooter } from '../../../pages/NavbarFooter';
+import { CouponsPage } from '../../../pages/couponPage';
+import { ProfilePage } from '../../../pages/profilePage';
 
 const email = process.env.VALID_EMAIL!;
 const password = process.env.VALID_PASSWORD!;
 
-test.describe('Coupons Page - ไม่เข้าสู่ระบบ', () => {
-    let navbar: NavbarFooter;
-    let couponsPage: CouponsPage;
+// หา index ของการ์ดใบแรกที่มีสถานะตามที่ระบุ (ใช้เฉพาะไฟล์นี้)
+// TODO: ย้ายไปเป็น method ใน CouponsPage เมื่อพร้อมแก้ POM
+async function findCardIndexByStatus(couponsPage: CouponsPage, status: string): Promise<number> {
+    const count = await couponsPage.couponItem.count();
+    for (let i = 0; i < count; i++) {
+        if ((await couponsPage.getCouponStatus(i)) === status) return i;
+    }
+    throw new Error(`ไม่พบการ์ดสถานะ "${status}" ในแท็บคูปองของฉัน — ต้อง seed ข้อมูลก่อนรันเทสนี้`);
+}
 
-    test.beforeEach(async ({ page }) => {
-        navbar = new NavbarFooter(page);
-        couponsPage = new CouponsPage(page);
-        await navbar.goto();
-        await navbar.dismissAllOverlaysIfPresent();
-        await navbar.goToMenu_mobile(navbar.couponsMenu_mobile);
-        await page.waitForURL(/\/coupons/, { timeout: 10000 });
-        expect(page.url()).toContain('/coupons');
-    });
-
-    test('Coupon_mobile_001: ตรวจสอบองค์ประกอบของหน้า "คูปอง" ได้ครบถ้วน', async () => {
-        // แท็บ "คูปองทั้งหมด" ต้อง active, แท็บ "คูปองของฉัน" ต้อง inactive
-        await expect(couponsPage.allCouponTab).toHaveClass(/active/);
-        await expect(couponsPage.myCouponTab).not.toHaveClass(/active/);
-
-        // แสดงรายการคูปองอย่างน้อย 1 รายการ
-        await expect(couponsPage.couponList).toBeVisible();
-        await expect(couponsPage.couponItem.first()).toBeVisible();
-        expect(await couponsPage.couponItem.count()).toBeGreaterThan(0);
-    });
-
-    test('Coupon_mobile_002: ตรวจสอบองค์ประกอบของการ์ด "คูปอง" ในแท็บ คูปองทั้งหมด', async () => {
-        const card = couponsPage.couponItem.first();
-        await expect(card).toBeVisible();
-
-        await expect(couponsPage.couponImageCard.first()).toBeVisible();
-        await expect(couponsPage.couponImageCard.first()).toHaveAttribute('style', /background-image/);
-        await expect(couponsPage.couponNameCard.first()).toBeVisible();
-        await expect(couponsPage.couponDueCard.first()).toContainText(/เหลืออีก \d+ วัน/);
-        await expect(couponsPage.couponPriceCard.first()).toContainText('แจกฟรี');
-        await expect(couponsPage.couponGetButton.first()).toBeVisible();
-    });
-
-    test('Coupon_mobile_003: ตรวจสอบการนำทางไปยังหน้า "รายละเอียดคูปอง" เมื่อกดปุ่ม "กดรับคูปอง" ในการ์ดคูปองของแท็บ คูปองทั้งหมด', async ({ page }) => {
-        const urlBefore = page.url();
-
-        await couponsPage.clickGetCoupon(0);
-
-        await page.waitForURL(/\/coupon\/[^/]+/, { timeout: 10000 });
-        expect(page.url()).not.toBe(urlBefore);
-        expect(page.url()).toContain('/coupon/');
-    });
-
-    test.describe('Coupon Detail - Quantity Selector', () => {
-        test.beforeEach(async ({ page }) => {
-            await couponsPage.couponGetButton.first().click();
-            await page.waitForURL(/\/coupon\/[^/]+/, { timeout: 10000 });
-        });
-
-        test('Coupon_mobile_007: ตรวจสอบการเพิ่มจำนวนคูปอง เมื่อกดปุ่ม "+" เมื่อสิทธิ์การรับคูปองยังไม่เต็มจำนวน', async ({ page }) => {
-            await expect(couponsPage.quantityValue).toHaveText('1'); // default
-            await couponsPage.quantityIncreaseButton.click();
-            await expect(couponsPage.quantityValue).toHaveText(String(2));
-        });
-
-        test('Coupon_mobile_008: ตรวจสอบการลดจำนวนคูปอง เมื่อกดปุ่ม "-" เมื่อสิทธิ์การรับคูปองยังไม่เต็มจำนวน', async ({ page }) => {
-            await couponsPage.quantityIncreaseButton.click(); // 1 -> 2 เพื่อให้ลดได้
-            await expect(couponsPage.quantityValue).toHaveText('2');
-
-            await couponsPage.quantityDecreaseButton.click(); // 2 -> 1
-            await expect(couponsPage.quantityValue).toHaveText('1');
-
-            // ถึง min (1) แล้ว ปุ่ม "-" ต้อง disable
-            await expect(couponsPage.quantityDecreaseButton).toHaveClass("SelectedWithQuota__ButtonSelectLeft-sc-30ef3833-0 bfHcDK btn");
-        });
-    });
-
-    test('Coupon_mobile_009: ตรวจสอบการรับคูปอง เมื่อกดปุ่ม "รับคูปอง" บนหน้า "รายละเอียดคูปอง" กรณีที่ยังไม่ได้เข้าสู่ระบบ', async ({ page }) => {
-        await couponsPage.clickGetCoupon();
-        await page.waitForURL(/\/coupon\/[^/]+/, { timeout: 10000 });
-
-        await couponsPage.couponReceiveButton.click();
-        await expect(navbar.getLoginModalLogo()).toBeVisible({ timeout: 10000 });
-    });
-});
-
-test.describe('Coupons Page - เข้าสู่ระบบ', () => {
+test.describe('Coupons Page (My Coupons) - เข้าสู่ระบบ', () => {
     let navbar: NavbarFooter;
     let couponsPage: CouponsPage;
     let profilePage: ProfilePage;
@@ -122,89 +68,13 @@ test.describe('Coupons Page - เข้าสู่ระบบ', () => {
         expect(page.url()).toContain('/coupons');
     });
 
-    test('Coupon_mobile_004: ตรวจสอบองค์ประกอบของหน้า "รายละเอียดคูปอง" กรณีที่สิทธิ์การรับคูปองยังไม่เต็มจำนวน', async ({ page }) => {
-        await couponsPage.clickGetCoupon(0);
-        await page.waitForURL(/\/coupon\/[^/]+/, { timeout: 10000 });
-
-        await expect(couponsPage.couponDetailImage).toBeVisible();
-        await expect(couponsPage.couponDescContent).toBeVisible();
-        await expect(couponsPage.couponDetailBadgeReceive).toContainText('ได้รับฟรี');
-        await expect(couponsPage.couponDetailName).toBeVisible();
-        await expect(couponsPage.couponTypeText).toContainText('คูปองแจกฟรี');
-
-        // Quantity Selector ต้องแสดง (ไม่ใช่ FullQuota text) เมื่อยังไม่เต็มสิทธิ์
-        await expect(couponsPage.quantityDecreaseButton).toBeVisible();
-        await expect(couponsPage.quantityIncreaseButton).toBeVisible();
-
-        await expect(couponsPage.couponQuotaText).toContainText(/สิทธิ์การรับคูปอง : \d+ คน \/ \d+ สิทธิ์/);
-        await expect(couponsPage.couponReceiveButton).toBeVisible();
-    });
-
-    test('Coupon_mobile_005: ตรวจสอบองค์ประกอบของหน้า "รายละเอียดคูปอง" กรณีที่รับสิทธิ์ครบแล้ว', async ({ page }) => {
-        await couponsPage.clickGetCoupon(1);
-        await page.waitForURL(/\/coupon\/[^/]+/, { timeout: 10000 });
-
-        await expect(couponsPage.couponDetailImage).toBeVisible();
-        await expect(couponsPage.couponDescContent).toBeVisible();
-        await expect(couponsPage.couponDetailBadgeReceive).toContainText('ได้รับฟรี');
-        await expect(couponsPage.couponDetailName).toBeVisible();
-        await expect(couponsPage.couponTypeText).toContainText('คูปองแจกฟรี');
-
-        // แทนที่ Quantity Selector ด้วยข้อความ FullQuota
-        await expect(couponsPage.couponFullQuotaText).toHaveText('คุณได้รับสิทธิ์ครบแล้ว');
-        await expect(couponsPage.couponQuotaText).toContainText(/สิทธิ์การรับคูปอง : \d+ คน \/ \d+ สิทธิ์/);
-        await expect(couponsPage.couponReceiveButton).toBeVisible();
-    });
-
-    test('Coupon_mobile_006: ตรวจสอบองค์ประกอบของหน้า "รายละเอียดคูปอง" กรณีที่คูปองหมด แต่ผู้ใช้ยังได้รับสิทธิ์ไม่ครบจำนวน', async ({ page }) => {
-        await couponsPage.clickGetCoupon(-1);
-        await page.waitForURL(/\/coupon\/[^/]+/, { timeout: 10000 });
-
-        await expect(couponsPage.couponDetailImage).toBeVisible();
-        await expect(couponsPage.couponDescContent).toBeVisible();
-        await expect(couponsPage.couponDetailBadgeReceive).toContainText('ได้รับฟรี');
-        await expect(couponsPage.couponDetailName).toBeVisible();
-        await expect(couponsPage.couponTypeText).toContainText('SOLD OUT');
-
-        await expect(couponsPage.quantityDecreaseButton).toBeVisible();
-        await expect(couponsPage.quantityIncreaseButton).toBeVisible();
-
-        await expect(couponsPage.couponQuotaText).toContainText(/สิทธิ์การรับคูปอง : \d+ คน \/ \d+ สิทธิ์/);
-        await expect(couponsPage.couponReceiveButton).toBeHidden();
-    });
-
-    test('Coupon_mobile_010: ตรวจสอบการรับคูปองสำเร็จ เมื่อกดปุ่ม "รับคูปอง" บนหน้า "รายละเอียดคูปอง" กรณีที่เข้าสู่ระบบแล้วและสิทธิ์การรับคูปองยังไม่เต็มจำนวน', async ({ page }) => {
-        await couponsPage.clickGetCoupon();
-        await page.waitForURL(/\/coupon\/[^/]+/, { timeout: 10000 });
-
-        await couponsPage.couponReceiveButton.click();
-
-        // // Modal รับคูปองสำเร็จ (SweetAlert2 success)
-        // const successModal = page.locator('.swal2-popup.swal2-icon-success');
-        // await expect(successModal).toBeVisible({ timeout: 10000 });
-
-        // หน้า "โปรไฟล์" แท็บ คูปองของฉัน อยู่ด้านหลัง modal
-        await expect(page).toHaveURL(/\/my-coupons/);
-    });
-
-    test('Coupon_mobile_011: ตรวจสอบการรับคูปอง เมื่อกดปุ่ม "รับคูปอง" กรณีที่รับสิทธิ์ครบแล้ว', async ({ page }) => {
-        await couponsPage.clickGetCoupon(1);
-        await page.waitForURL(/\/coupon\/[^/]+/, { timeout: 10000 });
-
-        await couponsPage.couponReceiveButton.click();
-
-        await expect(couponsPage.receiveErrorModal).toBeVisible({ timeout: 10000 });
-        await expect(couponsPage.receiveErrorIcon).toBeVisible();
-        await expect(couponsPage.receiveErrorTitle).toContainText("คุณรับคูปองนี้ครบจำนวนแล้ว");
-
-        await couponsPage.receiveErrorCloseButton.click();
-        await expect(couponsPage.receiveErrorModal).toBeHidden();
-    });
-
+    // ⚠️ แก้ข้อมูลจริง: รับคูปองเพิ่ม (ดูหมายเหตุการรันด้านบนไฟล์)
     test('Coupon_mobile_012: ตรวจสอบการแสดงคูปองเดิมหลายสิทธิ์ในแท็บ คูปองของฉัน เมื่อผู้ใช้งานรับคูปองมากกว่า 1 สิทธิ์', async ({ page }) => {
         const couponName = 'test coupon'; // ชื่อคูปองการ์ดแรกที่ใช้ทดสอบรับคูปองซ้ำได้เรื่อยๆ
         const receiveQty = 2; // จำนวนที่จะรับเพิ่มในรอบนี้
 
+        // TODO: 3 บรรทัด login/goToMenu ด้านล่างซ้ำกับ beforeEach (login และเข้าหน้า /coupons ไว้แล้ว)
+        // ต้องเช็คว่า test นี้ยังผ่านอยู่ไหมบน mobile ถ้า fail ที่ขั้นตอนนี้ ให้ลบออก
         await navbar.openLoginOrSignup_mobile();
         await navbar.auth.loginWithEmail(email, password);
         await expect(navbar.getLoginSuccess()).toBeVisible({ timeout: 10000 });
@@ -243,7 +113,7 @@ test.describe('Coupons Page - เข้าสู่ระบบ', () => {
         expect((afterCount / 2) - beforeCount).toBe(receiveQty);
     });
 
-    test('Coupon_mobile_014: ตรวจสอบการแสดงคูปองเมื่อกดแท็บ คูปองของฉัน บนหน้า "คูปอง" กรณีที่เข้าสู่ระบบแล้ว', async ({ page }) => {
+    test('Coupon_mobile_014: ตรวจสอบการแสดงคูปองเมื่อกดแท็บ คูปองของฉัน บนหน้า "คูปอง" กรณีที่เข้าสู่ระบบแล้ว', async () => {
         await couponsPage.clickMyCouponTab();
 
         await expect(couponsPage.myCouponTab).toHaveClass(/active/);
@@ -255,7 +125,7 @@ test.describe('Coupons Page - เข้าสู่ระบบ', () => {
         }
     });
 
-    test('Coupon_mobile_015: ตรวจสอบการเรียงลำดับการ์ดคูปองตามสถานะในแท็บ คูปองของฉัน', async ({ page }) => {
+    test('Coupon_mobile_015: ตรวจสอบการเรียงลำดับการ์ดคูปองตามสถานะในแท็บ คูปองของฉัน', async () => {
         await couponsPage.clickMyCouponTab();
 
         const statusOrder = ['ยังไม่ใช้คูปอง', 'ใช้คูปองแล้ว', 'คูปองหมดอายุ'];
@@ -276,15 +146,7 @@ test.describe('Coupons Page - เข้าสู่ระบบ', () => {
         }
     });
 
-    async function findCardIndexByStatus(couponsPage: CouponsPage, status: string): Promise<number> {
-        const count = await couponsPage.couponItem.count();
-        for (let i = 0; i < count; i++) {
-            if ((await couponsPage.getCouponStatus(i)) === status) return i;
-        }
-        throw new Error(`ไม่พบการ์ดสถานะ "${status}" ในแท็บคูปองของฉัน — ต้อง seed ข้อมูลก่อนรันเทสนี้`);
-    }
-
-    test('Coupon_mobile_016: ตรวจสอบองค์ประกอบของการ์ด "คูปอง" สถานะ "ยังไม่ใช้คูปอง" ในแท็บ คูปองของฉัน', async ({ page }) => {
+    test('Coupon_mobile_016: ตรวจสอบองค์ประกอบของการ์ด "คูปอง" สถานะ "ยังไม่ใช้คูปอง" ในแท็บ คูปองของฉัน', async () => {
         await couponsPage.clickMyCouponTab();
         await expect(couponsPage.couponItem.first()).toBeVisible(); // รอจนการ์ดใบแรก render จริง แทน fixed timeout
 
@@ -302,7 +164,7 @@ test.describe('Coupons Page - เข้าสู่ระบบ', () => {
         await expect(actionButton).toBeEnabled();
     });
 
-    test('Coupon_mobile_017: ตรวจสอบองค์ประกอบของการ์ด "คูปอง" สถานะ "ใช้คูปองแล้ว" ในแท็บ คูปองของฉัน', async ({ page }) => {
+    test('Coupon_mobile_017: ตรวจสอบองค์ประกอบของการ์ด "คูปอง" สถานะ "ใช้คูปองแล้ว" ในแท็บ คูปองของฉัน', async () => {
         await couponsPage.clickMyCouponTab();
         await expect(couponsPage.couponItem.first()).toBeVisible();
         await couponsPage.loadAllCoupons();
@@ -321,7 +183,7 @@ test.describe('Coupons Page - เข้าสู่ระบบ', () => {
         await expect(actionButton).toBeDisabled();
     });
 
-    test('Coupon_mobile_018: ตรวจสอบองค์ประกอบของการ์ด "คูปอง" สถานะ "คูปองหมดอายุ" ในแท็บ คูปองของฉัน', async ({ page }) => {
+    test('Coupon_mobile_018: ตรวจสอบองค์ประกอบของการ์ด "คูปอง" สถานะ "คูปองหมดอายุ" ในแท็บ คูปองของฉัน', async () => {
         await couponsPage.clickMyCouponTab();
         await expect(couponsPage.couponItem.first()).toBeVisible();
         await couponsPage.loadAllCoupons();
@@ -341,13 +203,13 @@ test.describe('Coupons Page - เข้าสู่ระบบ', () => {
     });
 
     test.describe('My Coupons - Use Coupon Flow', () => {
-        test.beforeEach(async ({ page }) => {
+        test.beforeEach(async () => {
             await couponsPage.clickMyCouponTab();
             await expect(couponsPage.couponItem.first()).toBeVisible();
             await couponsPage.loadAllCoupons();
         });
 
-        test('Coupon_mobile_019: ตรวจสอบการแสดง Use Coupon Modal เมื่อกดปุ่ม "ใช้งานคูปอง" บนการ์ดคูปองในแท็บ คูปองของฉัน ของหน้า "โปรไฟล์"', async ({ page }) => {
+        test('Coupon_mobile_019: ตรวจสอบการแสดง Use Coupon Modal เมื่อกดปุ่ม "ใช้งานคูปอง" บนการ์ดคูปองในแท็บ คูปองของฉัน ของหน้า "โปรไฟล์"', async () => {
             const index = await findCardIndexByStatus(couponsPage, 'ยังไม่ใช้คูปอง');
             const card = couponsPage.couponItem.nth(index);
             await card.getByRole('button').click();
@@ -359,7 +221,7 @@ test.describe('Coupons Page - เข้าสู่ระบบ', () => {
             await expect(couponsPage.useCouponModalUseButton).toBeVisible();
         });
 
-        test('Coupon_mobile_020: ตรวจสอบการปิด Use Coupon Modal เมื่อกดปุ่ม "ปิด"', async ({ page }) => {
+        test('Coupon_mobile_020: ตรวจสอบการปิด Use Coupon Modal เมื่อกดปุ่ม "ปิด"', async () => {
             const index = await findCardIndexByStatus(couponsPage, 'ยังไม่ใช้คูปอง');
             const card = couponsPage.couponItem.nth(index);
             await card.getByRole('button').click();
@@ -373,7 +235,7 @@ test.describe('Coupons Page - เข้าสู่ระบบ', () => {
             await expect(card.getByRole('button')).toBeEnabled();
         });
 
-        test('Coupon_mobile_021: ตรวจสอบการแสดง Confirm Modal เมื่อกดปุ่ม "กดใช้งานคูปอง" ใน Use Coupon Modal', async ({ page }) => {
+        test('Coupon_mobile_021: ตรวจสอบการแสดง Confirm Modal เมื่อกดปุ่ม "กดใช้งานคูปอง" ใน Use Coupon Modal', async () => {
             const index = await findCardIndexByStatus(couponsPage, 'ยังไม่ใช้คูปอง');
             const card = couponsPage.couponItem.nth(index);
             await card.getByRole('button').click();
@@ -387,7 +249,7 @@ test.describe('Coupons Page - เข้าสู่ระบบ', () => {
             await expect(couponsPage.confirmModalConfirmButton).toBeVisible();
         });
 
-        test('Coupon_mobile_022: ตรวจสอบการยกเลิกการใช้งานคูปอง เมื่อกดปุ่ม "ยกเลิก" ใน Confirm Modal', async ({ page }) => {
+        test('Coupon_mobile_022: ตรวจสอบการยกเลิกการใช้งานคูปอง เมื่อกดปุ่ม "ยกเลิก" ใน Confirm Modal', async () => {
             const index = await findCardIndexByStatus(couponsPage, 'ยังไม่ใช้คูปอง');
             const card = couponsPage.couponItem.nth(index);
             await card.getByRole('button').click();
@@ -402,7 +264,8 @@ test.describe('Coupons Page - เข้าสู่ระบบ', () => {
             await expect(card.getByRole('button')).toBeEnabled();
         });
 
-        test('Coupon_mobile_023: ตรวจสอบการแสดง QR/Barcode Modal เมื่อกดปุ่ม "ยืนยัน" ใน Confirm Modal', async ({ page }) => {
+        // ⚠️ แก้ข้อมูลจริง: ยืนยันแล้วคูปองถูกใช้ (ดูหมายเหตุการรันด้านบนไฟล์)
+        test('Coupon_mobile_023: ตรวจสอบการแสดง QR/Barcode Modal เมื่อกดปุ่ม "ยืนยัน" ใน Confirm Modal', async () => {
             const index = await findCardIndexByStatus(couponsPage, 'ยังไม่ใช้คูปอง');
             const card = couponsPage.couponItem.nth(index);
             await card.getByRole('button').click();
@@ -418,7 +281,8 @@ test.describe('Coupons Page - เข้าสู่ระบบ', () => {
             await expect(couponsPage.codeModalCloseButton).toBeVisible();
         });
 
-        test('Coupon_mobile_024: ตรวจสอบการสลับแท็บ Bar Code ใน QR/Barcode Modal', async ({ page }) => {
+        // ⚠️ แก้ข้อมูลจริง: ยืนยันแล้วคูปองถูกใช้
+        test('Coupon_mobile_024: ตรวจสอบการสลับแท็บ Bar Code ใน QR/Barcode Modal', async () => {
             const index = await findCardIndexByStatus(couponsPage, 'ยังไม่ใช้คูปอง');
             const card = couponsPage.couponItem.nth(index);
             await card.getByRole('button').click();
@@ -435,7 +299,8 @@ test.describe('Coupons Page - เข้าสู่ระบบ', () => {
             await expect(couponsPage.codeModalRefNumber).toHaveText(refNumberBefore ?? '');
         });
 
-        test('Coupon_mobile_025: ตรวจสอบการปิด QR/Barcode Modal เมื่อกดปุ่ม "ปิด"', async ({ page }) => {
+        // ⚠️ แก้ข้อมูลจริง + เทียบจำนวนก่อน/หลัง ต้องไม่มี test อื่นเปลี่ยนจำนวนระหว่างรัน
+        test('Coupon_mobile_025: ตรวจสอบการปิด QR/Barcode Modal เมื่อกดปุ่ม "ปิด"', async () => {
             const unusedBefore = await couponsPage.countCouponsByStatus('ยังไม่ใช้คูปอง');
             const usedBefore = await couponsPage.countCouponsByStatus('ใช้คูปองแล้ว');
 
@@ -457,7 +322,7 @@ test.describe('Coupons Page - เข้าสู่ระบบ', () => {
             expect(usedAfter).toBe(usedBefore + 1);
         });
 
-        test('Coupon_mobile_026: ตรวจสอบการไม่สามารถกดปุ่ม "คูปองถูกใช้งานไปแล้ว" ที่อยู่ในสถานะ Disabled', async ({ page }) => {
+        test('Coupon_mobile_026: ตรวจสอบการไม่สามารถกดปุ่ม "คูปองถูกใช้งานไปแล้ว" ที่อยู่ในสถานะ Disabled', async () => {
             const index = await findCardIndexByStatus(couponsPage, 'ใช้คูปองแล้ว');
             const card = couponsPage.couponItem.nth(index);
             const button = card.getByRole('button');
@@ -470,7 +335,7 @@ test.describe('Coupons Page - เข้าสู่ระบบ', () => {
             await expect(couponsPage.codeModal).toBeHidden();
         });
 
-        test('Coupon_mobile_027: ตรวจสอบการไม่สามารถกดปุ่ม "หมดอายุ" ที่อยู่ในสถานะ Disabled', async ({ page }) => {
+        test('Coupon_mobile_027: ตรวจสอบการไม่สามารถกดปุ่ม "หมดอายุ" ที่อยู่ในสถานะ Disabled', async () => {
             const index = await findCardIndexByStatus(couponsPage, 'คูปองหมดอายุ');
             const card = couponsPage.couponItem.nth(index);
             const button = card.getByRole('button');

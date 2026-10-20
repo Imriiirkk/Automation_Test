@@ -32,7 +32,7 @@ test.describe('Profile - coupon', () => {
         await expect(couponCardContainer).toBeVisible();
     });
 
-    test('Search_mobile_027: ตรวจสอบการแสดง Popup เมื่อกดปุ่ม "ใช้งานคูปอง" บนหน้าการ์ด', async () => {
+    test('Search_mobile_028: ตรวจสอบการแสดง Popup เมื่อกดปุ่ม "ใช้งานคูปอง" บนหน้าการ์ด', async () => {
         await profilePage.couponUseButton.click();
 
         await expect(profilePage.couponPopup).toBeVisible();
@@ -41,7 +41,7 @@ test.describe('Profile - coupon', () => {
         await expect(profilePage.couponPopupUseButton).toBeVisible();
     });
 
-    test('Search_mobile_028: ตรวจสอบการปิด Popup เมื่อกดปุ่ม "ปิด"', async () => {
+    test('Search_mobile_029: ตรวจสอบการปิด Popup เมื่อกดปุ่ม "ปิด"', async () => {
         await profilePage.couponUseButton.click();
 
         await expect(profilePage.couponPopup).toBeVisible();
@@ -57,15 +57,6 @@ test.describe('Profile - coupon', () => {
         await expect(profilePage.couponPopupUseButton).not.toBeVisible();
     });
 
-    test('Search_mobile_030: ตรวจสอบการแสดงปุ่ม Disable บนการ์ดคูปองที่ถูกใช้งานไปแล้ว', async () => {
-        await profilePage.couponUsedButton.click().catch(() => { });
-
-        await expect(profilePage.couponPopup).not.toBeVisible();
-        await expect(profilePage.couponPopupDescription).not.toBeVisible();
-        await expect(profilePage.couponPopupCloseButton).not.toBeVisible();
-        await expect(profilePage.couponPopupUseButton).not.toBeVisible();
-    });
-
     async function findCardIndexByStatus(profilePage: ProfilePage, status: string): Promise<number> {
         const count = await profilePage.couponCardItem.count();
         for (let i = 0; i < count; i++) {
@@ -74,7 +65,7 @@ test.describe('Profile - coupon', () => {
         throw new Error(`ไม่พบการ์ดสถานะ "${status}" ในแท็บคูปองของฉัน — ต้อง seed ข้อมูลก่อนรันเทสนี้`);
     }
 
-    test('Profile_mobile_021: ตรวจสอบการแสดง Confirm Modal เมื่อกดปุ่ม "กดใช้งานคูปอง" ใน Use Coupon Modal', async ({ page }) => {
+    test('Profile_mobile_030: ตรวจสอบการแสดง Confirm Modal เมื่อกดปุ่ม "กดใช้งานคูปอง" ใน Use Coupon Modal', async ({ page }) => {
         const index = await findCardIndexByStatus(profilePage, 'ยังไม่ใช้คูปอง');
         const card = profilePage.couponCardItem.nth(index);
         await card.getByRole('button').click();
@@ -88,7 +79,7 @@ test.describe('Profile - coupon', () => {
         await expect(profilePage.confirmModalConfirmButton).toBeVisible();
     });
 
-    test('Profile_mobile_022: ตรวจสอบการยกเลิกการใช้งานคูปอง เมื่อกดปุ่ม "ยกเลิก" ใน Confirm Modal', async ({ page }) => {
+    test('Profile_mobile_031: ตรวจสอบการยกเลิกการใช้งานคูปอง เมื่อกดปุ่ม "ยกเลิก" ใน Confirm Modal', async ({ page }) => {
         const index = await findCardIndexByStatus(profilePage, 'ยังไม่ใช้คูปอง');
         const card = profilePage.couponCardItem.nth(index);
         await card.getByRole('button').click();
@@ -102,7 +93,7 @@ test.describe('Profile - coupon', () => {
         await expect(card.getByRole('button')).toBeEnabled();
     });
 
-    test('Profile_mobile_023: ตรวจสอบการแสดง QR/Barcode Modal เมื่อกดปุ่ม "ยืนยัน" ใน Confirm Modal', async ({ page }) => {
+    test('Profile_mobile_032: ตรวจสอบการแสดง QR/Barcode Modal เมื่อกดปุ่ม "ยืนยัน" ใน Confirm Modal', async ({ page }) => {
         const index = await findCardIndexByStatus(profilePage, 'ยังไม่ใช้คูปอง');
         const card = profilePage.couponCardItem.nth(index);
         await card.getByRole('button').click();
@@ -118,7 +109,7 @@ test.describe('Profile - coupon', () => {
         await expect(profilePage.codeModalCloseButton).toBeVisible();
     });
 
-    test('Profile_mobile_024: ตรวจสอบการสลับแท็บ Bar Code ใน QR/Barcode Modal', async ({ page }) => {
+    test('Profile_mobile_033: ตรวจสอบการสลับแท็บ Bar Code ใน QR/Barcode Modal', async ({ page }) => {
         const index = await findCardIndexByStatus(profilePage, 'ยังไม่ใช้คูปอง');
         const card = profilePage.couponCardItem.nth(index);
         await card.getByRole('button').click();
@@ -135,7 +126,7 @@ test.describe('Profile - coupon', () => {
         await expect(profilePage.codeModalRefNumber).toHaveText(refNumberBefore ?? '');
     });
 
-    test('Profile_mobile_025: ตรวจสอบการปิด QR/Barcode Modal เมื่อกดปุ่ม "ปิด"', async ({ page }) => {
+    test('Profile_mobile_034: ตรวจสอบการปิด QR/Barcode Modal เมื่อกดปุ่ม "ปิด"', async ({ page }) => {
         await profilePage.loadAllCoupons();
         const unusedBefore = await profilePage.countCouponsByStatus('ยังไม่ใช้คูปอง');
         const usedBefore = await profilePage.countCouponsByStatus('ใช้คูปองแล้ว');
@@ -158,7 +149,7 @@ test.describe('Profile - coupon', () => {
         expect(usedAfter / 2).toBe((usedBefore / 2) + 1);
     });
 
-    test('Profile_mobile_026: ตรวจสอบการไม่สามารถกดปุ่ม "คูปองถูกใช้งานไปแล้ว" ที่อยู่ในสถานะ Disabled', async ({ page }) => {
+    test('Profile_mobile_035: ตรวจสอบการไม่สามารถกดปุ่ม "คูปองถูกใช้งานไปแล้ว" ที่อยู่ในสถานะ Disabled', async ({ page }) => {
         const index = await findCardIndexByStatus(profilePage, 'ใช้คูปองแล้ว');
         const card = profilePage.couponCardItem.nth(index);
         const button = card.getByRole('button');
@@ -171,7 +162,7 @@ test.describe('Profile - coupon', () => {
         await expect(profilePage.codeModal).toBeHidden();
     });
 
-    test('Profile_mobile_027: ตรวจสอบการไม่สามารถกดปุ่ม "หมดอายุ" ที่อยู่ในสถานะ Disabled', async ({ page }) => {
+    test('Profile_mobile_036: ตรวจสอบการไม่สามารถกดปุ่ม "หมดอายุ" ที่อยู่ในสถานะ Disabled', async ({ page }) => {
         const index = await findCardIndexByStatus(profilePage, 'คูปองหมดอายุ');
         const card = profilePage.couponCardItem.nth(index);
         const button = card.getByRole('button');
@@ -182,6 +173,15 @@ test.describe('Profile - coupon', () => {
         await expect(profilePage.couponPopup).toBeHidden();
         await expect(profilePage.confirmModal).toBeHidden();
         await expect(profilePage.codeModal).toBeHidden();
+    });
+
+    test('Search_mobile_037: ตรวจสอบการแสดงปุ่ม Disable บนการ์ดคูปองที่ถูกใช้งานไปแล้ว', async () => {
+        await profilePage.couponUsedButton.click().catch(() => { });
+
+        await expect(profilePage.couponPopup).not.toBeVisible();
+        await expect(profilePage.couponPopupDescription).not.toBeVisible();
+        await expect(profilePage.couponPopupCloseButton).not.toBeVisible();
+        await expect(profilePage.couponPopupUseButton).not.toBeVisible();
     });
 
 });
