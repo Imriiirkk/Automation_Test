@@ -90,32 +90,37 @@ test.describe('Article Page (Desktop)', () => {
     });
 
     // Pass
-    test('Article_Desktop_006: ตรวจสอบการกด "Bookmark" ที่การ์ดบทความ บน Banner กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to article');
-        await page.waitForURL(/\/article/, { timeout: 10000 });
-        await articlePage.clickBookMarkBanner(); // เปลี่ยนเป็นใช้
-        await expect(navbar.loginModalCloseButton).toBeVisible();
-        await navbar.closeLoginModal();
-    });
+    test.describe('Run test', () => {
+        test('Article_Desktop_006: ตรวจสอบการกด "Bookmark" ที่การ์ดบทความ บน Banner กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
+            await navbar.goToMenu_desktop('Link to article');
+            await page.waitForURL(/\/article/, { timeout: 10000 });
+            await articlePage.clickBookMarkBanner();
+            await expect(navbar.loginModalCloseButton).toBeVisible();
+            await navbar.closeLoginModal();
+        });
 
-    // Fail
-    test('Article_Desktop_007: ตรวจสอบการกด "Bookmark" ที่การ์ดบทความ บน Banner กรณีเข้าสู่ระบบแล้ว', async () => {
-        await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-        await navbar.goToMenu_desktop('Link to article');
-        await articlePage.clickBookMarkBanner();
-        await expect(articlePage.bookmark_CardBanner.first()).toHaveAttribute('fill', '#FEBC2E');
-    });
+        // Fail
+        test('Article_Desktop_007: ตรวจสอบการกด "Bookmark" ที่การ์ดบทความ บน Banner กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
+            await navbar.openLoginOrSignup_desktop();
+            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+            await navbar.goToMenu_desktop('Link to article');
+            await articlePage.clickBookMarkBanner();
+            await page.reload();
+            await expect(articlePage.bookmark_CardBanner.first()).toHaveAttribute('fill', '#FEBC2E');
+        });
 
-    // Fail
-    test('Article_Desktop_008: ตรวจสอบการกด "Bookmark" ซ้ำที่การ์ดบทความ บน Banner กรณีเข้าสู่ระบบแล้ว', async () => {
-        await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-        await navbar.goToMenu_desktop('Link to article');
-        await articlePage.clickBookMarkBanner();
-        await expect(articlePage.bookmark_CardBanner.first()).toHaveAttribute('fill', '#FEBC2E');
-        await articlePage.clickBookMarkBanner();
-        await expect(articlePage.bookmark_CardBanner.first()).toHaveAttribute('fill', '#979797');
+        // Fail
+        test('Article_Desktop_008: ตรวจสอบการกด "Bookmark" ซ้ำที่การ์ดบทความ บน Banner กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
+            await navbar.openLoginOrSignup_desktop();
+            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+            await navbar.goToMenu_desktop('Link to article');
+            await articlePage.clickBookMarkBanner();
+            await page.reload();
+            await expect(articlePage.bookmark_CardBanner.first()).toHaveAttribute('fill', '#FEBC2E');
+            await articlePage.clickBookMarkBanner();
+            await page.reload();
+            await expect(articlePage.bookmark_CardBanner.first()).toHaveAttribute('fill', '#979797');
+        });
     });
 
     test.describe('Categories Tap', () => {

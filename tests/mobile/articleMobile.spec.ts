@@ -107,27 +107,27 @@ test.describe('Article Page (Mobile)', () => {
         await expect(articlePage.comment).toBeVisible();
     });
 
-    test('Article_Mobile_006: ตรวจสอบการกด "Bookmark" ที่การ์ดบทความ บน Banner กรณียังไม่เข้าสู่ระบบ', async () => {
-        await articlePage.clickBookMarkBanner();
-        await expect(navbar.loginModalCloseButton).toBeVisible();
-        await navbar.closeLoginModal();
-    });
+    test.describe('Run test', () => {
+        test('Article_Mobile_006: ตรวจสอบการกด "Bookmark" ที่การ์ดบทความ บน Banner กรณียังไม่เข้าสู่ระบบ', async () => {
+            await articlePage.clickBookMarkBanner();
+            await expect(navbar.loginModalCloseButton).toBeVisible();
+            await navbar.closeLoginModal();
+        });
 
-    // ฝั่ง desktop เคสนี้ Fail — fill อยู่ที่ svg path ไม่ใช่ตัวปุ่ม จึงเปลี่ยนมาเช็คที่ svg path
-    // และ banner อาจ auto-slide ระหว่างเทส (ยังไม่ยืนยัน)
-    test('Article_Mobile_007: ตรวจสอบการกด "Bookmark" ที่การ์ดบทความ บน Banner กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
-        await loginAndGoToArticle(page);
-        await articlePage.clickBookMarkBanner();
-        await expect(articlePage.bookmark_CardBanner.locator('svg path')).toHaveAttribute('fill', '#FEBC2E');
-    });
+        test('Article_Mobile_007: ตรวจสอบการกด "Bookmark" ที่การ์ดบทความ บน Banner กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
+            await loginAndGoToArticle(page);
+            await articlePage.clickBookMarkBanner();
+            await expect(articlePage.bookmark_CardBanner.locator('svg path')).toHaveAttribute('fill', '#FEBC2E');
+        });
 
-    // TODO: สี '#979797' ตอนยกเลิก bookmark ที่ banner ยังไม่ได้ verify กับ site จริง
-    test('Article_Mobile_008: ตรวจสอบการกด "Bookmark" ซ้ำที่การ์ดบทความ บน Banner กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
-        await loginAndGoToArticle(page);
-        await articlePage.clickBookMarkBanner();
-        await expect(articlePage.bookmark_CardBanner.locator('svg path')).toHaveAttribute('fill', '#FEBC2E');
-        await articlePage.clickBookMarkBanner();
-        await expect(articlePage.bookmark_CardBanner.locator('svg path')).toHaveAttribute('fill', '#979797');
+        test('Article_Mobile_008: ตรวจสอบการกด "Bookmark" ซ้ำที่การ์ดบทความ บน Banner กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
+            await loginAndGoToArticle(page);
+            await articlePage.clickBookMarkBanner();
+            await expect(articlePage.bookmark_CardBanner.locator('svg path')).toHaveAttribute('fill', '#FEBC2E');
+            await articlePage.clickBookMarkBanner();
+            await page.reload();
+            await expect(articlePage.bookmark_CardBanner.locator('svg path')).toHaveAttribute('fill', '#979797');
+        });
     });
 
     // ---------- Promotion Categories Tap ----------
