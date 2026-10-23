@@ -3,8 +3,8 @@ import { AuthorPage } from '../../pages/AuthorPage';
 import { NavbarFooter } from '../../pages/NavbarFooter';
 import { ArticlePage } from '../../pages/ArticlePage';
 
-const VALID_EMAIL = 'testpunpro01@gmail.com';
-const VALID_PASSWORD = '123456';
+const VALID_EMAIL = ''; //อย่าลืมใส่อีเมลกับรหัสนะคะ
+const VALID_PASSWORD = ''; //อย่าลืมใส่อีเมลกับรหัสนะคะ
 
 const ICON_OFF = /cjtKzC/; // ยังไม่กด
 const ICON_ON = /gxBVIB/;  // กดแล้ว

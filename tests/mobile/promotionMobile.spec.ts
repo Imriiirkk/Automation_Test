@@ -4,8 +4,8 @@ import { NavbarFooter } from '../../pages/NavbarFooter';
 import { AuthorPage } from '../../pages/AuthorPage';
 import { CommentSection } from '../../pages/CommentSection';
 
-const VALID_EMAIL = 'testpunpro01@gmail.com';
-const VALID_PASSWORD = '123456';
+const VALID_EMAIL = ''; //อย่าลืมใส่อีเมลกับรหัสนะคะ
+const VALID_PASSWORD = ''; //อย่าลืมใส่อีเมลกับรหัสนะคะ
 
 let navbar: NavbarFooter;
 let promotionPage: PromotionPage;

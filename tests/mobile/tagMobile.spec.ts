@@ -9,8 +9,8 @@ let navbar: NavbarFooter;
 let tagPage: TagPage;
 let promotionPage: PromotionPage;
 
-const VALID_EMAIL = 'testpunpro01@gmail.com';
-const VALID_PASSWORD = '123456';
+const VALID_EMAIL = ''; //อย่าลืมใส่อีเมลกับรหัสนะคะ
+const VALID_PASSWORD = ''; //อย่าลืมใส่อีเมลกับรหัสนะคะ
 
 const ICON_OFF = /cjtKzC/;
 const ICON_ON = /gxBVIB/;
