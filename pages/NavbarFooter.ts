@@ -263,6 +263,4 @@ export class NavbarFooter extends BaseActions {
         return this.search.recentSearchItems.count();
     }
 
-
-
 }

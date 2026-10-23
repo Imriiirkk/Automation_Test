@@ -1,0 +1,258 @@
+import { test, expect } from '@playwright/test';
+import { HomePage } from '../../../pages/homePage';
+import { NavbarFooter } from '../../../pages/NavbarFooter';
+
+test.describe('Home Page', () => {
+    let homePage: HomePage;
+    let navbar: NavbarFooter;
+
+    test.beforeEach(async ({ page }) => {
+        homePage = new HomePage(page);
+        navbar = new NavbarFooter(page);
+        await navbar.goto();
+        await navbar.dismissAllOverlaysIfPresent();
+    });
+
+    test('Home_mobile_001: ตรวจสอบองค์ประกอบของหน้า "Home" ครบถ้วนเมื่อเข้าเว็บครั้งแรก', async () => {
+        await expect(homePage.getBannerContainer()).toBeVisible();
+        await expect(homePage.getCategorySectionContainer()).toBeVisible();
+        await expect(homePage.getServicesSectionContainer()).toBeVisible();
+        await expect(homePage.getPromotionSectionContainer()).toBeVisible();
+        await expect(homePage.getShopperPostSectionContainer()).toBeVisible();
+        await expect(homePage.getArticleSectionContainer()).toBeVisible();
+        await expect(homePage.getPunproSuggestionContainer()).toBeVisible();
+    });
+
+    // ================================================================
+    // Hero Banner
+    // ================================================================
+    test.describe('Hero Banner', () => {
+        test('Home_mobile_002: ตรวจสอบการแสดง Hero Banner พร้อม Indicator ', async () => {
+            await expect(homePage.getBannerContainer()).toBeVisible();
+            await expect(homePage.getBannerIndicatorContainer()).toBeVisible();
+        });
+
+        test('Home_mobile_003: ตรวจสอบการนำทางไปยังหน้าที่เชื่อมโยง เมื่อกด Hero Banner', async ({ page }) => {
+            const urlBefore = page.url();
+            await homePage.clickBanner(0);
+            await page.waitForLoadState('domcontentloaded');
+            expect(page.url()).not.toBe(urlBefore);
+        });
+
+        test('Home_mobile_004: ตรวจสอบการเลื่อน Hero Banner เมื่อกด Indicator', async () => {
+            const targetIndex = 2;
+            await homePage.clickBannerIndicator(targetIndex);
+            await expect(homePage.getActiveBannerIndicator())
+                .toHaveAttribute('aria-label', `Go to slide ${targetIndex}`);
+        });
+    });
+
+    //================================================================
+    // Category Section
+    //================================================================
+    test.describe('Category Section - Product Tab', () => {
+        test.beforeEach(async () => {
+            await homePage.getCategorySectionContainer().scrollIntoViewIfNeeded();
+        });
+
+        test('Home_mobile_005: ตรวจสอบการแสดงองค์ประกอบของ Section "หมวดหมู่" ในหน้า "Home"', async ({ page }) => {
+            await expect(homePage.categoryProductTab).toBeVisible();
+            await expect(homePage.categoryBrandTab).toBeVisible();
+            await expect(homePage.categorySeeMoreButton).toBeVisible();
+            await expect(homePage.categoryMenuContainer).toBeVisible();
+        });
+
+        test('Home_mobile_006: ตรวจสอบองค์ประกอบของ Section "หมวดหมู่" เมื่ออยู่ในแท็บสินค้า บนหน้า "Home"', async () => {
+            const expectedCategories = [
+                'รองเท้าผ้าใบ',
+                'กระเป๋า',
+                'เสื้อ',
+                'ความงาม',
+                'ไอที',
+                'กางเกง',
+                'ดูแลผิว',
+                'รองเท้าแตะ',
+                'หมวก',
+            ];
+
+            // เช็กจำนวนหมวดหมู่ครบ 9 รายการ — เป็นหลักฐานทางอ้อมว่ากำลังอยู่แท็บ "สินค้า"
+            await expect(homePage.categoryItemList).toHaveCount(expectedCategories.length);
+
+            for (let i = 0; i < expectedCategories.length; i++) {
+                const item = homePage.categoryItemList.nth(i);
+                await expect(item.locator('span')).toHaveText(expectedCategories[i]);
+                await expect(item.locator('[class*="CategoryMenuComponent__MenuButton-"]')).toBeVisible();
+            }
+        });
+
+        // ---------- Category Item Navigation (data-driven) ----------
+        const categoryCases = [
+            { testId: 'Home_mobile_007', name: 'รองเท้าผ้าใบ' },
+            { testId: 'Home_mobile_008', name: 'กระเป๋า' },
+            { testId: 'Home_mobile_009', name: 'เสื้อ' },
+            { testId: 'Home_mobile_010', name: 'ความงาม' },
+            { testId: 'Home_mobile_011', name: 'ไอที' },
+            { testId: 'Home_mobile_012', name: 'กางเกง' },
+            { testId: 'Home_mobile_013', name: 'ดูแลผิว' },
+            { testId: 'Home_mobile_014', name: 'รองเท้าแตะ' },
+            { testId: 'Home_mobile_015', name: 'หมวก' },
+        ];
+
+        for (const { testId, name } of categoryCases) {
+            test(`${testId}: ตรวจสอบการนำทางไปหน้าผลการค้นหา เมื่อกดหมวดหมู่ "${name}"`, async ({ page }) => {
+                await homePage.clickCategoryProductTab();
+                await homePage.clickCategoryItem(name);
+                await page.waitForURL(/\/search\?s=.+&ref_type=products/, { timeout: 10000 });
+
+                const url = new URL(page.url());
+                expect(url.searchParams.get('s')).toBe(name);
+            });
+        }
+
+        test('Home_mobile_016: ตรวจสอบการนำทางไปหน้า "หมวดหมู่ทั้งหมด" เมื่อกดปุ่ม "ดูทั้งหมด" ในแท็บ สินค้า', async ({ page }) => {
+            await homePage.clickCategoryProductTab();
+            await homePage.clickSeeMoreCategory();
+            await page.waitForURL(/\/category_groups\/products\?category=products/, { timeout: 10000 });
+            expect(page.url()).toContain('/category_groups/products?category=products');
+        });
+
+        // ---------- Category Group Navigation (data-driven) ----------
+        const categoryGroupCases = [
+            { testId: 'Home_mobile_017', group: 'แฟชั่นผู้หญิง', category: 'รองเท้าผ้าใบผู้หญิง', displayName: 'รองเท้าผ้าใบ' },
+            { testId: 'Home_mobile_019', group: 'แฟชั่นผู้ชาย', category: 'รองเท้าผ้าใบผู้ชาย', displayName: 'รองเท้าผ้าใบ' },
+            { testId: 'Home_mobile_021', group: 'กระเป๋า', category: 'กระเป๋าคาดอก', displayName: 'กระเป๋าคาดอก' },
+            { testId: 'Home_mobile_023', group: 'ความงาม & สุขภาพ', category: 'เครื่องสำอาง', displayName: 'เครื่องสำอาง' },
+            { testId: 'Home_mobile_025', group: 'เครื่องประดับ', category: 'หมวก', displayName: 'หมวก' },
+            { testId: 'Home_mobile_027', group: 'ไอที', category: 'มือถือ', displayName: 'มือถือ' },
+            { testId: 'Home_mobile_029', group: 'หมวดหมู่อื่นๆ', category: 'เครื่องใช้ไฟฟ้า', displayName: 'เครื่องใช้ไฟฟ้า' },
+        ];
+
+        for (const { testId, group, category, displayName } of categoryGroupCases) {
+            test(`${testId}: ตรวจสอบการนำทางไปหน้า "ผลการค้นหา" เมื่อกดหมวดหมู่ ${displayName} จากกลุ่ม ${group} ที่หน้า "หมวดหมู่ทั้งหมด" ที่แท็บ สินค้า`, async ({ page }) => {
+                await homePage.clickCategoryProductTab();
+                await homePage.clickSeeMoreCategory();
+                await page.waitForURL(/\/category_groups\/products\?category=products/, { timeout: 10000 });
+
+                await homePage.clickCategoryFromGroup(category);
+                await page.waitForURL(/\/search/, { timeout: 10000 });
+
+                expect(page.url()).toContain('search');
+                expect(page.url()).toContain(encodeURIComponent(category));
+            });
+        }
+
+        // ---------- "ดูทั้งหมด" per Category Group (data-driven) ----------
+        const seeAllGroupCases = [
+            { testId: 'Home_mobile_018', group: 'แฟชั่นผู้หญิง' },
+            { testId: 'Home_mobile_020', group: 'แฟชั่นผู้ชาย' },
+            { testId: 'Home_mobile_022', group: 'กระเป๋า' },
+            { testId: 'Home_mobile_024', group: 'ความงาม & สุขภาพ' },
+            { testId: 'Home_mobile_026', group: 'เครื่องประดับ' },
+            { testId: 'Home_mobile_028', group: 'ไอที' },
+            { testId: 'Home_mobile_030', group: 'หมวดหมู่อื่นๆ' },
+        ];
+
+        for (const { testId, group } of seeAllGroupCases) {
+            test(`${testId}: ตรวจสอบคลิกลิงก์ "ดูทั้งหมด" ของกลุ่มสินค้า ${group}`, async ({ page }) => {
+                await homePage.gotoAllCategoriesProductTab();
+
+                await homePage.clickSeeAllInCategoryGroup(group);
+                await page.waitForURL(/\/search/, { timeout: 10000 });
+
+                const url = new URL(page.url());
+                expect(url.pathname).toBe('/search');
+                // ใช้ url.search (raw, ยังไม่ decode) เทียบ แทนการเทียบทั้งก้อนด้วย encodeURIComponent
+                expect(decodeURIComponent(url.search)).toContain(group);
+            });
+        }
+    });
+
+    test.describe('Category Section - Brand Tab', () => {
+        test.beforeEach(async () => {
+            await homePage.getCategorySectionContainer().scrollIntoViewIfNeeded();
+            await homePage.clickCategoryBrandTab();
+        });
+
+        test('Home_mobile_031: ตรวจสอบการแสดงรายการแบรนด์ เมื่อกดแท็บ แบรนด์ ใน Section "หมวดหมู่" บนหน้า "Home"', async ({ page }) => {
+            const brandItems = homePage.categoryMenuContainer.locator('> div, > *');
+            const itemCount = await brandItems.count();
+            expect(itemCount).toBeGreaterThanOrEqual(10);
+
+            const brandLogos = homePage.categoryMenuContainer.locator('img');
+            const logoCount = await brandLogos.count();
+            expect(logoCount).toBeGreaterThanOrEqual(10);
+        });
+
+        test('Home_mobile_032: ตรวจสอบองค์ประกอบของ Section "หมวดหมู่" บนหน้า "Home" เมื่ออยู่ที่แท็บ แบรนด์', async ({ page }) => {
+            const expectedCategories = [
+                'Adidas',
+                'Nike',
+                'LYN',
+                'FILA',
+                'Charles&Keith',
+                'Uniqlo',
+                'Converse',
+                'Guess',
+                'CalvinKlein',
+                'Starbucks',
+            ];
+
+            // เช็กจำนวนหมวดหมู่ครบ 10 รายการ — เป็นหลักฐานทางอ้อมว่ากำลังอยู่แท็บ "แบรนด์"
+            await expect(homePage.categoryItemList).toHaveCount(expectedCategories.length);
+
+            // เช็กชื่อ + ลำดับ + ไอคอนของแต่ละหมวดหมู่
+            for (let i = 0; i < expectedCategories.length; i++) {
+                const item = homePage.categoryItemList.nth(i);
+                await expect(item.locator('span')).toHaveText(expectedCategories[i]);
+                await expect(item.locator('[class*="CategoryMenuComponent__MenuButton-"]')).toBeVisible();
+            }
+        });
+
+        // ---------- Brand Item Navigation (data-driven) ----------
+        const brandCases = [
+            { testId: 'Home_mobile_033', name: 'Adidas' },
+            { testId: 'Home_mobile_034', name: 'Nike' },
+            { testId: 'Home_mobile_035', name: 'LYN' },
+            { testId: 'Home_mobile_036', name: 'FILA' },
+            { testId: 'Home_mobile_037', name: 'Charles&Keith' },
+            { testId: 'Home_mobile_038', name: 'Uniqlo' },
+            { testId: 'Home_mobile_039', name: 'Converse' },
+            { testId: 'Home_mobile_040', name: 'Guess' },
+            { testId: 'Home_mobile_041', name: 'CalvinKlein' },
+            { testId: 'Home_mobile_042', name: 'Starbucks' },
+        ];
+
+        for (const { testId, name } of brandCases) {
+            test(`${testId}: ตรวจสอบการนำทางไปหน้าผลการค้นหา เมื่อกดแบรนด์ "${name}"`, async ({ page }) => {
+                await homePage.clickCategoryItem(name);
+                await page.waitForURL(/\/search\?s=.+&ref_type=brands/, { timeout: 10000 });
+                await expect(page).toHaveURL(/\/search\?s=.+&ref_type=brands/);
+            });
+        }
+
+        test('Home_mobile_043: ตรวจสอบการนำทางไปหน้าแสดงแบรนด์ทั้งหมด เมื่อกดปุ่ม "ดูทั้งหมด" ในแท็บแบรนด์', async ({ page }) => {
+            await homePage.clickSeeMoreCategory();
+            await page.waitForURL(/\/category_groups\/brands\?category=brands/, { timeout: 10000 });
+            expect(page.url()).toContain('/category_groups/brands?category=brands');
+        });
+
+        // ---------- Category Group Navigation (data-driven) ----------
+        const categoryGroupCases = [
+            { testId: 'Home_mobile_044', group: 'แบรนด์แฟชั่น', category: 'Nike', displayName: 'Nike' },
+            { testId: 'Home_mobile_045', group: 'แบรนด์อื่นๆ', category: '_Gift_Brand', displayName: '_Gift_Brand' },
+        ];
+
+        for (const { testId, group, category, displayName } of categoryGroupCases) {
+            test(`${testId}: ตรวจสอบการนำทางไปหน้า "ผลการค้นหา" เมื่อกดหมวดหมู่ ${displayName} จากกลุ่ม ${group} ที่หน้า "หมวดหมู่ทั้งหมด" ที่แท็บ แบรนด์`, async ({ page }) => {
+                await homePage.gotoAllCategoriesBrandTab();
+
+                await homePage.clickCategoryFromGroup(category);
+                await page.waitForURL(/\/search/, { timeout: 10000 });
+
+                expect(page.url()).toContain('search');
+                expect(page.url()).toContain(encodeURIComponent(category));
+            });
+        }
+    });
+
+});

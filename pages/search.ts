@@ -60,7 +60,7 @@ export class SearchComponent {
         return this.resultCardShopper.nth(index).locator('[class*="FixSizeItemCard__PriceContent"]');
     }
 
-    private cardFavoriteButton(index: number): Locator {
+    public cardFavoriteButton(index: number): Locator {
         return this.resultCardShopper.nth(index).locator('[class*="FixSizeItemCard__FavouriteButton"]');
     }
 
@@ -70,7 +70,7 @@ export class SearchComponent {
         this.searchToggle = page.getByRole('button', { name: 'Toggle navigation' }).nth(1);
         this.searchInput = page.getByRole('textbox', { name: 'text' });
         this.searchButton = page.getByRole('button', { name: 'search' });
-        this.searchSuggestionContainer = page.locator('[class*="ContentSuggestBlockSearch__SuggestionContainer"]');
+        this.searchSuggestionContainer = page.locator('[class*="ContentSuggestBlockSearch__SuggestionContainer"]:visible');
         this.searchSuggestionSeeMoreButton = this.searchSuggestionContainer.getByRole('button', { name: 'ดูเพิ่มเติม' });
         this.searchSuggestionDeleteAllButton = this.searchSuggestionContainer.getByRole('button', { name: 'ลบทั้งหมด' });
         this.searchInputClearButton = page.locator('[class*="InputSearch__InputAndClearWrapper"]').getByRole('button', { name: '×' });
@@ -234,14 +234,6 @@ export class SearchComponent {
         await this.page.waitForTimeout(1000); // รอ list re-render ตามลำดับใหม่
     }
 
-    // ---------- Product Card ----------
-
-    // ---------- Favorite ----------
-    // TODO: ยืนยัน selector ปุ่มหัวใจจริง (aria-label / data-testid / class เฉพาะ)
-    private favoriteButtonInCard(index: number): Locator {
-        return this.resultCardShopper.nth(index).locator('[aria-label*="favorite" i], [class*="Favorite"]').first();
-    }
-
     // ---------- Actions ----------
     async clickResultCard(index: number = 0) {
         await this.cardLink(index).click();
@@ -262,12 +254,7 @@ export class SearchComponent {
         return (await this.getCardOriginalPrice(index).count()) > 0;
     }
 
-    // แก้จากเดิมที่ดึงทั้ง container (รวมราคาก่อน+หลังลดปนกัน) มาดึงเฉพาะราคาที่ใช้ขายจริงต่อการ์ด
     async getAllCardPrices(): Promise<number[]> {
-        // การ์ดถูกจัดแบ่งเป็นหลาย column ด้วย react-masonry-css (round-robin: การ์ด index คู่/คี่แยกคนละ column)
-        // query แบบ flat จะได้ column ซ้ายทั้งหมดก่อนแล้วค่อยตามด้วย column ขวา ทำให้ลำดับไม่ตรงกับลำดับ sort จริง
-        // ต้องดึงทีละ column แล้ว interleave กลับ
-        // TODO: ยืนยัน class ".my-masonry-grid_column" ว่าอยู่ใต้ resultCardContainer จริงหรือไม่ (ถ้า count ออกมาเป็น 0 ให้เช็คจาก DevTools อีกที)
         const columns = this.resultCardContainer.locator('.my-masonry-grid_column');
         const columnCount = await columns.count();
 
@@ -295,8 +282,10 @@ export class SearchComponent {
         await this.cardFavoriteButton(index).click();
     }
 
-    // ยืนยันแล้วว่า default aria-label = "Add to favorites"
-    // TODO: ยังไม่เห็นตัวอย่าง state หลังกดแล้ว (เดาว่าเปลี่ยนเป็น "Remove from favorites" ตาม a11y pattern ทั่วไป) - ลองกดจริงแล้วดู aria-label เพื่อยืนยัน
+    getCardFavoriteButton(index: number): Locator {
+        return this.cardFavoriteButton(index).locator('svg > path');
+    }
+
     async isCardFavorited(index: number) {
         const label = await this.cardFavoriteButton(index).getAttribute('aria-label');
         return label === 'Remove from favorites';

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { NavbarFooter } from '../../pages/NavbarFooter';
 
-test.describe('Menu', () => {
+test.describe('Overlay', () => {
     let navbar: NavbarFooter;
 
     test.beforeEach(async ({ page }) => {
