@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 import { ShopperPostsPage } from '../../pages/ShopperPosts';
 import { NavbarFooter } from '../../pages/NavbarFooter';
 
-const VALID_EMAIL = 'testpunpro01@gmail.com';
-const VALID_PASSWORD = '123456';
+const VALID_EMAIL = ''; //อย่าลืมใส่อีเมลกับรหัสนะคะ
+const VALID_PASSWORD = ''; //อย่าลืมใส่อีเมลกับรหัสนะคะ
 
 let navbar: NavbarFooter;
 let shopperPostsPage: ShopperPostsPage;

@@ -3,8 +3,8 @@ import { PromotionPage } from '../../pages/PromotionPage';
 import { NavbarFooter } from '../../pages/NavbarFooter';
 import { BrandPage } from '../../pages/BrandPage';
 
-const VALID_EMAIL = 'testpunpro01@gmail.com';
-const VALID_PASSWORD = '123456';
+const VALID_EMAIL = ''; //อย่าลืมใส่อีเมลกับรหัสนะคะ
+const VALID_PASSWORD = ''; //อย่าลืมใส่อีเมลกับรหัสนะคะ
 // test.describe('Run test', () => {
 
 let navbar: NavbarFooter;
