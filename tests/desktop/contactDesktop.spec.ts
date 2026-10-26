@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
     contactPage = new ContactPage(page);
 
     await navbar.goto();
-    await navbar.goToMenu_desktop('Link to contact');
+    await navbar.goToMenu_desktop(navbar.contactMenu_desktop);
 
     // ปิด popup ก่อนทำการ click หรือ interact กับ element อื่น ๆ
     await navbar.dismissAppBannerIfPresent();

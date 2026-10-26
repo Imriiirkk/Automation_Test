@@ -48,7 +48,7 @@ test.describe('Brand Page (Desktop)', () => {
         promotionPage = new PromotionPage(page);
         brandPage = new BrandPage(page);
         await navbar.goto();
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await page.waitForURL(/\/promotion/, { timeout: 10000 });
         await promotionPage.clickPromotionCard_title();
         await promotionPage.logoBrand_CardProPopular.click();
@@ -93,14 +93,14 @@ test.describe('Brand Page (Desktop)', () => {
     test('Brand_Desktop_005: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
         const likeBtn = brandPage.loveEvent_Btn;
         await likeBtn.click();
-        await expect(navbar.loginModalCloseButton).toBeVisible();
-        await navbar.closeLoginModal();
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible();
+        await navbar.auth.closeLoginModal();
     });
 
     // Pass
     test('Brand_Desktop_006: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
         const likeBtn = brandPage.loveEvent_Btn.first();
         const likeIcon = likeBtn.locator('i');
@@ -114,7 +114,7 @@ test.describe('Brand Page (Desktop)', () => {
     // Pass
     test('Brand_Desktop_007: ตรวจสอบการกดปุ่ม "Like" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
         const likeBtn = brandPage.loveEvent_Btn.first();
         const likeIcon = likeBtn.locator('i');
@@ -151,14 +151,14 @@ test.describe('Brand Page (Desktop)', () => {
     test('Brand_Desktop_008: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
         const bookmarkBtn = brandPage.bookmarkEvent_Btn;
         await bookmarkBtn.click();
-        await expect(navbar.loginModalCloseButton).toBeVisible();
-        await navbar.closeLoginModal();
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible();
+        await navbar.auth.closeLoginModal();
     });
 
     // test.describe.serial('Run test', () => {
     test('Brand_Desktop_009: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
         const bookmarkBtn = brandPage.bookmarkEvent_Btn.first();
         const bookmarkIcon = bookmarkBtn.locator('i');
@@ -172,7 +172,7 @@ test.describe('Brand Page (Desktop)', () => {
 
     test('Brand_Desktop_010: ตรวจสอบการกดปุ่ม "Bookmark" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
         const bookmarkBtn = brandPage.bookmarkEvent_Btn.first();
         const bookmarkIcon = bookmarkBtn.locator('i');

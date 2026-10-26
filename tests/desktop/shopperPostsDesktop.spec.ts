@@ -12,7 +12,7 @@ test.beforeEach(async ({ page }) => {
     navbar = new NavbarFooter(page);
     shopperPostsPage = new ShopperPostsPage(page);
     await navbar.goto();
-    await navbar.goToMenu_desktop('Link to shopper_posts');
+    await navbar.goToMenu_desktop(navbar.shopperPostsMenu_desktop);
 
     // ปิด popup ก่อนทำการ click หรือ interact กับ element อื่นๆ
     await navbar.dismissAppBannerIfPresent();
@@ -212,14 +212,14 @@ test.describe('Shopper Posts Page (Desktop)', () => {
         test('ShopperPosts_Desktop_019: ตรวจสอบการกดปุ่ม "Like" บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น โดยที่ยังไม่เข้าสู่ระบบ', async () => {
             await shopperPostsPage.clickFilter_Item();
             await shopperPostsPage.clickLoveItemCard();
-            await expect(navbar.loginModalCloseButton).toBeVisible();
-            await navbar.closeLoginModal();
+            await expect(navbar.auth.loginModalCloseButton).toBeVisible();
+            await navbar.auth.closeLoginModal();
         });
 
         // Pass
         test('ShopperPosts_Desktop_020: ตรวจสอบการกดปุ่ม "Like" บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
             await navbar.openLoginOrSignup_desktop();
-            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+            await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
             await shopperPostsPage.clickLoveItemCard();
             await expect(shopperPostsPage.love_ItemCard.first()).toHaveAttribute('aria-label', 'Remove from favorites');
         });
@@ -227,7 +227,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
         // Pass
         test('ShopperPosts_Desktop_021: ตรวจสอบการกดปุ่ม "Like" อีกครั้ง บนการ์ดสินค้ารับหิ้ว แบบรายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
             await navbar.openLoginOrSignup_desktop();
-            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+            await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
             await shopperPostsPage.clickLoveItemCard();
             await expect(shopperPostsPage.love_ItemCard.first()).toHaveAttribute('aria-label', 'Remove from favorites');
             await shopperPostsPage.clickLoveItemCard();
@@ -323,15 +323,15 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     test('ShopperPosts_Desktop_030: ตรวจสอบการกดปุ่ม "Like" ในหน้า รายละเอียดสินค้ารายชิ้น โดยที่ยังไม่เข้าสู่ระบบ', async () => {
         await openItemDetail();
         await shopperPostsPage.clickLoveItemDetail();
-        await expect(navbar.loginModalCloseButton).toBeVisible();
-        await navbar.closeLoginModal();
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible();
+        await navbar.auth.closeLoginModal();
     });
 
 
     //Fail
     test('ShopperPosts_Desktop_031: ตรวจสอบการกดปุ่ม "Like" ในหน้า รายละเอียดสินค้ารายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await openItemDetail();
         const fill = await shopperPostsPage.loveBtn_ItemDetail.locator('svg path').getAttribute('fill');
 
@@ -345,7 +345,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     // Pass
     test('ShopperPosts_Desktop_032: ตรวจสอบการกดปุ่ม "Like" อีกครั้ง ในหน้า รายละเอียดสินค้ารายชิ้น เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await openItemDetail();
         const fill = await shopperPostsPage.loveBtn_ItemDetail.locator('svg path').getAttribute('fill');
 
@@ -416,14 +416,14 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     test('ShopperPosts_Desktop_038: ตรวจสอบการกดปุ่ม "Like" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน โดยที่ยังไม่เข้าสู่ระบบ', async () => {
         await shopperPostsPage.clickItemCard_titleByName('หมวก1');
         await shopperPostsPage.loveBtn_ItemSameEvent.click();
-        await expect(navbar.loginModalCloseButton).toBeVisible();
-        await navbar.closeLoginModal();
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible();
+        await navbar.auth.closeLoginModal();
     });
 
     // Pass
     test('ShopperPosts_Desktop_039: ตรวจสอบการกดปุ่ม "Like" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await shopperPostsPage.clickItemCard_titleByName('หมวก1');
         const ariaLabel = await shopperPostsPage.loveBtn_ItemSameEvent.getAttribute('aria-label');
         if (ariaLabel === 'Remove from favorites') {
@@ -436,7 +436,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     // Pass
     test('ShopperPosts_Desktop_040: ตรวจสอบการกดปุ่ม "Like" บนการ์ดสินค้าอื่นในอีเวนต์เดียวกัน อีกครั้ง เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await shopperPostsPage.clickItemCard_titleByName('หมวก1');
         const ariaLabel = await shopperPostsPage.loveBtn_ItemSameEvent.getAttribute('aria-label');
         if (ariaLabel === 'Add to favorites') {
@@ -515,14 +515,14 @@ test.describe('Shopper Posts Page (Desktop)', () => {
         await shopperPostsPage.clickFilter_Event();
         await shopperPostsPage.clickEventCard_titleByName('ทดสอบการสร้างโพสรับหิ้ว');
         await shopperPostsPage.loveBtn_EventDetail.click();
-        await expect(navbar.loginModalCloseButton).toBeVisible();
-        await navbar.closeLoginModal();
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible();
+        await navbar.auth.closeLoginModal();
     });
 
     // Pass
     test('ShopperPosts_Desktop_046: ตรวจสอบการกดปุ่ม "Like" ในหน้า รายละเอียดรายอีเวนต์ เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await shopperPostsPage.clickFilter_Event();
         await shopperPostsPage.clickEventCard_titleByName('ทดสอบการสร้างโพสรับหิ้ว');
         const fill = await shopperPostsPage.loveBtn_EventDetail.locator('svg path').getAttribute('fill');
@@ -538,7 +538,7 @@ test.describe('Shopper Posts Page (Desktop)', () => {
     // Pass
     test('ShopperPosts_Desktop_047: ตรวจสอบการกดปุ่ม "Like" อีกครั้ง ในหน้า รายละเอียดรายอีเวนต์ เมื่อเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await shopperPostsPage.clickFilter_Event();
         await shopperPostsPage.clickEventCard_titleByName('ทดสอบการสร้างโพสรับหิ้ว');
         const fill = await shopperPostsPage.loveBtn_EventDetail.locator('svg path').getAttribute('fill');

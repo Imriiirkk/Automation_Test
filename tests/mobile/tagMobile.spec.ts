@@ -120,14 +120,14 @@ test.describe('Tag Page (Mobile)', () => {
     test('Tag_Mobile_007: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
         const likeBtn = tagPage.lovePromotion_Btn;
         await likeBtn.click();
-        await expect(navbar.loginModalCloseButton).toBeVisible();
-        await navbar.closeLoginModal();
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible();
+        await navbar.auth.closeLoginModal();
     });
 
     // Pass
     test('Tag_Mobile_008: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_mobile();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
         const likeBtn = tagPage.lovePromotion_Btn;
         const likeIcon = likeBtn.locator('i');
@@ -144,7 +144,7 @@ test.describe('Tag Page (Mobile)', () => {
     // Pass
     test('Tag_Mobile_009: ตรวจสอบการกดปุ่ม "Like" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_mobile();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
         const likeBtn = tagPage.lovePromotion_Btn;
         const likeIcon = likeBtn.locator('i');
@@ -171,14 +171,14 @@ test.describe('Tag Page (Mobile)', () => {
     test('Tag_Mobile_010: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
         const bookmarkBtn = tagPage.bookmarkPromotion_Btn;
         await bookmarkBtn.click();
-        await expect(navbar.loginModalCloseButton).toBeVisible();
-        await navbar.closeLoginModal();
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible();
+        await navbar.auth.closeLoginModal();
     });
 
     // Pass
     test('Tag_Mobile_011: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_mobile();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
         const bookmarkBtn = tagPage.bookmarkPromotion_Btn;
         const bookmarkIcon = bookmarkBtn.locator('i');
@@ -195,7 +195,7 @@ test.describe('Tag Page (Mobile)', () => {
     // Pass
     test('Tag_Mobile_012: ตรวจสอบการกดปุ่ม "Bookmark" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async () => {
         await navbar.openLoginOrSignup_mobile();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
         const bookmarkBtn = tagPage.bookmarkPromotion_Btn;
         const bookmarkIcon = bookmarkBtn.locator('i');

@@ -15,7 +15,7 @@ let commentSection: CommentSection;
 // เข้าสู่ระบบ -> ไปหน้าโปรโมชัน -> เปิดรายละเอียดโปรโมชันแรก
 async function loginAndOpenPromotionDetail() {
     await navbar.openLoginOrSignup_mobile();
-    await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+    await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
     await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
 }
 
@@ -203,15 +203,15 @@ test.describe('Promotion Page (Mobile)', () => {
         // await navbar.dismissAppBannerIfPresent();
         await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
         await promotionPage.clickLoveButton();
-        await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-        await navbar.closeLoginModal()
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+        await navbar.auth.closeLoginModal();
     });
 
     // Pass
     test('Promotion_Mobile_021: ตรวจสอบการกด "Like" บนการ์ดโปรโมชัน กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         // await navbar.dismissAppBannerIfPresent();
         await navbar.openLoginOrSignup_mobile();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
         const fill = await promotionPage.loveButtonIcon.getAttribute('fill');
 
@@ -225,7 +225,7 @@ test.describe('Promotion Page (Mobile)', () => {
     // Pass
     test('Promotion_Mobile_022: ตรวจสอบการกด "Like" ซ้ำบนการ์ดโปรโมชัน เมื่อกดไปแล้ว (กลับไปเป็น Default) กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_mobile();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
         const fill = await promotionPage.loveButtonIcon.getAttribute('fill');
 
@@ -366,14 +366,14 @@ test.describe('Promotion Page (Mobile)', () => {
         await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
         await promotionPage.clickPromotionCard_title();
         await promotionPage.bookMarkButton_mobile.click();
-        await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-        await navbar.closeLoginModal()
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+        await navbar.auth.closeLoginModal();
     });
 
     // Pass
     test('Promotion_Mobile_034: ตรวจสอบการกด "Bookmark" บนหน้ารายละเอียดโปรโมชัน กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_mobile();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
         await promotionPage.clickPromotionCard_title();
         const bookmarkIcon = promotionPage.bookMarkButton_mobile.locator('i.fa-bookmark');
@@ -392,7 +392,7 @@ test.describe('Promotion Page (Mobile)', () => {
     // Pass
     test('Promotion_Mobile_035: ตรวจสอบการกด "Bookmark" ซ้ำบนหน้ารายละเอียดโปรโมชัน เมื่อกดไปแล้ว (กลับไปเป็น Default) กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_mobile();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
         await promotionPage.clickPromotionCard_title();
 
@@ -459,8 +459,8 @@ test.describe('Promotion Page (Mobile)', () => {
         await navbar.goToMenu_mobile(navbar.promotionMenu_mobile);
         await promotionPage.clickPromotionCard_title();
         await promotionPage.blockSentComment.click();
-        await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-        await navbar.closeLoginModal()
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+        await navbar.auth.closeLoginModal();
     });
 
     // Pass
@@ -470,8 +470,8 @@ test.describe('Promotion Page (Mobile)', () => {
         await page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
         await commentSection.replyComment_bth.click();
         await commentSection.textField_ReplyComment_promotion.first().click();
-        await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-        await navbar.closeLoginModal()
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+        await navbar.auth.closeLoginModal();
     });
 
     test.describe('Run test', () => {

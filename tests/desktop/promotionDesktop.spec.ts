@@ -19,7 +19,7 @@ test.beforeEach(async ({ page }) => {
     authorPage = new AuthorPage(page);
     commentSection = new CommentSection(page);
     await navbar.goto();
-    await navbar.goToMenu_desktop('Link to promotion');
+    await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
 
     // ปิด popup ก่อนทำการ click หรือ interact กับ element อื่นๆ
     await navbar.dismissAppBannerIfPresent();
@@ -32,14 +32,14 @@ test.describe('Promotion Page (Desktop)', () => {
     // ---------- Promotion (Main) ---------- 
     // Pass
     test('Promotion_Desktop_001: ตรวจสอบการกดเข้าหน้า "โปรโมชัน" ได้', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await page.waitForURL(/\/promotion/, { timeout: 10000 });
         await expect(promotionPage.promotion_heading).toBeVisible();
     });
 
     // Pass
     test('Promotion_Desktop_002: ตรวจสอบการแสดงรายละเอียดหน้า "โปรโมชัน"', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await expect(promotionPage.highlightedBanner).toBeVisible();
         await expect(promotionPage.blockMenuCategories).toBeVisible();
         await expect(promotionPage.promotionCard).toBeVisible();
@@ -48,13 +48,13 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // Pass
     test('Promotion_Desktop_003: ตรวจสอบการแสดงโปรโมชันที่ยังไม่หมดอายุบน Banner', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await expect(promotionPage.highlightedBanner).toBeVisible();
     });
 
     // Pass
     test('Promotion_Desktop_004: ตรวจสอบการเลื่อน Banner เมื่อกดปุ่ม Indicator', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await expect(promotionPage.highlightedBanner.first()).toBeVisible();
         await expect(promotionPage.bannerPagination).toBeVisible();
 
@@ -86,7 +86,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // Pass
     test('Promotion_Desktop_005: ตรวจสอบการนำทางไปหน้า "รายละเอียดโปรโมชัน" เมื่อกด Banner', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.highlightedBanner.click();
         await expect(page).toHaveURL(/\/p\/[a-zA-Z0-9-_]+/); // ตรวจสอบว่า URL มีรูปแบบ /p/ ตามด้วยชื่อโปรโมชัน
         await expect(promotionPage.breadcrumb).toBeVisible();
@@ -107,14 +107,13 @@ test.describe('Promotion Page (Desktop)', () => {
     // เช็คจำนวนการ์ดตั้งต้นที่มี 12 การ์ดก่อนกด "ดูเพิ่มเติม"
     for (const { id, filterName, label, urlPattern } of filterCases) {
         test(`${id}: กด Filter โปรโมชัน "${label}" ได้`, async ({ page }) => {
-            await navbar.goToMenu_desktop('Link to promotion');
+            await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
             await promotionPage.clickFilter(filterName);
             await expect(page).toHaveURL(urlPattern);
             const cardCount = await promotionPage.promotionCardEach.count();
             await expect(promotionPage.promotionCard).toBeVisible();
             expect(cardCount).toBeLessThanOrEqual(12);
             expect(cardCount).toBeGreaterThan(0);
-            // data-active attribute ของ filter ที่ถูกเลือกจะเป็น true
         });
     }
 
@@ -139,7 +138,7 @@ test.describe('Promotion Page (Desktop)', () => {
     // ---------- Promotion Card ---------- 
     // Pass
     test('Promotion_Desktop_013: ตรวจสอบการแสดงรายละเอียดบน "การ์ดโปรโมชัน"', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await expect(promotionPage.promotionCard).toBeVisible();
         await expect(promotionPage.promotionCard_image.first()).toBeVisible();
         await expect(promotionPage.promotionCard_title.first()).toBeVisible();
@@ -151,7 +150,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // Pass
     test('Promotion_Desktop_014: ตรวจสอบการกดรูปภาพบนการ์ด "โปรโมชัน" เพื่อเข้าดูรายละเอียดได้', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_image();
         await expect(promotionPage.breadcrumb).toBeVisible();
         await expect(promotionPage.blockContent).toBeVisible();
@@ -160,7 +159,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // pass
     test('Promotion_Desktop_015: ตรวจสอบการกดชื่อโปรโมชันบนการ์ด "โปรโมชัน" เพื่อเข้าดูรายละเอียดได้', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         await expect(promotionPage.breadcrumb).toBeVisible();
         await expect(promotionPage.blockContent).toBeVisible();
@@ -169,7 +168,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // pass
     test('Promotion_Desktop_016: ตรวจสอบการแสดงข้อความ "ยังไม่มีกำหนดสิ้นสุด" เมื่อโปรโมชันไม่กำหนดวันสิ้นสุด', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
 
         const card = promotionPage.promotionCardEach.filter({
             hasText: 'Subway โปรสุดคุ้ม ซื้อ 1 ชุดแถม 1 ชิ้น เริ่มต้น 203.-'
@@ -181,7 +180,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // pass
     test('Promotion_Desktop_017: ตรวจสอบการแสดงข้อความ "สิ้นสุดโปรใน x วัน" เมื่อโปรโมชันนั้นยังอยู่ในช่วงของโปรโมชันอยู่', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
 
         const card = promotionPage.promotionCardEach.filter({
             hasText: 'Test Create Post ;)'
@@ -193,7 +192,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // pass
     test('Promotion_Desktop_018: ตรวจสอบการแสดงข้อความ "หมดอายุ" เมื่อโปรโมชันสิ้นสุดแล้ว', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
 
         const card = promotionPage.promotionCardEach.filter({
             hasText: 'test หมดเวลา title'
@@ -205,7 +204,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // pass
     test('Promotion_Desktop_019: ตรวจสอบการแสดง วันที่เริ่มต้น และ สิ้นสุด เมื่อโปรโมชันมีการกำหนดวันที่', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
 
         const card = promotionPage.promotionCardEach.filter({
             hasText: 'Test Create Post ;)'
@@ -225,17 +224,17 @@ test.describe('Promotion Page (Desktop)', () => {
     // ---------- Love Button ----------
     // Pass
     test('Promotion_Desktop_020: ตรวจสอบการกด "Love" บนการ์ดโปรโมชัน กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickLoveButton();
-        await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-        await navbar.closeLoginModal()
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+        await navbar.auth.closeLoginModal()
     });
 
     // Pass
     test('Promotion_Desktop_021: ตรวจสอบการกด "Love" บนการ์ดโปรโมชัน กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         const fill = await promotionPage.loveButtonIcon.getAttribute('fill');
 
         if (fill === '#BF202F') {
@@ -249,8 +248,8 @@ test.describe('Promotion Page (Desktop)', () => {
     // Pass
     test('Promotion_Desktop_022: ตรวจสอบการกด "Love" ซ้ำบนการ์ดโปรโมชัน เมื่อกดไปแล้ว (กลับไปเป็น Default) กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         const fill = await promotionPage.loveButtonIcon.getAttribute('fill');
 
         if (fill === '#BF202F') {
@@ -265,7 +264,7 @@ test.describe('Promotion Page (Desktop)', () => {
     // ---------- ปุ่ม ดูเพิ่มเติม ---------- 
     // Pass
     test('Promotion_Desktop_023: ตรวจสอบการโหลดการ์ดเพิ่มเมื่อกดปุ่ม "ดูเพิ่มเติม"', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         const cardBefore = await promotionPage.promotionCard.count()
         await promotionPage.clickLoadMore();
         const cardAfter = await promotionPage.promotionCard.count()
@@ -281,7 +280,7 @@ test.describe('Promotion Page (Desktop)', () => {
     // ---------- ปุ่ม ^ ---------- 
     // Pass
     test('Promotion_Desktop_025: ตรวจสอบการแสดงปุ่ม "^" เมื่อ Scroll ลง บนหน้าโปรโมชัน', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         // await expect(navbar.scrollToTopButton).toBeHidden();
         await page.evaluate(() => window.scrollBy(0, 1000));
         await expect(navbar.scrollToTopButton).toBeVisible();
@@ -289,7 +288,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // Pass
     test('Promotion_Desktop_026: ตรวจสอบการเลื่อนหน้าจอกลับไปด้านบน เมื่อกดปุ่ม "^" บนหน้าโปรโมชัน', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await page.evaluate(() => window.scrollBy(0, 1000));
         await expect(navbar.scrollToTopButton).toBeVisible();
         await navbar.scrollToTopButton.click();
@@ -301,7 +300,7 @@ test.describe('Promotion Page (Desktop)', () => {
     // ---------- Promotion Detail ----------
     // Pass
     test('Promotion_Desktop_027: ตรวจสอบการแสดงรายละเอียดบน รายละเอียดโปรโมชัน', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         const tagCount = await promotionPage.tagItem.count();
         await expect(promotionPage.author_image).toBeVisible();
@@ -326,18 +325,18 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // Pass
     test('Promotion_Desktop_028: ตรวจสอบการกด "Love" บนหน้ารายละเอียดโปรโมชัน กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         await promotionPage.clickLoveDetailButton();
-        await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-        await navbar.closeLoginModal()
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+        await navbar.auth.closeLoginModal()
     });
 
     // Pass
     test('Promotion_Desktop_029: ตรวจสอบการกด "Love" บนหน้ารายละเอียดโปรโมชัน กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         const fill = await promotionPage.loveDetailBtnIcon.getAttribute('fill');
 
@@ -352,8 +351,8 @@ test.describe('Promotion Page (Desktop)', () => {
     // Pass
     test('Promotion_Desktop_030: ตรวจสอบการกด "Love" ซ้ำบนหน้ารายละเอียดโปรโมชัน เมื่อกดไปแล้ว (กลับไปเป็น Default) กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         const fill = await promotionPage.loveDetailBtnIcon.getAttribute('fill');
 
@@ -370,7 +369,7 @@ test.describe('Promotion Page (Desktop)', () => {
     // ---------- Share Button (Promotion Detail) ---------- 
     // Pass
     test('Promotion_Desktop_031: ตรวจสอบการกดปุ่ม "Share" บนหน้ารายละเอียดโปรโมชัน (ด้านบน)', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         await promotionPage.clickShareTop_Button();
         await expect(promotionPage.shareOnFacebook.first()).toBeVisible();
@@ -382,7 +381,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // Pass
     test('Promotion_Desktop_032: ตรวจสอบการกด "Icon Facebook" เพื่อแชร์โปรโมชันนั้น ไปที่ facebook.com บนหน้ารายละเอียดโปรโมชัน (ด้านบน)', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         const popup = await promotionPage.clickShareOnFacebook_top(page);
         await popup.waitForLoadState();
@@ -392,7 +391,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // Pass
     test('Promotion_Desktop_033: ตรวจสอบการกด "Icon Line" เพื่อแชร์โปรโมชันนั้น ไปที่ line.me บนหน้ารายละเอียดโปรโมชัน (ด้านบน)', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         const popup = await promotionPage.clickShareOnLine_top(page);
         await popup.waitForLoadState();
@@ -402,7 +401,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // Pass
     test('Promotion_Desktop_034: ตรวจสอบการกด "Icon X" เพื่อแชร์โปรโมชันนั้น ไปที่ x.com บนหน้ารายละเอียดโปรโมชัน (ด้านบน)', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         const popup = await promotionPage.clickShareOnX_top(page);
         await popup.waitForLoadState();
@@ -428,7 +427,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // Pass
     test('Promotion_Desktop_036: ตรวจสอบการกดปุ่ม "Share" บนหน้ารายละเอียดโปรโมชัน (ด้านหลัง)', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         await promotionPage.clickShareFooter_Button();
         await expect(promotionPage.shareOnFacebook.nth(1)).toBeVisible();
@@ -441,7 +440,7 @@ test.describe('Promotion Page (Desktop)', () => {
     // ---------- Share Button ---------- 
     // Pass
     test('Promotion_Desktop_037: ตรวจสอบการกด "Icon Facebook" เพื่อแชร์โปรโมชันนั้น ไปที่ facebook.com บนหน้ารายละเอียดโปรโมชัน (ด้านหลัง)', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         const popup = await promotionPage.clickShareOnFacebook_footer(page);
         await popup.waitForLoadState();
@@ -451,7 +450,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // Pass
     test('Promotion_Desktop_038: ตรวจสอบการกด "Icon Line" เพื่อแชร์โปรโมชันนั้น ไปที่ line.me บนหน้ารายละเอียดโปรโมชัน (ด้านหลัง)', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         const popup = await promotionPage.clickShareOnLine_footer(page);
         await popup.waitForLoadState();
@@ -461,7 +460,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // Pass
     test('Promotion_Desktop_039: ตรวจสอบการกด "Icon X" เพื่อแชร์โปรโมชันนั้น ไปที่ x.com บนหน้ารายละเอียดโปรโมชัน (ด้านหลัง)', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         const popup = await promotionPage.clickShareOnX_footer(page);
         await popup.waitForLoadState();
@@ -480,18 +479,18 @@ test.describe('Promotion Page (Desktop)', () => {
     // ---------- Bookmark Button (Promotion Detail) ----------
     // Pass
     test('Promotion_Desktop_041: ตรวจสอบการกด "Bookmark" บนหน้ารายละเอียดโปรโมชัน กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         await promotionPage.clickBookMarkButton();
-        await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-        await navbar.closeLoginModal()
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+        await navbar.auth.closeLoginModal()
     });
 
     // Pass
     test('Promotion_Desktop_042: ตรวจสอบการกด "Bookmark" บนหน้ารายละเอียดโปรโมชัน กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         const bookmarkIcon = promotionPage.bookMarkButton.locator('i.fa-bookmark');
         const bookmarkSvg = promotionPage.bookMarkButton.locator('svg');
@@ -509,8 +508,8 @@ test.describe('Promotion Page (Desktop)', () => {
 
     test('Promotion_Desktop_043: ตรวจสอบการกด "Bookmark" ซ้ำบนหน้ารายละเอียดโปรโมชัน เมื่อกดไปแล้ว (กลับไปเป็น Default) กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         const bookmarkIcon = promotionPage.bookMarkButton.locator('i.fa-bookmark');
         const bookmarkSvg = promotionPage.bookMarkButton.locator('svg');
@@ -567,14 +566,14 @@ test.describe('Promotion Page (Desktop)', () => {
     test('Promotion_Desktop_046: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ด "โปรโมชันมาแรง" กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
         await promotionPage.clickPromotionCard_title();
         await promotionPage.clickBookmark_PromotionPopular();
-        await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-        await navbar.closeLoginModal()
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+        await navbar.auth.closeLoginModal()
     });
 
     // Pass
     test('Promotion_Desktop_047: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ด "โปรโมชันมาแรง" กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await promotionPage.clickPromotionCard_title();
         const bookmarkIcon = promotionPage.bookmarkBtn_CardProPopular.locator('i');
 
@@ -591,8 +590,8 @@ test.describe('Promotion Page (Desktop)', () => {
     // Pass
     test('Promotion_Desktop_048: ตรวจสอบการกดปุ่ม "Bookmark" ซ้ำบนการ์ด "โปรโมชันมาแรง" กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
 
         const bookmarkIcon = promotionPage.bookmarkBtn_CardProPopular.locator('i');
@@ -614,14 +613,14 @@ test.describe('Promotion Page (Desktop)', () => {
     test('Promotion_Desktop_049: ตรวจสอบการกดปุ่ม "Love" บนการ์ด "โปรโมชันมาแรง" กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
         await promotionPage.clickPromotionCard_title();
         await promotionPage.clickLove_PromotionPopular();
-        await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-        await navbar.closeLoginModal()
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+        await navbar.auth.closeLoginModal()
     });
 
     // Pass
     test('Promotion_Desktop_050: ตรวจสอบการกดปุ่ม "Love" บนการ์ด "โปรโมชันมาแรง" กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         await promotionPage.clickPromotionCard_title();
 
         const loveIcon = promotionPage.loveBtn_CardProPopular.locator('i');
@@ -635,8 +634,8 @@ test.describe('Promotion Page (Desktop)', () => {
     // Pass
     test('Promotion_Desktop_051: ตรวจสอบการกดปุ่ม "Love" ซ้ำบนการ์ด "โปรโมชันมาแรง" กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
 
         const loveIcon = promotionPage.loveBtn_CardProPopular.locator('i');
@@ -732,31 +731,31 @@ test.describe('Promotion Page (Desktop)', () => {
     // ----- ยังไม่ login -----
     // Pass
     test('Promotion_Desktop_059: ตรวจสอบการแสดงความคิดเห็น กรณีที่ยังไม่เข้าสู่ระบบ', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await promotionPage.clickPromotionCard_title();
         await page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
         await promotionPage.blockSentComment.click();
-        await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-        await navbar.closeLoginModal()
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+        await navbar.auth.closeLoginModal()
     });
 
     // Pass
     test('Promotion_Desktop_060: ตรวจสอบการตอบกลับความคิดเห็น กรณีที่ยังไม่เข้าสู่ระบบ', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await page.locator('a[href="/p/test-5000"]').first().click();
         await page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
         await commentSection.replyComment_bth.click();
         await commentSection.textField_ReplyComment_promotion.first().click();
-        await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-        await navbar.closeLoginModal()
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+        await navbar.auth.closeLoginModal()
     });
 
     // ----- login แล้ว -----
     // Pass
     test('Promotion_Desktop_061: ตรวจสอบการแสดงความคิดเห็น กรณีที่เข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await page.locator('a[href="/p/test-5000"]').first().click();
         await page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
         const loggedInName = (await page.locator('a.NavbarTop__BlockUsername-sc-f8cfc4bb-5').innerText()).trim();
@@ -774,8 +773,8 @@ test.describe('Promotion Page (Desktop)', () => {
     // Pass
     test('Promotion_Desktop_062: ตรวจสอบการตอบกลับความคิดเห็นสำเร็จ กรณีที่เข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await page.locator('a[href="/p/test-5000"]').first().click();
         await page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
         await expect(commentSection.blockComment).toBeVisible();
@@ -791,7 +790,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // Pass
     test('Promotion_Desktop_063: ตรวจสอบการแสดงการตอบกลับความคิดเห็นทั้งหมด เมื่อกดปุ่ม "ตอบกลับ"', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await page.locator('a[href="/p/test-5000"]').first().click();
         await page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
         await commentSection.replyComment_bth.click();
@@ -800,7 +799,7 @@ test.describe('Promotion Page (Desktop)', () => {
 
     // Pass
     test('Promotion_Desktop_064: ตรวจสอบการซ่อนการตอบกลับความคิดเห็น เมื่อกดปุ่ม "ซ่อน"', async ({ page }) => {
-        await navbar.goToMenu_desktop('Link to promotion');
+        await navbar.goToMenu_desktop(navbar.promotionMenu_desktop);
         await page.locator('a[href="/p/test-5000"]').first().click();
         await page.waitForURL(/\/p\/[a-zA-Z0-9-_]+/, { timeout: 10000 });
         await commentSection.replyComment_bth.click();

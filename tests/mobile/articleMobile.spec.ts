@@ -21,7 +21,7 @@ async function goToArticlePage() {
 
 async function loginAndGoToArticle(page: Page) {
     await navbar.openLoginOrSignup_mobile();
-    await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+    await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
     await expect(page.locator('.swal2-container')).toBeHidden({ timeout: 10000 });
     await goToArticlePage();
 }
@@ -110,8 +110,8 @@ test.describe('Article Page (Mobile)', () => {
     test.describe('Run test', () => {
         test('Article_Mobile_006: ตรวจสอบการกด "Bookmark" ที่การ์ดบทความ บน Banner กรณียังไม่เข้าสู่ระบบ', async () => {
             await articlePage.clickBookMarkBanner();
-            await expect(navbar.loginModalCloseButton).toBeVisible();
-            await navbar.closeLoginModal();
+            await expect(navbar.auth.loginModalCloseButton).toBeVisible();
+            await navbar.auth.closeLoginModal();;
         });
 
         test('Article_Mobile_007: ตรวจสอบการกด "Bookmark" ที่การ์ดบทความ บน Banner กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
@@ -226,8 +226,8 @@ test.describe('Article Page (Mobile)', () => {
         // Pass
         test('Article_Mobile_021: ตรวจสอบการคลิกปุ่ม "Bookmark" บน การ์ดบทความ ยังไม่เข้าสู่ระบบ', async () => {
             await articlePage.clickBookmarkCard();
-            await expect(navbar.loginModalCloseButton).toBeVisible();
-            await navbar.closeLoginModal();
+            await expect(navbar.auth.loginModalCloseButton).toBeVisible();
+            await navbar.auth.closeLoginModal();;
         });
 
         // Pass
@@ -301,8 +301,8 @@ test.describe('Article Page (Mobile)', () => {
         test('Article_Mobile_028: ตรวจสอบการแสดงความคิดเห็น ในกรณีที่ยังไม่เข้าสู่ระบบ', async ({ page }) => {
             await articlePage.clickArticleCard_title();
             await commentSection.blockSentComment.click();
-            await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-            await navbar.closeLoginModal()
+            await expect(navbar.auth.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+            await navbar.auth.closeLoginModal();
         });
 
         // Pass
@@ -311,15 +311,15 @@ test.describe('Article Page (Mobile)', () => {
             // await articlePage.clickArticleCard_title();
             await commentSection.replyComment_bth.click();
             await commentSection.textField_ReplyComment.click();
-            await expect(navbar.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
-            await navbar.closeLoginModal()
+            await expect(navbar.auth.loginModalCloseButton).toBeVisible(); // ตรวจสอบว่ามี modal login ปรากฏขึ้นมา
+            await navbar.auth.closeLoginModal();
         });
 
         // ----- login แล้ว -----
         // Pass
         test('Article_Mobile_030: ตรวจสอบการแสดงความคิดเห็น ในกรณีที่เข้าสู่ระบบแล้ว', async ({ page }) => {
             await navbar.openLoginOrSignup_mobile();
-            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+            await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
             await page.locator('a[href="/p/testar-001"]').first().click();
             await expect(commentSection.blockComment).toBeVisible();
             const countBefore = await commentSection.existingComment.count();
@@ -335,7 +335,7 @@ test.describe('Article Page (Mobile)', () => {
         // Pass
         test('Article_Mobile_031: ตรวจสอบการตอบกลับความคิดเห็น ในกรณีที่เข้าสู่ระบบแล้ว', async ({ page }) => {
             await navbar.openLoginOrSignup_mobile();
-            await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+            await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
             await page.locator('a[href="/p/testar-001"]').first().click();
             await expect(commentSection.blockComment).toBeVisible();
             await commentSection.sentReplyComment();
@@ -368,8 +368,8 @@ test.describe('Article Page (Mobile)', () => {
         test('Article_Mobile_034: ตรวจสอบการคลิกปุ่ม "Bookmark" บนหน้ารายละเอียดบทความ ยังไม่เข้าสู่ระบบ', async () => {
             await articlePage.clickArticleCard_title();
             await articlePage.bookMarkButton_mobile.click();
-            await expect(navbar.loginModalCloseButton).toBeVisible();
-            await navbar.closeLoginModal();
+            await expect(navbar.auth.loginModalCloseButton).toBeVisible();
+            await navbar.auth.closeLoginModal();;
         });
 
         // Pass

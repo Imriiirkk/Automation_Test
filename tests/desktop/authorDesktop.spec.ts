@@ -31,7 +31,7 @@ test.describe('Author Page (Desktop)', () => {
         articlePage = new ArticlePage(page);
 
         await navbar.goto();
-        await navbar.goToMenu_desktop('Link to article');
+        await navbar.goToMenu_desktop(navbar.articleMenu_desktop);
         await page.waitForURL(/\/article/, { timeout: 10000 });
         await articlePage.clickArticleCard_title();
         await articlePage.clickAuthorLink();
@@ -106,14 +106,14 @@ test.describe('Author Page (Desktop)', () => {
     test('Author_Desktop_007: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
         await expect(authorPage.loveArticle_Btn).toBeVisible();
         await authorPage.loveArticle_Btn.click();
-        await expect(navbar.loginModalCloseButton).toBeVisible();
-        await navbar.closeLoginModal();
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible();
+        await navbar.auth.closeLoginModal();
     });
 
     // Pass
     test('Author_Desktop_008: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
         const loveBtn = authorPage.lovePromotion_Btn;
         const iconLove = loveBtn.locator('i');
@@ -138,7 +138,7 @@ test.describe('Author Page (Desktop)', () => {
     // Pass
     test('Author_Desktop_009: ตรวจสอบการกดปุ่ม "Like" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
         const loveBtn = authorPage.lovePromotion_Btn;
         const iconLove = loveBtn.locator('i');
@@ -174,14 +174,14 @@ test.describe('Author Page (Desktop)', () => {
     test('Author_Desktop_010: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
         await expect(authorPage.bookmarkArticle_Btn).toBeVisible();
         await authorPage.bookmarkArticle_Btn.click();
-        await expect(navbar.loginModalCloseButton).toBeVisible();
-        await navbar.closeLoginModal();
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible();
+        await navbar.auth.closeLoginModal();
     });
 
     // Pass
     test('Author_Desktop_011: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         const bookmarkBtn = authorPage.bookmarkPromotion_Btn;
         const iconBookmark = bookmarkBtn.locator('i');
 
@@ -195,7 +195,7 @@ test.describe('Author Page (Desktop)', () => {
     // Pass
     test('Author_Desktop_012: ตรวจสอบการกดปุ่ม "Bookmark" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_desktop();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         const bookmarkBtn = authorPage.bookmarkPromotion_Btn;
         const iconBookmark = bookmarkBtn.locator('i');
 

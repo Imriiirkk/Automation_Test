@@ -107,14 +107,14 @@ test.describe('Author Page (Mobile)', () => {
     test('Author_Mobile_007: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
         await expect(authorPage.loveArticle_Btn).toBeVisible();
         await authorPage.loveArticle_Btn.click();
-        await expect(navbar.loginModalCloseButton).toBeVisible();
-        await navbar.closeLoginModal();
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible();
+        await navbar.auth.closeLoginModal();
     });
 
     // Pass
     test('Author_Mobile_008: ตรวจสอบการกดปุ่ม "Like" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_mobile();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
         const loveBtn = authorPage.lovePromotion_Btn;
         const iconLove = loveBtn.locator('i');
@@ -139,7 +139,7 @@ test.describe('Author Page (Mobile)', () => {
     // Pass
     test('Author_Mobile_009: ตรวจสอบการกดปุ่ม "Like" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_mobile();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
 
         const loveBtn = authorPage.lovePromotion_Btn;
         const iconLove = loveBtn.locator('i');
@@ -175,14 +175,14 @@ test.describe('Author Page (Mobile)', () => {
     test('Author_Mobile_010: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณียังไม่เข้าสู่ระบบ', async ({ page }) => {
         await expect(authorPage.bookmarkArticle_Btn).toBeVisible();
         await authorPage.bookmarkArticle_Btn.click();
-        await expect(navbar.loginModalCloseButton).toBeVisible();
-        await navbar.closeLoginModal();
+        await expect(navbar.auth.loginModalCloseButton).toBeVisible();
+        await navbar.auth.closeLoginModal();
     });
 
     // Pass
     test('Author_Mobile_011: ตรวจสอบการกดปุ่ม "Bookmark" บนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_mobile();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         const bookmarkBtn = authorPage.bookmarkPromotion_Btn;
         const icon = bookmarkBtn.locator('i');
 
@@ -197,7 +197,7 @@ test.describe('Author Page (Mobile)', () => {
     // Pass
     test('Author_Mobile_012: ตรวจสอบการกดปุ่ม "Bookmark" ซ้ำบนการ์ดต่างๆ กรณีเข้าสู่ระบบแล้ว', async ({ page }) => {
         await navbar.openLoginOrSignup_mobile();
-        await navbar.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
+        await navbar.auth.loginWithEmail(VALID_EMAIL, VALID_PASSWORD);
         const bookmarkBtn = authorPage.bookmarkPromotion_Btn;
         const icon = bookmarkBtn.locator('i');
 
